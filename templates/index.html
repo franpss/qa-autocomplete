@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+
+    <title>Wikibase autocomplete search</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="{{ url_for('static' , filename='css/index.css')}}" rel="stylesheet" type="text/css"/>
+<body>
+    <div class="center col-xs-4">
+        <h3>Wikibase autocomplete search</h3>
+        <input name="source" id="source" class="form-control input-lg" placeholder="Type your query here" type="text">
+        
+    </div>
+    <div id="result"></div>
+    
+
+
+    <script>
+        const $source = document.querySelector('#source');
+        const $result = document.querySelector('#result');
+    
+        const typeHandler = function(e) {
+            $result.innerHTML = e.target.value;
+            console.log(e.target.value);
+    
+            $.ajax({
+                url: "/pipe",
+                type : 'POST',
+                cache: false,
+                data:{'data': e.target.value},
+                success: function(html)
+                {
+    
+                   var myList = [];
+                   for(var i = 0; i < html.search.length; i++)
+                   {
+                        myList.push(html.search[i].label)
+                   }
+                    $( "#source" ).autocomplete({
+                        source: myList
+                    });
+    
+                }
+            });
+        }
+    
+    
+        $source.addEventListener('input', typeHandler) // register for oninput
+        $source.addEventListener('propertychange', typeHandler) // for IE8
+
+    </script>
+</body>
+</html>
