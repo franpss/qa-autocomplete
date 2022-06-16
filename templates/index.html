@@ -3,7 +3,6 @@
 <head>
 
     <title>Wikibase autocomplete search</title>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -18,41 +17,6 @@
     </div>
     <div id="result"></div>
     
-
-
-    <script>
-        const $source = document.querySelector('#source');
-        const $result = document.querySelector('#result');
-    
-        const typeHandler = function(e) {
-            $result.innerHTML = e.target.value;
-            console.log(e.target.value);
-    
-            $.ajax({
-                url: "/pipe",
-                type : 'POST',
-                cache: false,
-                data:{'data': e.target.value},
-                success: function(html)
-                {
-    
-                   var myList = [];
-                   for(var i = 0; i < html.search.length; i++)
-                   {
-                        myList.push(html.search[i].label)
-                   }
-                    $( "#source" ).autocomplete({
-                        source: myList
-                    });
-    
-                }
-            });
-        }
-    
-    
-        $source.addEventListener('input', typeHandler) // register for oninput
-        $source.addEventListener('propertychange', typeHandler) // for IE8
-
-    </script>
 </body>
+<script src="{{ url_for('static' , filename='js/index.js') }}"></script>
 </html>

@@ -1,13 +1,7 @@
 import sys
+from xml.dom.pulldom import END_DOCUMENT
 from SPARQLWrapper import SPARQLWrapper, JSON
 import requests
-
-endpoint_url = "http://query.qawiki.dcc.uchile.cl/proxy/wdqs/bigdata/namespace/wdq/sparql"#"https://query.wikidata.org/sparql"
-
-query = """
-SELECT ?x WHERE {
-  VALUES ?q {  wd:Q187 }
-  ?q wdt:P11 ?x}"""
 
 
 def get_results(endpoint_url, query):
@@ -19,9 +13,9 @@ def get_results(endpoint_url, query):
     return sparql.query().convert()
 
 
-results = get_results(endpoint_url, query)
-for result in results["results"]["bindings"]:
-    print(result)
+# results = get_results(endpoint_url, query)
+# for result in results["results"]["bindings"]:
+#     print(result)
 
 # url = 'https://query.wikidata.org/bigdata/namespace/wdq/sparql'
 # data = requests.get(url, params={'query': query, 'format': 'json'}).json()
