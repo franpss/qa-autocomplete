@@ -19,8 +19,14 @@ const typeHandler = function(e) {
             }
             $("#source").autocomplete({
                 source: myList,
-                select: function( event, ui ) { 
-                    window.location.href = "/wikibase_results/" + ui.item.value;
+                "focus": function (event, ui) {
+                    $(event.target).val(ui.item.label);
+                    return false;
+                },
+                "select": function( event, ui ) { 
+                    $(event.target).val(ui.item.label);
+                    window.location = "/wikibase_results/" + ui.item.value;
+                    return false;
                 }
             })
         }
