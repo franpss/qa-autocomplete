@@ -19,28 +19,6 @@ def pipe():
 
     return response.json()
 
-# @app.route('/qawiki_query/<string:question_id>', methods=["GET"])
-# def qawiki_query(question_id):
-#     endpoint_url = "http://query.qawiki.dcc.uchile.cl/proxy/wdqs/bigdata/namespace/wdq/sparql"#"https://query.wikidata.org/sparql"
-#     question_query = """SELECT ?x WHERE {{VALUES ?q {{ wd:{} }} ?q wdt:P11 ?x}}"""
-#     query_f = question_query.format(question_id)
-#     results=  get_results(endpoint_url, query_f)
-#     try:
-#         return {"query": results["results"]["bindings"][0]["x"]["value"]}
-#     except:
-#         return {"error": ""}
-
-
-# @app.route('/wikibase_results/<string:query>', methods=["GET"])
-# def wikibase_results(query):
-#     print(query)
-#     endpoint_url = "https://query.wikidata.org/sparql"
-#     results = get_results(endpoint_url, query)
-#     try:
-#         return results#{"query": results["results"]["bindings"][0]["x"]["value"]}
-#     except:
-#         return {"error": ""}
-
 @app.route('/wikibase_results/<string:question_id>', methods=["GET"])
 def wikibase_results(question_id):
     qawiki_endpoint_url = "http://query.qawiki.dcc.uchile.cl/proxy/wdqs/bigdata/namespace/wdq/sparql"#"https://query.wikidata.org/sparql"
