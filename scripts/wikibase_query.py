@@ -10,7 +10,11 @@ def get_results(endpoint_url, query):
     sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
-    return sparql.query().convert()
+    output = sparql.query().convert()
+    var_name = output["head"]["vars"][0]
+    results = [item[var_name] for item in output["results"]["bindings"]]
+    return results
+
 
 
 # results = get_results(endpoint_url, query)

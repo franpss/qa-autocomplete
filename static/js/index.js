@@ -1,9 +1,7 @@
 const $source = document.querySelector('#source');
 const $result = document.querySelector('#result');
 const typeHandler = function(e) {
-    $result.innerHTML = e.target.value;
-    console.log(e.target.value);
-    
+    $result.innerHTML = e.target.value;    
     $.ajax({
         url: "/pipe",
         type : 'POST',
@@ -34,6 +32,10 @@ const typeHandler = function(e) {
     }
     
     
-$source.addEventListener('input', typeHandler) // register for oninput
-$source.addEventListener('propertychange', typeHandler) // for IE8
+$source.addEventListener('input',(e) => {
+    if (e.target.value.length >= 2) {
+        typeHandler(e);
+     }
+     }) // register for oninput
+//$source.addEventListener('propertychange', typeHandler) // for IE8
 
