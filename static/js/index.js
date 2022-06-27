@@ -1,19 +1,25 @@
 const $source = document.querySelector('#source');
-const $result = document.querySelector('#result');
 const typeHandler = function(e) {
-    $result.innerHTML = e.target.value;    
+    let lang =  $("#lang-select").val()
     $.ajax({
         url: "/pipe",
         type : 'POST',
         cache: false,
-        data:{'data': e.target.value},
+        data:{'data': e.target.value, 'lang': lang},
         success: function(html)
         {
+            
             var myList = [];
             for(var i = 0; i < html.search.length; i++)
             {
-                myList.push({"label": html.search[i].label,
-                "value": html.search[i].id})
+                if (lang == "en"){
+                    myList.push({"label": html.search[i].label,
+                    "value": html.search[i].id})
+                }
+                else {
+                    myList.push({"label": html.search[i].aliases[0],
+                    "value": html.search[i].id})
+                }
             }
             $("#source").autocomplete({
                 source: myList,
@@ -22,8 +28,8 @@ const typeHandler = function(e) {
                     return false;
                 },
                 "select": function( event, ui ) { 
-                    $(event.target).val(ui.item.label);
-                    window.location = "/wikibase_results/" + ui.item.value;
+                    getResults(ui.item.value);
+                    //window.location = "/wikibase_results/" + ui.item.value;
                     return false;
                 }
             })
@@ -36,6 +42,48 @@ $source.addEventListener('input',(e) => {
     if (e.target.value.length >= 2) {
         typeHandler(e);
      }
-     }) // register for oninput
+     }) 
+$(document).ready(function(){
+  $("#hide").click(function(){
+    loadScreen();
+  });
+})
+
+function getResults(id){
+    loadScreen();
+    $.ajax({
+        url: "/wikibase_results/" + id,
+        type: "GET",
+        cache: true,
+        dataType: "json",
+            
+        success: function (response) {
+            hideLoadScreen();
+            loadResults(response);
+        },
+        error: function (response) {
+            hideLoadScreen()
+            loadResults("Error")
+        }
+        });
+    }
+
+function loadResults(results){
+    $("#result").removeClass('hidden');
+    $("#result").append(JSON.stringify(results));
+}
+
+function loadScreen(){
+    let loadingScreen = $("#loading");
+    loadingScreen.removeClass('hidden');
+}
+
+function hideLoadScreen(){
+    let loadingScreen = $("#loading");
+    loadingScreen.addClass('hidden');
+    
+
+}
+
 //$source.addEventListener('propertychange', typeHandler) // for IE8
 

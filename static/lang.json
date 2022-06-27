@@ -1,0 +1,14 @@
+{
+    "title": {
+        "en": "Wikibase autocomplete search",
+        "es": "Búsqueda por autocompletación en Wikidata"
+    },
+    "loading": {
+        "en": "Loading results",
+        "es": "Cargando resultados"
+    },
+    "results": {
+        "en": "Search results",
+        "es": "Resultados de la búsqueda"
+    }
+}

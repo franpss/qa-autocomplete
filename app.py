@@ -1,8 +1,8 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, make_response, render_template, request
 import requests
 import sys
 sys.path.insert(0, './scripts')
-from scripts.wikibase_query import get_results
+from scripts.query import get_results
 from scripts.utils import filter_questions
 app = Flask(__name__)
 
@@ -14,10 +14,11 @@ def index():
 
 @app.route('/pipe', methods=["GET", "POST"])
 def pipe():
+    lang = request.form.get("lang")
     data = request.form.get("data")
     payload = {}
     headers= {}
-    url = f"http://qawiki.dcc.uchile.cl/w/api.php?action=wbsearchentities&search={str(data)}" + "&language=en&format=json&origin=*"
+    url = f"http://qawiki.dcc.uchile.cl/w/api.php?action=wbsearchentities&search={str(data)}" + "&language=" + lang + "&format=json&origin=*"
     response = requests.request("GET", url, headers=headers, data = payload)
     print(url)
     response_json = response.json()
@@ -34,14 +35,7 @@ def wikibase_results(question_id):
     wikibase_endpoint_url = "https://query.wikidata.org/sparql"
     wikibase_results = get_results(wikibase_endpoint_url, qawiki_query)
     return {"answer": wikibase_results}
-    # try:
-    #     qawiki_results =  get_results(qawiki_endpoint_url, query_f)
-    #     qawiki_query = qawiki_results[0]
-    #     wikibase_endpoint_url = "https://query.wikidata.org/sparql"
-    #     wikibase_results = get_results(wikibase_endpoint_url, qawiki_query)
-    #     return {"answer": wikibase_results}
-    # except Exception as e:
-    #     return {"error": str(e)}
+  
     
 # @app.route('/qawiki_query/<string:question_id>', methods=["GET"])
 # def qawiki_query(question_id):
@@ -55,6 +49,13 @@ def wikibase_results(question_id):
 #     except:
 #         return {"error": ""}
 
+@app.route('/setcookie', methods=['POST', 'GET'])
+def setcookie():
+    if request.method == 'POST':
+        lang = request.form['lang']
+    resp = make_response(render_template('index.html'))
+    resp.set_cookie('lang', lang, secure=True, httponly=False)
 
+    return resp
 if __name__ == "__main__":
     app.run()

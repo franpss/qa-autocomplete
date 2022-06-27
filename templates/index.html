@@ -1,20 +1,47 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
     <title>Wikibase autocomplete search</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="{{ url_for('static' , filename='css/index.css')}}" rel="stylesheet" type="text/css"/>
+    <script src="{{ url_for('static' , filename='js/lang.js') }}"></script>
+    <script src="{{ url_for('static' , filename='js/js.cookie.js') }}"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script charset="utf-8" type="text/javascript">
+        let json_lang = "{{ url_for('static' , filename='lang.json')}}";
+    </script>
+</head>
 <body>
-    <div class="center col-xs-4">
-        <h3>Wikibase autocomplete search</h3>
-        <input name="source" id="source" class="form-control input-lg" placeholder="Type your query here" type="text">
+    <form id="set-lang" action="/setcookie" method="POST">
+        <select id="lang-select" class="form-select" name="lang">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+        </select>
+    </form>
+    <div>
+    <div class="center">
+        <h3 class="lang title" id="title"></h3>
+        <input name="source" id="source" class="form-control input-lg" type="text">
+        <div class="bottom-content">
+            <div id="loading" class="loading parent hidden"> 
+                <h4 class="lang loading" id="loading"></h4> 
+                <div class="dot-typing"></div>
+            </div>
+            <div id="result" class="animate-bottom hidden">
+                <h4 class="lang results" id="results"></h3>
+                
+            </div>
+        </div>
+
     </div>
-    <div id="result"></div>
+
+    
+</div>
     
 </body>
 <script src="{{ url_for('static' , filename='js/index.js') }}"></script>
