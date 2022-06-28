@@ -29,7 +29,6 @@ const typeHandler = function(e) {
                 },
                 "select": function( event, ui ) { 
                     getResults(ui.item.value);
-                    //window.location = "/wikibase_results/" + ui.item.value;
                     return false;
                 }
             })
@@ -50,6 +49,7 @@ $(document).ready(function(){
 })
 
 function getResults(id){
+    hideResults();
     loadScreen();
     $.ajax({
         url: "/wikibase_results/" + id,
@@ -69,8 +69,13 @@ function getResults(id){
     }
 
 function loadResults(results){
-    $("#result").removeClass('hidden');
-    $("#result").append(JSON.stringify(results));
+    $("#results").removeClass('hidden');
+    let parsedResults = parser(results);
+    $("#answer").append(parsedResults);
+}
+function hideResults(){
+    $("#answer").empty();
+    $("#results").addClass('hidden');
 }
 
 function loadScreen(){

@@ -10,6 +10,7 @@
     <link href="{{ url_for('static' , filename='css/index.css')}}" rel="stylesheet" type="text/css"/>
     <script src="{{ url_for('static' , filename='js/lang.js') }}"></script>
     <script src="{{ url_for('static' , filename='js/js.cookie.js') }}"></script>
+    <script src="{{ url_for('static' , filename='js/resultsParser.js') }}"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script charset="utf-8" type="text/javascript">
@@ -23,26 +24,24 @@
             <option value="es">Español</option>
         </select>
     </form>
-    <div>
     <div class="center">
         <h3 class="lang title" id="title"></h3>
         <input name="source" id="source" class="form-control input-lg" type="text">
         <div class="bottom-content">
-            <div id="loading" class="loading parent hidden"> 
-                <h4 class="lang loading" id="loading"></h4> 
+            <div id="loading" class="loading hidden"> 
+                <h3 class="lang loading" id="loading"></h3> 
                 <div class="dot-typing"></div>
             </div>
-            <div id="result" class="animate-bottom hidden">
-                <h4 class="lang results" id="results"></h3>
+            <div id="results" class="animate-bottom hidden">
+                <h3 id="search-results-title" class="lang result"></h3> 
+                <div id="answer"></div>
                 
             </div>
+            
         </div>
 
     </div>
 
-    
-</div>
-    
 </body>
 <script src="{{ url_for('static' , filename='js/index.js') }}"></script>
 </html>
