@@ -36,19 +36,6 @@ def wikibase_results(question_id):
     wikibase_results = get_results(wikibase_endpoint_url, qawiki_query)
     return {"answer": wikibase_results}
   
-    
-# @app.route('/qawiki_query/<string:question_id>', methods=["GET"])
-# def qawiki_query(question_id):
-#     qawiki_endpoint_url = "http://query.qawiki.dcc.uchile.cl/proxy/wdqs/bigdata/namespace/wdq/sparql"#"https://query.wikidata.org/sparql"
-#     question_query = """SELECT ?x WHERE {{VALUES ?q {{ wd:{} }} ?q wdt:P11 ?x}}"""
-#     query_f = question_query.format(question_id)
-#     try:
-#         qawiki_results =  get_results(qawiki_endpoint_url, query_f)
-#         qawiki_query = qawiki_results["results"]["bindings"][0]["x"]["value"]
-#         return {"query": qawiki_query}
-#     except:
-#         return {"error": ""}
-
 @app.route('/setcookie', methods=['POST', 'GET'])
 def setcookie():
     if request.method == 'POST':
