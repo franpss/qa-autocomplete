@@ -7,7 +7,8 @@ function getQuestions(input) {
         cache: false,
         data:{'data': input, 'lang': lang},
         success: function(html)
-        {            
+        {   
+            console.log("html.search", html.search);         
             for(var i = 0; i < html.search.length; i++)
             {
                 if (lang == "en"){
@@ -15,8 +16,10 @@ function getQuestions(input) {
                     "value": html.search[i].id})
                 }
                 else {
-                    output.push({"label": html.search[i].aliases[0],
-                    "value": html.search[i].id})
+                    if ("aliases" in html.search[i]){
+                        output.push({"label": html.search[i].aliases[0],
+                        "value": html.search[i].id})
+                    }
                 }
             }
         }
@@ -30,14 +33,14 @@ $("#source").on("input", function() {
         var questions = getQuestions(this.value);
         console.log("questions", questions);
         $("#source").autocomplete({  
-            "source": questions,
+            source : questions,
             focus: function (event, ui) {
+                event.preventDefault()
                 $(event.target).val(ui.item.label);
-                return false;
             },
             select: function( event, ui ) { 
+                event.preventDefault()
                 getResults(ui.item.value);
-                return false;
             }
         })
     }
