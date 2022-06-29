@@ -28,7 +28,7 @@ $("#source").on("input", function() {
     if ( this.value.length > 0 ){
         var questions = getQuestions(this.value);
         $("#source").autocomplete({  
-            source: questions,
+            "source": questions,
             focus: function (event, ui) {
                 $(event.target).val(ui.item.label);
                 return false;
