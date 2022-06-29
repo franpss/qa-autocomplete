@@ -3,6 +3,7 @@ version: '3.8'
 services:
   web:
     build: .
+    command: python app.py run -h 0.0.0.0:$PORT
     volumes:
       - .:/app
     ports:
