@@ -1,47 +1,46 @@
-const $source = document.querySelector('#source');
-const typeHandler = function(e) {
+function getQuestions(input) {
     let lang =  $("#lang-select").val()
+    var output = [];
     $.ajax({
         url: "/pipe",
         type : 'POST',
         cache: false,
-        data:{'data': e.target.value, 'lang': lang},
+        data:{'data': input, 'lang': lang},
         success: function(html)
-        {
-            
-            var myList = [];
+        {            
             for(var i = 0; i < html.search.length; i++)
             {
                 if (lang == "en"){
-                    myList.push({"label": html.search[i].label,
+                    output.push({"label": html.search[i].label,
                     "value": html.search[i].id})
                 }
                 else {
-                    myList.push({"label": html.search[i].aliases[0],
+                    output.push({"label": html.search[i].aliases[0],
                     "value": html.search[i].id})
                 }
             }
-            $("#source").autocomplete({
-                source: myList,
-                "focus": function (event, ui) {
-                    $(event.target).val(ui.item.label);
-                    return false;
-                },
-                "select": function( event, ui ) { 
-                    getResults(ui.item.value);
-                    return false;
-                }
-            })
         }
      })
+     return output;
     }
     
-    
-$source.addEventListener('input',(e) => {
-    if (e.target.value.length > 0) {
-        typeHandler(e);
-     }
-     }) 
+$("#source").on("input", function() {
+    if ( this.value.length > 0 ){
+        var questions = getQuestions(this.value);
+        $("#source").autocomplete({  
+            source: questions,
+            focus: function (event, ui) {
+                $(event.target).val(ui.item.label);
+                return false;
+            },
+            select: function( event, ui ) { 
+                getResults(ui.item.value);
+                return false;
+            }
+        })
+    }  
+});  
+
 
 function getResults(id){
     hideResults();
