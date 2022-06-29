@@ -14,6 +14,5 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
 CMD ["python", "app.py"]
-EXPOSE 5000
 # copy project
 COPY . /app/
