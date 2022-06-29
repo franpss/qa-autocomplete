@@ -43,6 +43,7 @@ $("#source").on("input", function() {
     }
     else {
         console.log("checkpoint 1");
+    }
 });  
 
 
