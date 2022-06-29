@@ -25,8 +25,10 @@ function getQuestions(input) {
     }
     
 $("#source").on("input", function() {
+    console.log("len", this.value.length);
     if ( this.value.length > 0 ){
         var questions = getQuestions(this.value);
+        console.log("questions", questions);
         $("#source").autocomplete({  
             "source": questions,
             focus: function (event, ui) {
@@ -38,7 +40,9 @@ $("#source").on("input", function() {
                 return false;
             }
         })
-    }  
+    }
+    else {
+        console.log("checkpoint 1");
 });  
 
 
