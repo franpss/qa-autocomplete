@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, make_response, render_template, request
 import requests
 import sys
+import os
 sys.path.insert(0, './scripts')
 from scripts.query import get_results
 from scripts.utils import filter_questions
@@ -48,4 +49,5 @@ def setcookie():
 
     return resp
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host="0.0.0.0")
