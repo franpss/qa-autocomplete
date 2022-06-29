@@ -15,19 +15,22 @@ def index():
 @app.route('/pipe', methods=["GET", "POST"])
 def pipe():
     lang = request.form.get("lang")
-    data = request.form.get("data")
+    data = str(request.form.get("data"))
     payload = {}
     headers= {}
-    url = f"http://qawiki.dcc.uchile.cl/w/api.php?action=wbsearchentities&search={str(data)}" + "&language=" + lang + "&format=json&origin=*"
-    response = requests.request("GET", url, headers=headers, data = payload)
-    print(url)
-    response_json = response.json()
-    response_filtered = filter_questions(response_json)
-    return response_filtered
+    url = f"http://qawiki.dcc.uchile.cl/w/api.php?action=wbsearchentities&search={data}" + "&language=" + lang + "&format=json&origin=*"
+    if len(data) > 0:
+        response = requests.request("GET", url, headers=headers, data = payload)
+        print(url)
+        response_json = response.json()
+        response_filtered = filter_questions(response_json)
+        return response_filtered
+    else:
+        return {}
 
 @app.route('/wikibase_results/<string:question_id>', methods=["GET"])
 def wikibase_results(question_id):
-    qawiki_endpoint_url = "http://query.qawiki.dcc.uchile.cl/proxy/wdqs/bigdata/namespace/wdq/sparql"#"https://query.wikidata.org/sparql"
+    qawiki_endpoint_url = "http://query.qawiki.dcc.uchile.cl/proxy/wdqs/bigdata/namespace/wdq/sparql"
     question_query = """SELECT ?x WHERE {{VALUES ?q {{ wd:{} }} ?q wdt:P11 ?x}}"""
     query_f = question_query.format(question_id)
     qawiki_results =  get_results(qawiki_endpoint_url, query_f)

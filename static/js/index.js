@@ -38,19 +38,15 @@ const typeHandler = function(e) {
     
     
 $source.addEventListener('input',(e) => {
-    if (e.target.value.length >= 2) {
+    if (e.target.value.length > 0) {
         typeHandler(e);
      }
      }) 
-$(document).ready(function(){
-  $("#hide").click(function(){
-    loadScreen();
-  });
-})
 
 function getResults(id){
     hideResults();
     loadScreen();
+    let lang =  $("#lang-select").val()
     $.ajax({
         url: "/wikibase_results/" + id,
         type: "GET",
@@ -63,7 +59,7 @@ function getResults(id){
         },
         error: function (response) {
             hideLoadScreen()
-            loadResults("Error")
+            loadError(lang)
         }
         });
     }
@@ -73,6 +69,18 @@ function loadResults(results){
     let parsedResults = parser(results);
     $("#answer").append(parsedResults);
 }
+
+function loadError(lang){
+    $("#results").removeClass('hidden');
+    if (lang == "es"){
+        $("#answer").append("Ha sucedido un error desde Wikidata");
+    }
+    else {
+        $("#answer").append("An error has occurred from Wikidata")
+    }
+    
+}
+
 function hideResults(){
     $("#answer").empty();
     $("#results").addClass('hidden');
