@@ -8,7 +8,6 @@ function getQuestions(input) {
         data:{'data': input, 'lang': lang},
         success: function(html)
         {   
-            console.log("html.search", html.search);         
             for(var i = 0; i < html.search.length; i++)
             {
                 if (lang == "en"){
@@ -28,10 +27,8 @@ function getQuestions(input) {
     }
     
 $("#source").on("input", function() {
-    console.log("len", this.value.length);
     if ( this.value.length > 0 ){
         var questions = getQuestions(this.value);
-        console.log("questions", questions);
         $("#source").autocomplete({  
             source : questions,
             focus: function (event, ui) {
@@ -43,9 +40,6 @@ $("#source").on("input", function() {
                 getResults(ui.item.value);
             }
         })
-    }
-    else {
-        console.log("checkpoint 1");
     }
 });  
 
