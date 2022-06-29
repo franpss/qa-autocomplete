@@ -6,5 +6,5 @@ services:
     volumes:
       - .:/app
     ports:
-      - 5000:5000
+      - $PORT:$PORT
    
