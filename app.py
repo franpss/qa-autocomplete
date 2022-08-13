@@ -5,6 +5,13 @@ import os
 sys.path.insert(0, './scripts')
 from scripts.query import get_results
 from scripts.utils import filter_questions
+from dotenv import load_dotenv
+load_dotenv()
+
+QAWIKI_ENDPOINT = os.environ.get("QAWIKI_ENDPOINT")
+WIKIBASE_ENDPOINT = os.environ.get("WIKIBASE_ENDPOINT")
+QAWIKI_ENTITY_SEARCH = os.environ.get("QAWIKI_ENTITY_SEARCH")
+
 app = Flask(__name__)
 
 
@@ -19,25 +26,25 @@ def pipe():
     data = str(request.form.get("data"))
     payload = {}
     headers= {}
-    url = f"http://qawiki.dcc.uchile.cl/w/api.php?action=wbsearchentities&search={data}" + "&language=" + lang + "&format=json&origin=*"
+    url = QAWIKI_ENTITY_SEARCH.format(data, lang)
     if len(data) > 0:
         response = requests.request("GET", url, headers=headers, data = payload)
         print(url)
         response_json = response.json()
-        response_filtered = filter_questions(response_json)
+        response_filtered = filter_questions(response_json, QAWIKI_ENDPOINT)
         return response_filtered
     else:
         return {}
 
 @app.route('/wikibase_results/<string:question_id>', methods=["GET"])
 def wikibase_results(question_id):
-    qawiki_endpoint_url = "http://query.qawiki.dcc.uchile.cl/proxy/wdqs/bigdata/namespace/wdq/sparql"
     question_query = """SELECT ?x WHERE {{VALUES ?q {{ wd:{} }} ?q wdt:P11 ?x}}"""
     query_f = question_query.format(question_id)
-    qawiki_results =  get_results(qawiki_endpoint_url, query_f)
+    qawiki_results =  get_results(QAWIKI_ENDPOINT, query_f)
     qawiki_query = qawiki_results[0]["value"]
-    wikibase_endpoint_url = "https://query.wikidata.org/sparql"
-    wikibase_results = get_results(wikibase_endpoint_url, qawiki_query)
+    ### marker 1
+    print("query", qawiki_query)
+    wikibase_results = get_results(WIKIBASE_ENDPOINT, qawiki_query)
     return {"answer": wikibase_results}
   
 @app.route('/setcookie', methods=['POST', 'GET'])
