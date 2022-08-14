@@ -3,8 +3,8 @@ import requests
 import sys
 import os
 sys.path.insert(0, './scripts')
-from scripts.query import get_results
-from scripts.utils import filter_questions
+from scripts.query import get_results, get_mentions
+from scripts.utils import filter_questions, generate_templates
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -36,14 +36,20 @@ def pipe():
     else:
         return {}
 
-@app.route('/wikibase_results/<string:question_id>', methods=["GET"])
+@app.route('/wikibase_results/<string:question_id>', methods=["GET", "POST"])
 def wikibase_results(question_id):
     question_query = """SELECT ?x WHERE {{VALUES ?q {{ wd:{} }} ?q wdt:P11 ?x}}"""
     query_f = question_query.format(question_id)
     qawiki_results =  get_results(QAWIKI_ENDPOINT, query_f)
     qawiki_query = qawiki_results[0]["value"]
-    ### marker 1
-    print("query", qawiki_query)
+    lang = request.form.get("lang")
+    question = request.form.get("question")
+    
+    # --- temporal (in the future they should be saved)
+    question_template, query_template = generate_templates(lang, question, question_id, qawiki_query, QAWIKI_ENDPOINT)
+    print("question_template", question_template)
+    print("query_template", query_template)
+    # ---
     wikibase_results = get_results(WIKIBASE_ENDPOINT, qawiki_query)
     return {"answer": wikibase_results}
   

@@ -37,22 +37,23 @@ $("#source").on("input", function() {
             },
             select: function( event, ui ) { 
                 event.preventDefault()
-                getResults(ui.item.value);
+                getResults(ui.item.value, ui.item.label);
             }
         })
     }
 });  
 
 
-function getResults(id){
+function getResults(id, question){
     hideResults();
     loadScreen();
     let lang =  $("#lang-select").val()
     $.ajax({
         url: "/wikibase_results/" + id,
-        type: "GET",
+        type: "POST",
         cache: true,
         dataType: "json",
+        data: {'question': question, 'lang': lang},
             
         success: function (response) {
             hideLoadScreen();
