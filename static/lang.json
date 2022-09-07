@@ -10,5 +10,10 @@
     "search-results-title": {
         "en": "Search results",
         "es": "Resultados de la búsqueda"
+    },
+    "go-back": {
+        "en": "← Go back",
+        "es": "← Ir atrás"
+
     }
 }

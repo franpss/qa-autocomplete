@@ -16,6 +16,7 @@
     <link href="{{ url_for('static' , filename='images/favicon.ico') }}" rel="shortcut icon" type="ico"/>
     <script charset="utf-8" type="text/javascript">
         let json_lang = "{{ url_for('static' , filename='lang.json')}}";
+        let questions_json = "{{ url_for('static' , filename='cached_questions/templates.json')}}";
     </script>
 </head>
 <body>
@@ -26,8 +27,17 @@
         </select>
     </form>
     <div class="center">
+        <div class="clickable hidden" id="home"><a onclick='goBack()'><h5 class="lang go-back" id="go-back"></h5></a></div>
         <h3 class="lang title" id="title"></h3>
-        <input name="source" id="source" class="form-control input-lg" type="text">
+        <div class="main-input" name="main-input" id="main-input">
+            
+            <input name="source" id="source" class="form-control input-lg" type="text">
+         </div>
+         
+            <form class="form-inline hidden" id="template-form">      
+                    <button onclick='generateQuery("a")' class="btn btn-light right"><span class="glyphicon 
+                        glyphicon-search"></span></button>
+              </form>
         <div class="bottom-content">
             <div id="loading" class="loading hidden"> 
                 <h3 class="lang loading" id="loading"></h3> 

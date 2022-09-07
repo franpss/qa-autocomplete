@@ -11,12 +11,23 @@
 .hidden {
     display: none;
   }
+.clickable {cursor: pointer;}
 
+.btn {
+  width: 50px;
+}
+
+.right {
+  float: right;
+}
 
 .bottom-content {
   margin-top: 20px;
 }
 
+.template-text {
+  font-size: 18px;
+}
 #lang-select {
   position: absolute;
   right: 5%;
