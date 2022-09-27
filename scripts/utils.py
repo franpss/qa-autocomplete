@@ -1,7 +1,7 @@
 import json
 import requests
 import re
-
+import os
 
 def filter_questions(response, qawiki_endpoint_url):
     items = ["wd:" + item['id'] for item in response["search"]]
@@ -39,21 +39,23 @@ def generate_templates(lang, question_id, qawiki_query, qawiki_endpoint):
     get_question_query = """SELECT ?label {{ VALUES (?item) {{(wd:{0})}} . ?item rdfs:label ?label . FILTER (langMatches( lang(?label), "{1}" ))}}"""
     results_question_query = get_results(qawiki_endpoint, get_question_query.format(question_id, lang))
     if len(results_question_query) == 0:
-        return None, None
+        return None, [], None, None
     else:
-        question = results_question_query[0]["value"]
-        question_template = question
+        original_question = results_question_query[0]["value"]
+        question_template = original_question
         query_template = qawiki_query
         matched_mentions = []
+        mentions_text = []
 
         for e in entities:
-            matched_mentions.extend([m for m in mentions if m['qualifierValue'] == e and m['propertyValue'] in question])
+            matched_mentions.extend([m for m in mentions if m['qualifierValue'] == e and m['propertyValue'] in original_question])
 
         for idx in range(len(matched_mentions)):
+            mentions_text.append(matched_mentions[idx]["propertyValue"])
             question_template = question_template.replace(matched_mentions[idx]["propertyValue"], f"$mention_{idx}")
             query_template = query_template.replace("wd:" + matched_mentions[idx]["qualifierValue"], f"$entity_{idx}")
 
-        return question_template, query_template
+        return original_question, mentions_text, question_template, query_template
 
 def get_results(url, query, f="json"):
     r = requests.get(url, params = {'format': f, 'query': query})
@@ -117,7 +119,7 @@ def get_templates(qawiki_endpoint_url, langs=["en", "es"]):
         raw_query =  get_qawiki_question_query(item["id"], qawiki_endpoint_url)
 #        item["query"] = raw_query
         for lang in langs:
-            item[f"question_template_{lang}"], item[f"query_template_{lang}"] = generate_templates(lang, item["id"], raw_query, qawiki_endpoint_url)
+            item[f"question_{lang}"], item[f"mentions_{lang}"], item[f"question_template_{lang}"], item[f"query_template_{lang}"] = generate_templates(lang, item["id"], raw_query, qawiki_endpoint_url)
             item[f"visible_question_{lang}"] = None if item[f"question_template_{lang}"] is None else re.sub(r"(\$[a-z]+_[0-9]+)", "(...)", item[f"question_template_{lang}"])
         questions_output.append(item)
     return questions_output
@@ -137,16 +139,10 @@ def save_json(dic, path='static/cached_questions', filename='templates.json'):
             os.makedirs(path)
         with open(os.path.join(path, filename), 'w', encoding='utf8') as f:
             json.dump(dic, f, indent=2, ensure_ascii=False)   
-import os
-from dotenv import load_dotenv
-load_dotenv()
+# import os
+# from dotenv import load_dotenv
+# load_dotenv()
 
-#save_json(get_templates(os.environ.get("QAWIKI_ENDPOINT")))
+# save_json(get_templates(os.environ.get("QAWIKI_ENDPOINT")))
 
-
-# with open('static/cached_questions/templates.json') as json_file:
-#     data = json.load(json_file)
-#     for q in data:
-#         if q["query_template_en"] != q["query_template_es"]:
-#             print(q["id"], "not equal")
  

@@ -25,28 +25,13 @@ def wikidata_search():
 def index():
     return render_template("index.html")
 
-
-@app.route('/merger', methods=["GET", "POST"])
-def merger():
-    data = str(request.form.get("data"))
-    lang = request.form.get("lang")
-    questions = get_qawiki_questions(lang, data, QAWIKI_ENTITY_SEARCH, QAWIKI_ENDPOINT)
-    test = []
-    for question in questions:
-        raw_query =  get_qawiki_question_query(question["id"], QAWIKI_ENDPOINT)
-        question["query"] = raw_query
-        question["question_template"], question["query_template"] = generate_templates(lang, question["question"], question["id"], raw_query, QAWIKI_ENDPOINT)
-        question["visible_question"] = re.sub(r"(\$[a-z]+_[0-9]+)", "(...)", question["question_template"])
-        test.append(question)
-
-
-    return {"results": test}
-
-@app.route('/wikibase_results', methods=["GET", "POST"])
+@app.route('/wikibase_results', methods=["GET"])
 def wikibase_results():
-    replaced_query= request.form.get("query")
+    params = request.args.to_dict() 
+    replaced_query= params["query"] 
     answer = get_results(WIKIBASE_ENDPOINT, replaced_query)
     return {"answer": answer}
+   
   
 @app.route('/setcookie', methods=['POST', 'GET'])
 def setcookie():

@@ -13,12 +13,14 @@
   }
 .clickable {cursor: pointer;}
 
-.btn {
-  width: 50px;
-}
 
 .right {
   float: right;
+}
+
+
+.glyphicon {
+  top: 4px !important;
 }
 
 .bottom-content {
@@ -96,4 +98,26 @@
 @keyframes animatebottom { 
   from{ bottom:-100px; opacity:0 } 
   to{ bottom:0; opacity:1 }
+}
+
+.italic-placeholder::-webkit-input-placeholder {
+  font-style: italic;
+}
+.italic-placeholder:-moz-placeholder {
+  font-style: italic;  
+}
+.italic-placeholder::-moz-placeholder {
+  font-style: italic;  
+}
+.italic-placeholder:-ms-input-placeholder {  
+  font-style: italic; 
+}
+
+.error {
+  border: solid 1.4px #ff000055 !important;  
+}
+
+.popover-content {
+  font-size: 9px;
+  padding: 3px !important;
 }

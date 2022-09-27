@@ -1,22 +1,13 @@
 function booleanAnswer(results, lang){
     let result = results.answer.boolean;
     if (result){
-        if (lang == "es"){
-            return "<h4>Verdadero";
-        }
-        else if (lang == "en"){
-            return "<h4>True</h4>";
-        }
+        return "<h4>" + messages_data["boolean-true"][lang] + "<h4>"
     }
     else {
-        if (lang == "es"){
-            return "<h4>Falso</h4>";
-        }
-        else if (lang == "en"){
-            return "<h4>False</h4>";
+        return "<h4>" + messages_data["boolean-false"][lang] + "<h4>"
         }
     }
-}
+
 function uriAnswer(result){
     let url = result.value;
     return "<h4><a href='{}'>{}</a></h4>".replaceAll("{}", url);
@@ -30,6 +21,9 @@ function literalAnswer(result){
 function parser(results){
     let lang =  $("#lang-select").val();
     let answers = results.answer;
+    if (answers.length == 0) {
+        return messages_data["no-results"][lang]
+    }
     if ("boolean" in answers){
         return booleanAnswer(results, lang);
     }

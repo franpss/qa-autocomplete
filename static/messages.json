@@ -1,0 +1,23 @@
+{
+    "no-results": {
+        "en": "No results found",
+        "es": "No se encontraron resultados"
+    },
+    "boolean-true": {
+        "en": "True",
+        "es": "Verdadero"
+    },
+    "boolean-false": {
+        "en": "False",
+        "es": "Falso"
+    },
+    "wikidata-error": {
+        "en": "An error has occurred from Wikidata",
+        "es": "Ha sucedido un error desde Wikidata"
+    },
+    "missing-input-error": {
+        "en": "You must select an entity from the list",
+        "es": "Debes seleccionar una entidad de la lista"
+    }
+    
+}

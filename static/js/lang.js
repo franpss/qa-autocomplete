@@ -18,17 +18,14 @@ function readLanguageCookie() {
 function applyLanguage() {
     let langCookie = readLanguageCookie();
     applyLanguageText(langCookie);
-    applyLanguageForm(langCookie, true);
 }
 
-function handleLanguageChange(change_form=false) {
+function handleLanguageChange() {
     // Language selector change handler
     $("#lang-select").on("change", function(){
         applyLanguageText($("#lang-select").val());
-        if(change_form) {
-            applyLanguageForm($("#lang-select").val());
-        }
         $('#set-lang').submit();
+        
     });
 
     // Set language cookie via AJAX
@@ -42,6 +39,7 @@ function handleLanguageChange(change_form=false) {
             data: form.serialize(),
         });
     });
+    
 }
 
 /*

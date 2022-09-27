@@ -15,5 +15,10 @@
         "en": "← Go back",
         "es": "← Ir atrás"
 
+    },
+    "query": {
+        "en": "Search",
+        "es": "Buscar"
     }
+    
 }
