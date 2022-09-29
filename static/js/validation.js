@@ -1,8 +1,11 @@
 function checkform()
 {
     let lang =  $("#lang-select").val();
+    let validInput = false;
+    if ($('form#template-form').find('*[id*=entity]').length == 0) {
+        validInput = true;
+    }
     $('form#template-form').find('*[id*=entity]').each(function() {
-        let validInput = false;
         if ($(this).data("uiAutocomplete") == null || 
         $(this).data("uiAutocomplete").selectedItem == null)  {
             validInput = false;
@@ -15,11 +18,10 @@ function checkform()
             hideError(this)
         }
 
-        if (validInput){
-            getResults();
-        }
-
     })
+    if (validInput){
+        getResults();
+    }
  
 }
 
@@ -31,7 +33,7 @@ function hideError(input){
 function showError(input, lang){
     $(input).addClass("error");
     $(input).popover({
-        content: messages_data["missing-input-error"][lang], 
+        content: messagesData["missing-input-error"][lang], 
         placement: "bottom", 
         trigger: 'focus'}).popover('show');
 }

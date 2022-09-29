@@ -1,5 +1,5 @@
 function applyLanguageText(lang){
-    $.getJSON(json_lang, function(data){
+    $.getJSON(jsonLang, function(data){
         $(".lang").each(function(){
             $(this).html(data[$(this).attr("id")][lang]);
         });

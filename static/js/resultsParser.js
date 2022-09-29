@@ -1,10 +1,10 @@
 function booleanAnswer(results, lang){
     let result = results.answer.boolean;
     if (result){
-        return "<h4>" + messages_data["boolean-true"][lang] + "<h4>"
+        return "<h4>" + messagesData["boolean-true"][lang] + "<h4>"
     }
     else {
-        return "<h4>" + messages_data["boolean-false"][lang] + "<h4>"
+        return "<h4>" + messagesData["boolean-false"][lang] + "<h4>"
         }
     }
 
@@ -22,7 +22,7 @@ function parser(results){
     let lang =  $("#lang-select").val();
     let answers = results.answer;
     if (answers.length == 0) {
-        return messages_data["no-results"][lang]
+        return messagesData["no-results"][lang]
     }
     if ("boolean" in answers){
         return booleanAnswer(results, lang);

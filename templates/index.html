@@ -16,11 +16,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link href="{{ url_for('static' , filename='images/favicon.ico') }}" rel="shortcut icon" type="ico"/>
     <script charset="utf-8" type="text/javascript">
-        let json_lang = "{{ url_for('static' , filename='lang.json')}}";
-        let questions_json = "{{ url_for('static' , filename='cached_questions/templates.json')}}";
-        let questions_data = [];
-        let messages_json = "{{ url_for('static' , filename='messages.json')}}";
-        let messages_data = [];   
+        let jsonLang = "{{ url_for('static' , filename='lang.json')}}";
+        let questionsJson = "{{ url_for('static' , filename='cached_questions/templates.json')}}";
+        let questionsData = [];
+        let messagesJson = "{{ url_for('static' , filename='messages.json')}}";
+        let messagesData = [];   
     </script>
 </head>
 <body>
@@ -60,4 +60,7 @@
 </body>
 <script src="{{ url_for('static' , filename='js/index.js') }}"></script>
 <script src="{{ url_for('static' , filename='js/validation.js') }}"></script>
+<script src="{{ url_for('static' , filename='js/autocomplete.js') }}"></script>
+<script src="{{ url_for('static' , filename='js/templates.js') }}"></script>
+<script src="{{ url_for('static' , filename='js/navigation.js') }}"></script>
 </html>
