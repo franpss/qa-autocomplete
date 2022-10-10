@@ -19,6 +19,10 @@
     "query": {
         "en": "Search",
         "es": "Buscar"
+    },
+    "wikidata-query": {
+        "en": "Wikidata query",
+        "es": "Consulta en Wikidata"
     }
     
 }

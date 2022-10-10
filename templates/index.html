@@ -7,7 +7,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="{{ url_for('static' , filename='css/index.css')}}" rel="stylesheet" type="text/css"/>
     <script src="{{ url_for('static' , filename='js/lang.js') }}"></script>
     <script src="{{ url_for('static' , filename='js/js.cookie.js') }}"></script>
@@ -21,7 +20,8 @@
         let questionsData = [];
         let messagesJson = "{{ url_for('static' , filename='messages.json')}}";
         let messagesData = [];   
-    </script>
+    </script>    
+
 </head>
 <body>
     
@@ -39,7 +39,7 @@
             <input name="source" id="source" class="form-control input-lg" type="text">
          </div>
             <form class="form-inline hidden" id="template-form">     
-                <button id="query" type="button" class="btn btn-dark search-button right lang" onclick="checkform()"><i class="fa fa-moon-o"></i></button> 
+                <button id="query" type="button" class="btn btn-dark search-button right lang" onclick="checkform()"></button> 
                     
               </form>
         <div class="bottom-content">
@@ -48,7 +48,10 @@
                 <div class="dot-typing"></div>
             </div>
             <div id="results" class="animate-bottom hidden">
-                <h3 id="search-results-title" class="lang result"></h3> 
+                <div class="results-header">
+                <h3 id="search-results-title" class="lang result"></h3>
+                <div id="wikidata-query-link" class="wikidata-query-link"></div>
+                </div>
                 <div id="answer"></div>
                 
             </div>

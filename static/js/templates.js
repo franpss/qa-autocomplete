@@ -4,7 +4,8 @@ Template form functions
 
 function generateTemplateForm(questionData, lang){
     let questionTemplate = questionData["question_template_" + lang];
-    let mentions = questionData["mentions_" + lang];
+    let matches = questionData["matches_" + lang];
+    let mentions = matches.map(item => item["mention"])
     let mentionRegex = /\$mention_[0-9]+/
     let questionTemplateList = questionTemplate.split(/(\$[a-z]+_[0-9]+)/);
     let html = ""

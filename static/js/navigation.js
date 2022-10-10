@@ -52,9 +52,11 @@ function cleanForm(){
     $('#template-form').find('*').not('.search-button').remove();
 }
 
-function loadResults(results){
+function loadResults(results, query){
     $("#results").removeClass('hidden');
+    $("#wikidata-query-link").empty();
     let parsedResults = parser(results);
+    $("#wikidata-query-link").append("<a href='https://query.wikidata.org/#" + query + "' target='_blank'>Wikidata</a>");
     $("#answer").append(parsedResults);
 }
 

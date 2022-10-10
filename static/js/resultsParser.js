@@ -18,6 +18,15 @@ function literalAnswer(result){
     return "<h4>{}</h4>".replace("{}", answer);
 }
 
+function answerParser(answer) {
+    if (answer.type == "uri"){
+        return(uriAnswer(answer));
+    }
+    else if (answer.type == "literal"){
+        return(literalAnswer(answer));
+    }
+}
+
 function parser(results){
     let lang =  $("#lang-select").val();
     let answers = results.answer;
@@ -29,14 +38,24 @@ function parser(results){
     }
     else {
         var output = [];
+        rows = "";
         for(var i = 0; i < answers.length; i++)
         {
-            if (answers[i].type == "uri"){
-                output.push(uriAnswer(answers[i]));
+            
+            if (answers[i].length > 1){
+                cols = "";
+                for (var j = 0; j < answers[i].length; j++){
+                    cols = cols + "<td>{}</td>".replace("{}", answerParser(answers[i][j]));
+                }
+                rows = rows + "<tr>{}</tr>".replace("{}", cols);
+            } 
+            else {
+                output.push(answerParser(answers[i][0]))
             }
-            else if (answers[i].type == "literal"){
-                output.push(literalAnswer(answers[i]));
-            }
+            
+        }
+        if (rows != ""){
+            output.push("<table class='table table-bordered'>{}</table>".replace("{}", rows))
         }
         return output;
     }

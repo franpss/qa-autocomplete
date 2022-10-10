@@ -3,7 +3,8 @@ import os
 import sys
 sys.path.insert(0, '.')
 from scripts.templates import get_templates
-
+from dotenv import load_dotenv
+load_dotenv()
 
 def save_json(dic, path='static/cached_questions', filename='templates.json'):
         """Saves dictionary in json file.
@@ -39,8 +40,16 @@ def read_json(path):
         return data
 
         
-# from dotenv import load_dotenv
-# load_dotenv()
-
-# save_json(get_templates(os.environ.get("QAWIKI_ENDPOINT")))
+# qawiki_endpoint = os.environ.get("QAWIKI_ENDPOINT")
+# entity_prefix = os.environ.get("ENTITY_PREFIX")
+# boolean_values_dict = read_json("scripts/QAWikiBooleanValues.json")
+# save_json(get_templates(qawiki_endpoint, entity_prefix, boolean_values_dict))
  
+# from linkpreview import link_preview
+
+# preview = link_preview("https://www.wikidata.org/wiki/Q306")
+# print("title:", preview.title)
+# print("description:", preview.description)
+# print("image:", preview.image)
+# print("force_title:", preview.force_title)
+# print("absolute_image:", preview.absolute_image)

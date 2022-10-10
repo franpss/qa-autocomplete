@@ -56,7 +56,7 @@ function getResults() {
                     
         success: function (response) {
             hideLoadScreen();
-            loadResults(response);
+            loadResults(response, query);
         },
         error: function (response) {
             hideLoadScreen()
