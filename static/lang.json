@@ -23,6 +23,10 @@
     "wikidata-query": {
         "en": "Wikidata query",
         "es": "Consulta en Wikidata"
+    },
+    "cont-question-title": {
+        "en": "Contingent question:",
+        "es": "Pregunta contingente:"
     }
     
 }

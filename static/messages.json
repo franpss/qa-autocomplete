@@ -3,11 +3,11 @@
         "en": "No results found",
         "es": "No se encontraron resultados"
     },
-    "boolean-true": {
+    "true": {
         "en": "True",
         "es": "Verdadero"
     },
-    "boolean-false": {
+    "false": {
         "en": "False",
         "es": "Falso"
     },

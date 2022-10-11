@@ -43,26 +43,81 @@ $("#lang-select").on("change", function(){
     fillMainAutocomplete()
 });
 
-function getResults() {
-    let query = generateQuery();
+async function getContQuestionResults(contQuery, contQuestion) {
+    let questionData = window.questionData;
+    let expectedValue = questionData["contingent_question"]["expected_value"]
     let lang =  $("#lang-select").val();
-    hideResults();
-    loadScreen();
+    hideContQuestionResults();
     $.ajax({
         url: "/wikibase_results",
         type: "GET",
         dataType: "json",
-        data: {'query': query},
+        data: {'query': contQuery},
                     
         success: function (response) {
-            hideLoadScreen();
-            loadResults(response, query);
+            loadContQuestionResults(response, contQuery, contQuestion);
+            if (response["answer"]["boolean"] && expectedValue ||
+             !response["answer"]["boolean"] && !expectedValue){
+                let query = generateQuery();
+                $.ajax({
+                    url: "/wikibase_results",
+                    type: "GET",
+                    dataType: "json",
+                    data: {'query': query},
+                                
+                    success: function (response) {
+                        hideLoadScreen();
+                        loadResults(response, query);
+                    },
+                    error: function (response) {
+                        hideLoadScreen();
+                        loadError(lang)
+                    }
+                });
+            }
+            else {
+                showResults();
+                hideLoadScreen();
+            }
         },
         error: function (response) {
-            hideLoadScreen()
             loadError(lang)
         }
     });
+}
+
+function getResults() {
+    let questionData = window.questionData;
+    let cont_question_data = questionData["contingent_question"]
+    let query = generateQuery();
+    let lang =  $("#lang-select").val();
+    hideResults();
+    loadScreen();
+    if (cont_question_data != null) {
+        let cont_question = generateContQuestionQuery()
+        getContQuestionResults(cont_question["query"], cont_question["question"])
+    }
+    else {
+        hideContQuestionResults();
+        $.ajax({
+            url: "/wikibase_results",
+            type: "GET",
+            dataType: "json",
+            data: {'query': query},
+                        
+            success: function (response) {
+                hideLoadScreen();
+                loadResults(response, query);
+            },
+            error: function (response) {
+                hideLoadScreen()
+                loadError(lang)
+            }
+        });
+    }
+    
+    
+    
 };
         
 

@@ -45,3 +45,35 @@ function generateQuery(){
     })
     return queryTemplateList.join("");
 }
+
+function generateContQuestionQuery() {
+    let lang =  $("#lang-select").val();
+    let questionData = window.questionData;
+    let entitiesValues = [];
+    let mentionsValues = [];
+    $('form#template-form').find('*[id*=entity]').each(function() {
+        let idx = this.id.split("-")[1];
+        entitiesValues[idx] = $(this).data("uiAutocomplete").selectedItem.value;
+        mentionsValues[idx] = $(this).data("uiAutocomplete").selectedItem.label;
+    })
+
+    let queryTemplate = questionData["contingent_question"]["query_template_" + lang]
+    let questionTemplate = questionData["contingent_question"]["question_template_" + lang]
+    let templateRegex = /(\$[a-z]+_[0-9]+)/;
+    let queryTemplateList = queryTemplate.split(templateRegex);
+    let questionTemplateList = questionTemplate.split(templateRegex);
+    queryTemplateList.forEach(function (item, index) {
+        if (templateRegex.test(item)){
+            let templateEntityIdx = item.split("_")[1];
+            queryTemplateList[index] = "wd:" + entitiesValues[templateEntityIdx];
+        }
+    })
+    questionTemplateList.forEach(function (item, index) {
+        if (templateRegex.test(item)){
+            let templateMentionIdx = item.split("_")[1];
+            questionTemplateList[index] = mentionsValues[templateMentionIdx];
+        }
+    })
+    return {"question": questionTemplateList.join(""), "query": queryTemplateList.join("")};
+}
+

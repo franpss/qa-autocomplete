@@ -38,6 +38,11 @@ function hideResults(){
     $("#results").addClass('hidden');
 }
 
+function hideContQuestionResults(){
+    $("#cont-question-data").empty();
+    $("#cont-question").addClass('hidden');
+}
+
 function loadScreen(){
     let loadingScreen = $("#loading");
     loadingScreen.removeClass('hidden');
@@ -58,6 +63,17 @@ function loadResults(results, query){
     let parsedResults = parser(results);
     $("#wikidata-query-link").append("<a href='https://query.wikidata.org/#" + query + "' target='_blank'>Wikidata</a>");
     $("#answer").append(parsedResults);
+}
+function showResults() {
+    $("#results").removeClass('hidden');
+}
+function loadContQuestionResults(results, query, question){
+    $("#cont-question").removeClass('hidden');
+    $("#wikidata-query-link").empty();
+    let parsedResults = parser(results);
+    $("#wikidata-query-link").append("<a href='https://query.wikidata.org/#" + query + "' target='_blank'>Wikidata</a>");
+    $("#cont-question-data").append("<h5>{}</h5>".replace("{}", question));
+    $("#cont-question-data").append(parsedResults);
 }
 
 function loadError(lang){

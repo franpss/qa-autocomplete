@@ -130,3 +130,23 @@
 .result, .wikidata-query-link {
   display:inline;
 }
+.bolded { 
+  font-weight: bold; }
+
+
+.cont-question-data h4 {
+    font-size: 12px !important;
+  }
+
+.border {
+    border: 1px solid #ccc!important;
+    border-style: dashed !important;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+.margin {
+  margin: 5px;
+}
+.desc {
+  font-size: 12px !important;
+}

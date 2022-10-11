@@ -1,10 +1,10 @@
 function booleanAnswer(results, lang){
     let result = results.answer.boolean;
     if (result){
-        return "<h4>" + messagesData["boolean-true"][lang] + "<h4>"
+        return "<h4>" + messagesData["true"][lang] + "<h4>"
     }
     else {
-        return "<h4>" + messagesData["boolean-false"][lang] + "<h4>"
+        return "<h4>" + messagesData["false"][lang] + "<h4>"
         }
     }
 

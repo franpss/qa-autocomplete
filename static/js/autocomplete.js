@@ -71,7 +71,7 @@ function autocompleteTemplateForm() {
                                     return {
                                         label: item.label,
                                         value: item.value,
-                                        desc: item.desc
+                                        desc: item.desc == null ? "" : item.desc
                                     }
                                 }));
                             },
@@ -92,7 +92,7 @@ function autocompleteTemplateForm() {
                     }
                 }).autocomplete("instance")._renderItem = function(ul, item) {
                     return $("<li>")
-                        .append("<div>" + item.label + "<br>" + item.desc + "</div>")
+                        .append("<div>" + item.label + "<br> <span class='desc'>" + item.desc + "</span></div>")
                         .appendTo(ul);
                 };
             }
