@@ -35,8 +35,11 @@ function handleLanguageChange() {
             $('#set-lang').submit();
             window.location.href = "/";
         }
-        applyLanguageText($("#lang-select").val());
-        $('#set-lang').submit();
+        else {
+            applyLanguageText($("#lang-select").val());
+            $('#set-lang').submit();
+        }
+        
         
     });
 
