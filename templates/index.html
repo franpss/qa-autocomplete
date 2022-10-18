@@ -13,6 +13,7 @@
     <script src="{{ url_for('static' , filename='js/resultsParser.js') }}"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/fd7e4b205d.js" crossorigin="anonymous"></script>
     <link href="{{ url_for('static' , filename='images/favicon.ico') }}" rel="shortcut icon" type="ico"/>
     <script charset="utf-8" type="text/javascript">
         let jsonLang = "{{ url_for('static' , filename='lang.json')}}";
@@ -33,7 +34,7 @@
     </form>
     <div class="center">
         <div class="clickable hidden" id="home"><a onclick='goBack()'><h5 class="lang go-back" id="go-back"></h5></a></div>
-        <h3 class="lang title" id="title"></h3>
+        <span><h3 class="lang title" id="title"></h3><a id="qawiki-link" class="hidden lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a></span>
         <div class="main-input" name="main-input" id="main-input">
             
             <input name="source" id="source" class="form-control input-lg" type="text">
@@ -49,8 +50,9 @@
             </div>
             <div id="results" class="animate-bottom hidden">
                 <div class="results-header">
-                <h3 id="search-results-title" class="lang result"></h3>
-                <div id="wikidata-query-link" class="wikidata-query-link"></div>
+                <h3 id="search-results-title" class="lang" style="margin-bottom: 1px;"></h3>
+                <a id="wikidata-query-link" class="wikidata-query-link lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                <!-- <div id="wikidata-query-link" class="wikidata-query-link"></div> -->
                 </div>
                 <div id="cont-question" class="border hidden">
                     <h4 id="cont-question-title" class="lang margin bolded cont-question"></h4>

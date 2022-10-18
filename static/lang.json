@@ -27,6 +27,14 @@
     "cont-question-title": {
         "en": "Contingent question:",
         "es": "Pregunta contingente:"
+    },
+    "qawiki-link": {
+        "en": "View question in QAWiki",
+        "es": "Ver pregunta en QAWiki"
+    },
+    "wikidata-query-link": {
+        "en": "View query in Wikidata Query Service",
+        "es": "Ver consulta en Servicio de Consultas de Wikidata"
     }
     
 }

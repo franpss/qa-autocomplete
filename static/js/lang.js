@@ -1,7 +1,15 @@
 function applyLanguageText(lang){
     $.getJSON(jsonLang, function(data){
         $(".lang").each(function(){
-            $(this).html(data[$(this).attr("id")][lang]);
+            if ($(this).contents().length > 0) {
+                let contents = $(this).contents().filter(function(){ return this.nodeType != 3; }).first().replaceWith(data[$(this).attr("id")][lang]);
+                $(this).text(data[$(this).attr("id")][lang]);
+                $(this).append(contents);
+            }
+            
+            else {
+                $(this).text(data[$(this).attr("id")][lang]);
+            }
         });
     });
 }
@@ -23,6 +31,10 @@ function applyLanguage() {
 function handleLanguageChange() {
     // Language selector change handler
     $("#lang-select").on("change", function(){
+        if (!$("#template-form").hasClass("hidden")){
+            $('#set-lang').submit();
+            window.location.href = "/";
+        }
         applyLanguageText($("#lang-select").val());
         $('#set-lang').submit();
         

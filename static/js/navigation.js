@@ -9,9 +9,20 @@ function showMainInputBox(){
     $("#source").removeClass('hidden');
 }
 
+function showQAWikiLink(questionId){
+    $("#qawiki-link").attr("href", "http://qawiki.dcc.uchile.cl/wiki/Item:" + questionId)
+    $("#qawiki-link").removeClass('hidden');
+}
+
+function hideQAWikiLink(){
+    $("#qawiki-link").addClass('hidden');
+}
+
 function goBack(){
+    window.history.replaceState({}, document.title, "/");
     hideGoBack();
     hideTemplateForm();
+    hideQAWikiLink();
     cleanForm();
     hideResults();
     showMainInputBox();
@@ -57,21 +68,19 @@ function cleanForm(){
     $('#template-form').find('*').not('.search-button').remove();
 }
 
-function loadResults(results, query){
+async function loadResults(results, query){
+    let parsedResults = await parser(results);
     $("#results").removeClass('hidden');
-    $("#wikidata-query-link").empty();
-    let parsedResults = parser(results);
-    $("#wikidata-query-link").append("<a href='https://query.wikidata.org/#" + query + "' target='_blank'>Wikidata</a>");
+    $("#wikidata-query-link").attr("href", "https://query.wikidata.org/#" + query)
     $("#answer").append(parsedResults);
 }
 function showResults() {
     $("#results").removeClass('hidden');
 }
-function loadContQuestionResults(results, query, question){
+async function loadContQuestionResults(results, query, question){
+    let parsedResults = await parser(results);
     $("#cont-question").removeClass('hidden');
-    $("#wikidata-query-link").empty();
-    let parsedResults = parser(results);
-    $("#wikidata-query-link").append("<a href='https://query.wikidata.org/#" + query + "' target='_blank'>Wikidata</a>");
+    $("#wikidata-query-link").attr("href", "https://query.wikidata.org/#" + query)
     $("#cont-question-data").append("<h5>{}</h5>".replace("{}", question));
     $("#cont-question-data").append(parsedResults);
 }
@@ -84,6 +93,7 @@ function loadError(lang){
 function loadTemplateForm(questionId, lang){
     hideMainInputBox();
     questionData = getQuestionData(questionId);
+    showQAWikiLink(questionId);
     generateTemplateForm(questionData, lang);
     autocompleteTemplateForm();
     showTemplateForm();

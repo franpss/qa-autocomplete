@@ -22,19 +22,25 @@ def filter_entities(response, wikidata_endpoint_url, info_entity="wdt:P35"):
 
 
 def get_results(url, query, f="json"):
-    r = requests.get(url, params = {'format': f, 'query': query})
-    data = r.json()
     output = []
-    if "vars" in data["head"]:
-        vars_list = data["head"]["vars"]
-        for item in data["results"]["bindings"]:
-            row = []
-            for var in vars_list:
-                row.append(item[var])
-            output.append(row)
-    if "boolean" in data:
-        return data
-    return output
+    try:
+        r = requests.get(url, params = {'format': f, 'query': query})
+        data = r.json()   
+        if "vars" in data["head"]:
+            vars_list = data["head"]["vars"]
+            for item in data["results"]["bindings"]:
+                row = []
+                for var in vars_list:
+                    if var in item:
+                        row.append(item[var])
+                    else: 
+                        row.append({})
+                output.append(row)
+        if "boolean" in data:
+            return data
+        return output
+    except:
+        return []
     
 
 def get_props_qualif(url, query, f="json"):

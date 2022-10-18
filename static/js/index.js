@@ -54,10 +54,10 @@ async function getContQuestionResults(contQuery, contQuestion) {
         dataType: "json",
         data: {'query': contQuery},
                     
-        success: function (response) {
-            loadContQuestionResults(response, contQuery, contQuestion);
+        success: async function (response) {
+            
             if (response["answer"]["boolean"] && expectedValue ||
-             !response["answer"]["boolean"] && !expectedValue){
+             (!response["answer"]["boolean"] && !expectedValue)){
                 let query = generateQuery();
                 $.ajax({
                     url: "/wikibase_results",
@@ -65,9 +65,9 @@ async function getContQuestionResults(contQuery, contQuestion) {
                     dataType: "json",
                     data: {'query': query},
                                 
-                    success: function (response) {
+                    success: async function (response) {
+                        await loadResults(response, query);
                         hideLoadScreen();
-                        loadResults(response, query);
                     },
                     error: function (response) {
                         hideLoadScreen();
@@ -76,6 +76,7 @@ async function getContQuestionResults(contQuery, contQuestion) {
                 });
             }
             else {
+                await loadContQuestionResults(response, contQuery, contQuestion);
                 showResults();
                 hideLoadScreen();
             }
@@ -86,7 +87,7 @@ async function getContQuestionResults(contQuery, contQuestion) {
     });
 }
 
-function getResults() {
+async function getResults() {
     let questionData = window.questionData;
     let cont_question_data = questionData["contingent_question"]
     let query = generateQuery();
@@ -95,7 +96,7 @@ function getResults() {
     loadScreen();
     if (cont_question_data != null) {
         let cont_question = generateContQuestionQuery()
-        getContQuestionResults(cont_question["query"], cont_question["question"])
+        await getContQuestionResults(cont_question["query"], cont_question["question"])
     }
     else {
         hideContQuestionResults();
@@ -105,9 +106,9 @@ function getResults() {
             dataType: "json",
             data: {'query': query},
                         
-            success: function (response) {
+            success: async function (response) {
+                await loadResults(response, query);
                 hideLoadScreen();
-                loadResults(response, query);
             },
             error: function (response) {
                 hideLoadScreen()

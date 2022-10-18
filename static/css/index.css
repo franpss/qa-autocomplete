@@ -122,17 +122,15 @@
   padding: 3px !important;
 }
 
-.results-header{
-  display: inline-block;
-  width: 100%;
-}
-
-.result, .wikidata-query-link {
+.wikidata-query-link {
   display:inline;
 }
 .bolded { 
   font-weight: bold; }
 
+.results-header {
+  margin-bottom: 10px;
+}
 
 .cont-question-data h4 {
     font-size: 12px !important;
@@ -149,4 +147,8 @@
 }
 .desc {
   font-size: 12px !important;
+}
+
+img {
+  float: right;
 }

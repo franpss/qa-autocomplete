@@ -42,6 +42,7 @@ function fillMainAutocomplete() {
         },
         select: function( event, ui ) { 
             event.preventDefault();
+            window.history.pushState({}, document.title, "/question_template/" + ui.item.value);
             loadTemplateForm(ui.item.value, lang);
         },                     
     })
