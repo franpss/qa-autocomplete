@@ -1,7 +1,10 @@
+/*
+Global variables
+*/
 var previewEntityQuery = `
-SELECT ?label ?desc ?thumb
+SELECT ?sbj ?label ?desc ?thumb
 WHERE {
-  VALUES ?sbj { wd:{entityId} }
+  VALUES ?sbj { {entitiesIds} }
   OPTIONAL { ?sbj rdfs:label ?label . FILTER(lang(?label)="{lang}") }
   OPTIONAL { ?sbj wdt:P18 ?image . }
   OPTIONAL { ?sbj schema:description ?desc . FILTER(lang(?desc)="{lang}") }
@@ -14,6 +17,59 @@ WHERE {
               ?safeFileName, "/100px-", ?safeFileName) as ?thumb)
 }
 `
+var wikidataUrl = "http://www.wikidata.org/entity/";
+
+/*
+Auxiliary functions to gather entities from the results and make a single request 
+to Wikidata for additional information (label, description and image).
+*/
+function getEntitiesList(items) {
+    let output = []
+    for(var i = 0; i < items.length; i++)
+    {
+        for(var j = 0; j < items[i].length; j++)
+        {
+            if (items[i][j].value.includes(wikidataUrl) && output.indexOf(items[i][j] < 0)){
+                output.push(items[i][j].value.replace(wikidataUrl, "wd:"))
+            }
+        }
+    }
+    return output
+}
+
+/*
+Functions to fetch entities info from Wikidata.
+*/
+async function getInfoUriAnswers(entitiesList){
+    let lang =  $("#lang-select").val();
+    let filledPreviewQuery = previewEntityQuery.replace("{entitiesIds}", entitiesList.join(" ")).replaceAll("{lang}", lang);
+    var previewInfo = await $.ajax({
+        url: "/wikibase_results",
+        type: "GET",
+        dataType: "json",
+        data: {'query': filledPreviewQuery}
+    });
+    return previewInfo
+}
+
+async function getInfoUriAnswersByBlocks(entitiesList, blockSize=200) {
+    if (entitiesList.length <= blockSize) {
+        let results = await getInfoUriAnswers(entitiesList);
+        return results.answer;
+    }
+    else {
+        output = []; 
+        for (var i = 0; i < entitiesList.length; i+=blockSize) {
+            let blockResults = await getInfoUriAnswers(entitiesList.slice(i, i + blockSize));
+            output = output.concat(blockResults.answer)
+        }
+        return output
+    }
+}
+
+/*
+Parsing functions
+*/
 function booleanAnswer(results, lang){
     let result = results.answer.boolean;
     if (result){
@@ -24,23 +80,21 @@ function booleanAnswer(results, lang){
         }
     }
 
-async function uriAnswer(result){
-    let url = result.value;
-    let wikidataUrl = "http://www.wikidata.org/entity/";
-    let lang =  $("#lang-select").val();
-    if (url.includes(wikidataUrl)) {
-        let entityId = url.replace("http://www.wikidata.org/entity/", "");
-        let filledPreviewQuery = previewEntityQuery.replace("{entityId}", entityId).replaceAll("{lang}", lang);
-        var previewInfo = await $.ajax({
-            url: "/wikibase_results",
-            type: "GET",
-            dataType: "json",
-            data: {'query': filledPreviewQuery}
-        });
-        if (previewInfo.answer.length > 0) {
-            let label = "value" in previewInfo.answer[0][0]? previewInfo.answer[0][0].value : null;
-            let desc = "value" in previewInfo.answer[0][1]? previewInfo.answer[0][1].value : null;
-            let img = "value" in previewInfo.answer[0][2]? previewInfo.answer[0][2].value : null;
+function literalAnswer(result){
+    let answer = result.value;
+    return "<h4>{}</h4>".replace("{}", answer);
+}
+
+function answerParser(answer, infoUriAnswers) {
+    if (answer.type == "uri"){
+        console.log(1)
+        let answerInfo = infoUriAnswers.find((item) => item[0].value === answer.value)
+        console.log("answerinfo", answerInfo)
+        if (answerInfo) {
+            let url = answerInfo[0].value;
+            let label = "value" in answerInfo[1]? answerInfo[1].value : null;
+            let desc = "value" in answerInfo[2]? answerInfo[2].value : null;
+            let img = "value" in answerInfo[3]? answerInfo[3].value : null;
             return `
             <div style="overflow: hidden;">
             <p>
@@ -52,35 +106,17 @@ async function uriAnswer(result){
             `
             .replace("{label}", label? "<h4><a href='{url}'>{label}</a></h4>".replace("{url}", url).replace("{label}", label) : "<h4><a href='{url}'>{url}</a></h4>".replaceAll("{url}", url))
             .replace("{desc}", desc? "<h5>{desc}</h5>".replace("{desc}", desc) : "")
-            .replace("{img}", img? "<img src='{img}' alt='entity image'>".replace("{img}", img) : "");
+            .replace("{img}", img? "<img src='{img}' alt='entity image'>".replace("{img}", img.replace(/'/g, "%27")) : "");
         }
         else {
-            return "<h4><a href='{url}'>{url}</a></h4>".replaceAll("{url}", url)
+            return "<h4><a href='{url}'>{url}</a></h4>".replaceAll("{url}", answer.value)
         }
-        
-    }
-    else {
-        return "<h4><a href='{url}'>{url}</a></h4>".replaceAll("{url}", url)
-    }
-    
-        
-    
-}
-
-function literalAnswer(result){
-    let answer = result.value;
-    return "<h4>{}</h4>".replace("{}", answer);
-}
-
-async function answerParser(answer) {
-    if (answer.type == "uri"){
-        return await uriAnswer(answer);
     }
     else if (answer.type == "literal"){
         return(literalAnswer(answer));
     }
 }
-
+  
 async function parser(results){
     let lang =  $("#lang-select").val();
     let answers = results.answer;
@@ -91,20 +127,21 @@ async function parser(results){
         return booleanAnswer(results, lang);
     }
     else {
+        let entitiesList = getEntitiesList(answers);
+        let infoUriAnswers = await getInfoUriAnswersByBlocks(entitiesList)
         var output = [];
         rows = "";
         for(var i = 0; i < answers.length; i++)
         {
-            
             if (answers[i].length > 1){
                 cols = "";
                 for (var j = 0; j < answers[i].length; j++){
-                    cols = cols + "<td>{}</td>".replace("{}", await answerParser(answers[i][j]));
+                    cols = cols + "<td>{}</td>".replace("{}", answerParser(answers[i][j], infoUriAnswers));
                 }
                 rows = rows + "<tr>{}</tr>".replace("{}", cols);
             } 
             else {
-                output.push(await answerParser(answers[i][0]));
+                output.push(answerParser(answers[i][0], infoUriAnswers));
             }
             
         }
@@ -112,6 +149,5 @@ async function parser(results){
             output.push("<table class='table table-bordered'>{}</table>".replace("{}", rows))
         }
         return output;
-    }
-    
+    }   
 }

@@ -48,6 +48,8 @@ async function getContQuestionResults(contQuery, contQuestion) {
     let expectedValue = questionData["contingent_question"]["expected_value"]
     let lang =  $("#lang-select").val();
     hideContQuestionResults();
+    loadQueryLink(contQuery);
+    showQueryLink();
     $.ajax({
         url: "/wikibase_results",
         type: "GET",
@@ -94,6 +96,8 @@ async function getResults() {
     let lang =  $("#lang-select").val();
     hideResults();
     loadScreen();
+    loadQueryLink(query);
+    showQueryLink();
     if (cont_question_data != null) {
         let cont_question = generateContQuestionQuery()
         await getContQuestionResults(cont_question["query"], cont_question["question"])

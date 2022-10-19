@@ -23,8 +23,8 @@ def filter_entities(response, wikidata_endpoint_url, info_entity="wdt:P35"):
 
 def get_results(url, query, f="json"):
     output = []
+    r = requests.get(url, params = {'format': f, 'query': query})
     try:
-        r = requests.get(url, params = {'format': f, 'query': query})
         data = r.json()   
         if "vars" in data["head"]:
             vars_list = data["head"]["vars"]

@@ -24,7 +24,7 @@
 }
 
 .bottom-content {
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 .template-text {
@@ -36,68 +36,14 @@
   top: 3%; 
 }
 
-#result {
+#result{
   overflow: auto;
 }
-
-/**
- * ==============================================
- * Dot Typing
- * ==============================================
- */
- .dot-typing {
-  position: relative;
-  top: 16px;
-  left: -9979px;
-  width: 10px;
-  height: 10px;
-  border-radius: 5px;
-  background-color: #686868;
-  color: #686868;
-  box-shadow: 9984px 0 0 0 #686868, 9999px 0 0 0 #686868, 10014px 0 0 0 #686868;
-  animation: dotTyping 1.5s infinite linear;
+.row {
+  margin-left: 0px !important;
 }
-
-@keyframes dotTyping {
-  0% {
-    box-shadow: 9984px 0 0 0 #686868, 9999px 0 0 0 #686868, 10014px 0 0 0 #686868;
-  }
-  16.667% {
-    box-shadow: 9984px -10px 0 0 #686868, 9999px 0 0 0 #686868, 10014px 0 0 0 #686868;
-  }
-  33.333% {
-    box-shadow: 9984px 0 0 0 #686868, 9999px 0 0 0 #686868, 10014px 0 0 0 #686868;
-  }
-  50% {
-    box-shadow: 9984px 0 0 0 #686868, 9999px -10px 0 0 #686868, 10014px 0 0 0 #686868;
-  }
-  66.667% {
-    box-shadow: 9984px 0 0 0 #686868, 9999px 0 0 0 #686868, 10014px 0 0 0 #686868;
-  }
-  83.333% {
-    box-shadow: 9984px 0 0 0 #686868, 9999px 0 0 0 #686868, 10014px -10px 0 0 #686868;
-  }
-  100% {
-    box-shadow: 9984px 0 0 0 #686868, 9999px 0 0 0 #686868, 10014px 0 0 0 #686868;
-  }
-}
-/* Add animation to "page content" */
-.animate-bottom {
-  position: relative;
-  -webkit-animation-name: animatebottom;
-  -webkit-animation-duration: 1s;
-  animation-name: animatebottom;
-  animation-duration: 1s
-}
-
-@-webkit-keyframes animatebottom {
-  from { bottom:-100px; opacity:0 } 
-  to { bottom:0px; opacity:1 }
-}
-
-@keyframes animatebottom { 
-  from{ bottom:-100px; opacity:0 } 
-  to{ bottom:0; opacity:1 }
+.col-md-4, .col-md-1 {
+  padding-left: 0px !important;
 }
 
 .italic-placeholder::-webkit-input-placeholder {
@@ -151,4 +97,47 @@
 
 img {
   float: right;
+}
+
+.loader {
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #a7a7a7;
+  width: 20px;
+  height: 20px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+h3 {
+  margin-top: 5px !important;
+}
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
 }

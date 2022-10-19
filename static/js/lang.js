@@ -1,5 +1,5 @@
 function applyLanguageText(lang){
-    $.getJSON(jsonLang, function(data){
+    $.getJSON(langJson, function(data){
         $(".lang").each(function(){
             if ($(this).contents().length > 0) {
                 let contents = $(this).contents().filter(function(){ return this.nodeType != 3; }).first().replaceWith(data[$(this).attr("id")][lang]);

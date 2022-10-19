@@ -16,7 +16,7 @@
     <script src="https://kit.fontawesome.com/fd7e4b205d.js" crossorigin="anonymous"></script>
     <link href="{{ url_for('static' , filename='images/favicon.ico') }}" rel="shortcut icon" type="ico"/>
     <script charset="utf-8" type="text/javascript">
-        let jsonLang = "{{ url_for('static' , filename='lang.json')}}";
+        let langJson = "{{ url_for('static' , filename='lang.json')}}";
         let questionsJson = "{{ url_for('static' , filename='cached_questions/templates.json')}}";
         let questionsData = [];
         let messagesJson = "{{ url_for('static' , filename='messages.json')}}";
@@ -44,14 +44,14 @@
                     
               </form>
         <div class="bottom-content">
+            <div id="query-link" class="hidden"><a id="wikidata-query-link" class="wikidata-query-link lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
             <div id="loading" class="loading hidden"> 
-                <h3 class="lang loading" id="loading"></h3> 
-                <div class="dot-typing"></div>
+                <div style="display: inline-block;"><h3 class="lang loading" id="loading"></h3></div>
+                <div style="display: inline-block; margin-bottom: -3px;"><div class="loader"></div></div>
             </div>
             <div id="results" class="animate-bottom hidden">
                 <div class="results-header">
                 <h3 id="search-results-title" class="lang" style="margin-bottom: 1px;"></h3>
-                <a id="wikidata-query-link" class="wikidata-query-link lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a>
                 <!-- <div id="wikidata-query-link" class="wikidata-query-link"></div> -->
                 </div>
                 <div id="cont-question" class="border hidden">
