@@ -5,9 +5,9 @@ var previewEntityQuery = `
 SELECT ?sbj ?label ?desc ?thumb
 WHERE {
   VALUES ?sbj { {entitiesIds} }
-  OPTIONAL { ?sbj rdfs:label ?label . FILTER(lang(?label)="{lang}") }
+  OPTIONAL { ?sbj rdfs:label ?label . FILTER(lang(?label)="{lang}" || lang(?label)="en") }
   OPTIONAL { ?sbj wdt:P18 ?image . }
-  OPTIONAL { ?sbj schema:description ?desc . FILTER(lang(?desc)="{lang}") }
+  OPTIONAL { ?sbj schema:description ?desc . FILTER(lang(?desc)="{lang}" || lang(?desc)="en") }
   BIND(REPLACE(wikibase:decodeUri(STR(?image)), "http://commons.wikimedia.org/wiki/Special:FilePath/", "") as ?fileName) .
   BIND(REPLACE(?fileName, " ", "_") as ?safeFileName)
   BIND(MD5(?safeFileName) as ?fileNameMD5) .
