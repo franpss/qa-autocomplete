@@ -3,9 +3,9 @@ version: '3.8'
 services:
   web:
     build: .
-    command: python app.py run -h 0.0.0.0
+    command:  "gunicorn --workers 4 --bind 0.0.0.0:8157 app:app"
     volumes:
       - .:/app
     ports:
-      - 5000:5000
+      - 8157:8157
    

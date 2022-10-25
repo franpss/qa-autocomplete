@@ -49,7 +49,7 @@ def setcookie():
     if request.method == 'POST':
         lang = request.form['lang']
     resp = make_response(render_template('index.html'))
-    resp.set_cookie('lang', lang, secure=True, httponly=False)
+    resp.set_cookie('lang', lang, secure=True, httponly=False, samesite="Lax")
 
     return resp
 if __name__ == "__main__":

@@ -87,9 +87,7 @@ function literalAnswer(result){
 
 function answerParser(answer, infoUriAnswers) {
     if (answer.type == "uri"){
-        console.log(1)
         let answerInfo = infoUriAnswers.find((item) => item[0].value === answer.value)
-        console.log("answerinfo", answerInfo)
         if (answerInfo) {
             let url = answerInfo[0].value;
             let label = "value" in answerInfo[1]? answerInfo[1].value : null;
