@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import time
 sys.path.insert(0, '.')
 from scripts.templates import get_templates
 from dotenv import load_dotenv
@@ -39,17 +40,22 @@ def read_json(path):
         data = json.load(json_file)
         return data
 
-        
-# qawiki_endpoint = os.environ.get("QAWIKI_ENDPOINT")
-# entity_prefix = os.environ.get("ENTITY_PREFIX")
-# boolean_values_dict = read_json("scripts/QAWikiBooleanValues.json")
-# save_json(get_templates(qawiki_endpoint, entity_prefix, boolean_values_dict))
- 
-# from linkpreview import link_preview
+def templates_update(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict="static/QAWikiBooleanValues.json"):
+    """Calls needed functions to update templates.
 
-# preview = link_preview("https://www.wikidata.org/wiki/Q306")
-# print("title:", preview.title)
-# print("description:", preview.description)
-# print("image:", preview.image)
-# print("force_title:", preview.force_title)
-# print("absolute_image:", preview.absolute_image)
+    Parameters
+    ----------
+    qawiki_endpoint : str
+        QAWiki endpoint url
+    qawiki_entity_prefix : str
+        QAWiki entity prefix url
+    boolean_values_dict : str
+        QAWiki endpoint url
+    """
+    print("Updating templates...")
+    t0 = time.time()
+    templates = get_templates(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict)
+    save_json(templates)
+    tf = time.time()
+    print(f"Templates updated. Time elapsed: {tf - t0} seconds.")
+ 

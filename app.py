@@ -1,20 +1,27 @@
 from flask import Flask, abort, jsonify, make_response, render_template, request
-import requests
 import sys
 import os
-import re
-
-from scripts.utils import read_json
+from scripts.utils import read_json, templates_update
 sys.path.insert(0, './scripts')
 from scripts.query import get_results, get_wikidata_entities
 from dotenv import load_dotenv
+from apscheduler.schedulers.background import BackgroundScheduler
 load_dotenv()
+
 
 QAWIKI_ENDPOINT = os.environ.get("QAWIKI_ENDPOINT")
 WIKIBASE_ENDPOINT = os.environ.get("WIKIBASE_ENDPOINT")
 QAWIKI_ENTITY_SEARCH = os.environ.get("QAWIKI_ENTITY_SEARCH")
 WIKIDATA_ENTITY_SEARCH = os.environ.get("WIKIDATA_ENTITY_SEARCH")
+QAWIKI_ENTITY_PREFIX = os.environ.get("QAWIKI_ENTITY_PREFIX")
+JOB_INTERVAL_MINUTES = int(os.environ.get("JOB_INTERVAL_MINUTES"))
 TEMPLATES_PATH = 'static/cached_questions/templates.json'
+
+sched = BackgroundScheduler(daemon=True)
+boolean_values_dict = read_json("static/QAWikiBooleanValues.json")
+sched.add_job(templates_update, 'interval', args=[QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX, boolean_values_dict], minutes=JOB_INTERVAL_MINUTES)
+sched.start()
+
 app = Flask(__name__)
 
 @app.route("/wikidata_search", methods=["GET", "POST"])

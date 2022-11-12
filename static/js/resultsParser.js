@@ -5,9 +5,10 @@ var previewEntityQuery = `
 SELECT ?sbj ?label ?desc ?thumb
 WHERE {
   VALUES ?sbj { {entitiesIds} }
-  OPTIONAL { ?sbj rdfs:label ?label . FILTER(lang(?label)="{lang}" || lang(?label)="en") }
+  OPTIONAL { ?sbj rdfs:label ?labelLang . FILTER(lang(?labelLang)="{lang}") }
+  OPTIONAL { ?sbj rdfs:label ?labelEn . FILTER(lang(?labelEn)="en") }
   OPTIONAL { ?sbj wdt:P18 ?image . }
-  OPTIONAL { ?sbj schema:description ?desc . FILTER(lang(?desc)="{lang}" || lang(?desc)="en") }
+  OPTIONAL { ?sbj schema:description ?desc . FILTER(lang(?desc)="{lang}") }
   BIND(REPLACE(wikibase:decodeUri(STR(?image)), "http://commons.wikimedia.org/wiki/Special:FilePath/", "") as ?fileName) .
   BIND(REPLACE(?fileName, " ", "_") as ?safeFileName)
   BIND(MD5(?safeFileName) as ?fileNameMD5) .
@@ -15,7 +16,9 @@ WHERE {
               SUBSTR(?fileNameMD5, 1, 1), "/", 
               SUBSTR(?fileNameMD5, 1, 2), "/", 
               ?safeFileName, "/100px-", ?safeFileName) as ?thumb)
+  BIND(COALESCE(?labelLang,?labelEn) AS ?label)
 }
+
 `
 var wikidataUrl = "http://www.wikidata.org/entity/";
 
@@ -102,7 +105,9 @@ function answerParser(answer, infoUriAnswers) {
             </p>
             </div>
             `
-            .replace("{label}", label? "<h4><a href='{url}'>{label}</a></h4>".replace("{url}", url).replace("{label}", label) : "<h4><a href='{url}'>{url}</a></h4>".replaceAll("{url}", url))
+            .replace("{label}", label? "<h4><a href='{url}'>{label}</a></h4>"
+                .replace("{url}", url).replace("{label}", label) : "<h4><a href='{url}'>{entityId}</a></h4>"
+                    .replace("{url}", url)).replace("{entityId}", url.replace(wikidataUrl, ""))
             .replace("{desc}", desc? "<h5>{desc}</h5>".replace("{desc}", desc) : "")
             .replace("{img}", img? "<img src='{img}' alt='entity image'>".replace("{img}", img.replace(/'/g, "%27")) : "");
         }
