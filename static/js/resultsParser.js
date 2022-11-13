@@ -109,7 +109,7 @@ function answerParser(answer, infoUriAnswers) {
                 .replace("{url}", url).replace("{label}", label) : "<h4><a href='{url}'>{entityId}</a></h4>"
                     .replace("{url}", url)).replace("{entityId}", url.replace(wikidataUrl, ""))
             .replace("{desc}", desc? "<h5>{desc}</h5>".replace("{desc}", desc) : "")
-            .replace("{img}", img? "<img src='{img}' alt='entity image'>".replace("{img}", img.replace(/'/g, "%27")) : "");
+            .replace("{img}", img? "<img src='{img}' alt='entity image' class='entity-img'>".replace("{img}", img.replace(/'/g, "%27")) : "");
         }
         else {
             return "<h4><a href='{url}'>{url}</a></h4>".replaceAll("{url}", answer.value)
@@ -149,7 +149,7 @@ async function parser(results){
             
         }
         if (rows != ""){
-            output.push("<table class='table table-bordered'>{}</table>".replace("{}", rows))
+            output.push("<table style='table-layout:fixed;' class='table table-bordered'>{}</table>".replace("{}", rows))
         }
         return output;
     }   
