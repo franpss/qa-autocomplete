@@ -3,6 +3,7 @@ Autocomplete functions (main and templates)
 */
 
 function fillMainAutocomplete() {
+    let qaWikiNewItemUrl = "http://qawiki.dcc.uchile.cl/wiki/Special:NewItem"
     let lang =  $("#lang-select").val();    
     var dataArr = $.map(questionsData, function(item) {
         if (item["visible_question_"+lang] != null){
@@ -37,14 +38,27 @@ function fillMainAutocomplete() {
             );
         },
         focus: function (event, ui) {
-            event.preventDefault();
-            $(event.target).val(ui.item.label);
+            if (ui.item.value != qaWikiNewItemUrl) {
+                event.preventDefault();
+                $(event.target).val(ui.item.label);
+            }
         },
         select: function( event, ui ) { 
-            event.preventDefault();
-            window.history.pushState({}, document.title, "/question_template/" + ui.item.value);
-            loadTemplateForm(ui.item.value, lang);
-        },                     
+            if (ui.item.value != qaWikiNewItemUrl) {
+                event.preventDefault();
+                window.history.pushState({}, document.title, "/question_template/" + ui.item.value);
+                loadTemplateForm(ui.item.value, lang);
+            }
+            else {
+                window.location.href = ui.item.value;
+            }
+        },     
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = { value: qaWikiNewItemUrl, label: messagesData["no-results-new-item"][lang] };
+                ui.content.push(noResult);
+            }
+        }                
     })
 ;
 }

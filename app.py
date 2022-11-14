@@ -24,7 +24,7 @@ sched.start()
 
 app = Flask(__name__)
 
-@app.route("/wikidata_search", methods=["GET", "POST"])
+@app.route("/wikidata_search", methods=["POST"])
 def wikidata_search():
     data = str(request.form.get("data"))
     lang = request.form.get("lang")
@@ -51,7 +51,7 @@ def question_template(question_id):
     else:
         abort(404)
   
-@app.route('/setcookie', methods=['POST', 'GET'])
+@app.route('/setcookie', methods=['POST'])
 def setcookie():
     if request.method == 'POST':
         lang = request.form['lang']

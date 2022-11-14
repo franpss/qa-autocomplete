@@ -18,6 +18,10 @@
     "missing-input-error": {
         "en": "You must select an entity from the list",
         "es": "Debes seleccionar una entidad de la lista"
+    },
+    "no-results-new-item": {
+        "en": "No results found :-( Click here and create the question in QAWiki!",
+        "es": "No se encontraron resultados :-( Cliquea aquí y crea la pregunta en QAWiki!"
     }
     
 }
