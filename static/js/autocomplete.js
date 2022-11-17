@@ -3,7 +3,6 @@ Autocomplete functions (main and templates)
 */
 
 function fillMainAutocomplete() {
-    let qaWikiNewItemUrl = "http://qawiki.dcc.uchile.cl/wiki/Special:NewItem"
     let lang =  $("#lang-select").val();    
     var dataArr = $.map(questionsData, function(item) {
         if (item["visible_question_"+lang] != null){
@@ -14,6 +13,10 @@ function fillMainAutocomplete() {
         }
        
         });
+    dataArr = dataArr.filter(
+        (question, index) => index === dataArr.findIndex(
+        other => question.label === other.label
+    ));
     var accentMap = {
             "á": "a",
             "é": "e",
@@ -38,13 +41,13 @@ function fillMainAutocomplete() {
             );
         },
         focus: function (event, ui) {
-            if (ui.item.value != qaWikiNewItemUrl) {
+            if (ui.item.value != qaWikiHomeUrl) {
                 event.preventDefault();
                 $(event.target).val(ui.item.label);
             }
         },
         select: function( event, ui ) { 
-            if (ui.item.value != qaWikiNewItemUrl) {
+            if (ui.item.value != qaWikiHomeUrl) {
                 event.preventDefault();
                 window.history.pushState({}, document.title, "/question_template/" + ui.item.value);
                 loadTemplateForm(ui.item.value, lang);
@@ -55,8 +58,12 @@ function fillMainAutocomplete() {
         },     
         response: function(event, ui) {
             if (!ui.content.length) {
-                var noResult = { value: qaWikiNewItemUrl, label: messagesData["no-results-new-item"][lang] };
+                var noResult = { value: qaWikiHomeUrl, label: messagesData["no-results-new-item"][lang] };
                 ui.content.push(noResult);
+                showLangHelp(lang);
+            }
+            else {
+                hideLangHelp();
             }
         }                
     })
@@ -105,11 +112,14 @@ function autocompleteTemplateForm() {
                         hideError(this);
 
                     }
+                }).on("focus", function () {
+                    $(this).autocomplete("search", this.value);
                 }).autocomplete("instance")._renderItem = function(ul, item) {
                     return $("<li>")
                         .append("<div>" + item.label + "<br> <span class='desc'>" + item.desc + "</span></div>")
                         .appendTo(ul);
                 };
+                
             }
         });
     });

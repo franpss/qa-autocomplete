@@ -1,3 +1,4 @@
+from this import d
 from flask import Flask, abort, jsonify, make_response, render_template, request
 import sys
 import os
@@ -31,9 +32,17 @@ def wikidata_search():
     output = get_wikidata_entities(lang, data, WIKIDATA_ENTITY_SEARCH)
     return {"search": output}
 
-@app.route("/", methods=["GET"])
+
+@app.route('/', methods=["GET"])
 def index():
-    return render_template("index.html")
+    lang = request.args.get('lang')
+    if lang is not None:
+        resp = make_response(render_template('index.html'))
+        resp.set_cookie('lang', lang, secure=True, httponly=False, samesite="Lax")
+        return resp
+    else:
+        return render_template("index.html")
+
 
 @app.route('/wikibase_results', methods=["GET"])
 def wikibase_results():

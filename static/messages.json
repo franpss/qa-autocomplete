@@ -22,6 +22,10 @@
     "no-results-new-item": {
         "en": "No results found :-( Click here and create the question in QAWiki!",
         "es": "No se encontraron resultados :-( Cliquea aquí y crea la pregunta en QAWiki!"
+    },
+    "no-results-check-lang": {
+        "en": "Did you select the correct language?",
+        "es": "¿Seleccionaste el idioma correcto?"
     }
     
 }

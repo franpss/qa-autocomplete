@@ -4847,30 +4847,6 @@
     "visible_question_es": "¿Cuál (...) es la más longeva?"
   },
   {
-    "id": "Q245",
-    "contingent_question": null,
-    "question_en": "What are the colors of the French flag?",
-    "matches_en": [
-      {
-        "mention": "French flag",
-        "entity": "Q43192"
-      }
-    ],
-    "question_template_en": "What are the colors of the $mention_0?",
-    "query_template_en": "SELECT ?obj { $entity_0 wdt:P462 ?obj }",
-    "visible_question_en": "What are the colors of the (...)?",
-    "question_es": "¿Cuáles colores tiene la bandera francés?",
-    "matches_es": [
-      {
-        "mention": "bandera francés",
-        "entity": "Q43192"
-      }
-    ],
-    "question_template_es": "¿Cuáles colores tiene la $mention_0?",
-    "query_template_es": "SELECT ?obj { $entity_0 wdt:P462 ?obj }",
-    "visible_question_es": "¿Cuáles colores tiene la (...)?"
-  },
-  {
     "id": "Q246",
     "contingent_question": null,
     "question_en": "How long is Ikiru?",
@@ -6336,6 +6312,49 @@
     "question_template_es": "¿Cuándo es el día de festividad de Saint $mention_0?",
     "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P841 ?obj }",
     "visible_question_es": "¿Cuándo es el día de festividad de Saint (...)?"
+  },
+  {
+    "id": "Q405",
+    "contingent_question": null,
+    "question_en": "In which country was Elon Musk born?",
+    "matches_en": [
+      {
+        "mention": "Elon Musk",
+        "entity": "Q317521"
+      }
+    ],
+    "question_template_en": "In which country was $mention_0 born?",
+    "query_template_en": "SELECT DISTINCT ?obj2 WHERE { $entity_0 wdt:P19 ?obj1 . ?obj1 wdt:P17 ?obj2 . }",
+    "visible_question_en": "In which country was (...) born?",
+    "question_es": "¿En qué país nació Elon Musk?",
+    "matches_es": [
+      {
+        "mention": "Elon Musk",
+        "entity": "Q317521"
+      }
+    ],
+    "question_template_es": "¿En qué país nació $mention_0?",
+    "query_template_es": "SELECT DISTINCT ?obj2 WHERE { $entity_0 wdt:P19 ?obj1 . ?obj1 wdt:P17 ?obj2 . }",
+    "visible_question_es": "¿En qué país nació (...)?"
+  },
+  {
+    "id": "Q406",
+    "contingent_question": null,
+    "question_en": "How many polish Grandmasters are there?",
+    "matches_en": [
+      {
+        "mention": "Grandmaster",
+        "entity": "Q105269"
+      }
+    ],
+    "question_template_en": "How many polish Grandmasters are there?",
+    "query_template_en": "SELECT (COUNT(?grandmaster) as ?count) WHERE { ?grandmaster wdt:P2962 $entity_0 .  ?grandmaster wdt:P27 wd:Q36 }",
+    "visible_question_en": "How many polish Grandmasters are there?",
+    "question_es": "¿Cuántos Gran Maestros Internacionales polacos existen?",
+    "matches_es": [],
+    "question_template_es": "¿Cuántos Gran Maestros Internacionales polacos existen?",
+    "query_template_es": "SELECT (COUNT(?grandmaster) as ?count) WHERE { ?grandmaster wdt:P2962 wd:Q105269 .  ?grandmaster wdt:P27 wd:Q36 }",
+    "visible_question_es": "¿Cuántos Gran Maestros Internacionales polacos existen?"
   },
   {
     "id": "Q276",
