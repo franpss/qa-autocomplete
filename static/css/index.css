@@ -126,7 +126,12 @@ a {
 
 .title {
   margin-top: 3px !important;
+  margin-bottom: 7px;
 }
+.clear { 
+  clear:both; 
+}
+
 .loader {
   border: 5px solid #f3f3f3;
   border-radius: 50%;

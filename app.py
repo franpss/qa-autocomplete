@@ -2,7 +2,7 @@ from this import d
 from flask import Flask, abort, jsonify, make_response, render_template, request
 import sys
 import os
-from scripts.utils import read_json, templates_update
+from scripts.utils import read_json, templates_update, template_update
 sys.path.insert(0, './scripts')
 from scripts.query import get_results, get_wikidata_entities
 from dotenv import load_dotenv
@@ -20,7 +20,7 @@ TEMPLATES_PATH = 'static/cached_questions/templates.json'
 
 sched = BackgroundScheduler(daemon=True)
 boolean_values_dict = read_json("static/QAWikiBooleanValues.json")
-sched.add_job(templates_update, 'interval', args=[QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX, boolean_values_dict], minutes=JOB_INTERVAL_MINUTES)
+sched.add_job(templates_update, 'interval', args=[QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX], minutes=JOB_INTERVAL_MINUTES)
 sched.start()
 
 app = Flask(__name__)
@@ -59,7 +59,11 @@ def question_template(question_id):
         return render_template("index.html")
     else:
         abort(404)
-  
+
+@app.route('/update_template/<question_id>', methods=["GET"])
+def update_template(question_id):
+    return template_update(question_id, QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX)
+
 @app.route('/setcookie', methods=['POST'])
 def setcookie():
     if request.method == 'POST':
