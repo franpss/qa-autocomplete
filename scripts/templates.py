@@ -1,5 +1,7 @@
 import re
 from scripts.query import get_props_qualif, get_qawiki_question_query, get_results
+
+
 def generate_templates_cont_question(cont_question_dict, matches, lang):
     for idx in range(len(matches)):
         cont_question_dict[f"question_template_{lang}"] = re.sub(r'\b' + re.escape(matches[idx]["mention"]) + r'((?= )|(?=\?))', f"$mention_{idx}", cont_question_dict[f"question_raw_{lang}"])
@@ -48,8 +50,13 @@ def generate_templates(lang, question_id, qawiki_query, qawiki_endpoint):
 # las plantillas para cada idioma. De todos modos, luego es transportada la información
 # de la pregunta contingente a generate_templates, pero para solo hacer el match entre entidades
 # (que también deben estar en la pregunta original) y la query
-def get_templates(qawiki_endpoint_url, entity_prefix, boolean_values_dict, langs=["en", "es"]):
+def get_all_templates(qawiki_endpoint_url, entity_prefix, boolean_values_dict, langs):
     query = """SELECT * WHERE { ?q wdt:P1 wd:Q1 }"""
+    questions =  get_results(qawiki_endpoint_url, query)
+    questions_ids = [question[0]["value"].removeprefix(entity_prefix) for question in questions]
+    return get_templates(questions_ids, qawiki_endpoint_url, entity_prefix, boolean_values_dict)
+
+def get_templates(questions_ids, qawiki_endpoint_url, entity_prefix, boolean_values_dict, langs):
     get_question_query = """
         SELECT ?label {{ 
         VALUES (?item) {{(wd:{0})}} . 
@@ -64,10 +71,7 @@ def get_templates(qawiki_endpoint_url, entity_prefix, boolean_values_dict, langs
          ?statement ?pq ?entity . 
          wd:P33 wikibase:qualifier ?pq 
         }} LIMIT 1 """
-    questions =  get_results(qawiki_endpoint_url, query)
-    questions_ids = [question[0]["value"].removeprefix(entity_prefix) for question in questions]
     questions_output = []
-    
     for question_id in questions_ids:
         try:
             item = {"id": question_id}

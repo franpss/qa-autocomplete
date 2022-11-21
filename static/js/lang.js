@@ -37,6 +37,7 @@ function handleLanguageChange() {
         }
         else {
             applyLanguageText($("#lang-select").val());
+            addMainPlaceholder();
             $('#set-lang').submit();
         }
         

@@ -132,7 +132,12 @@ Initial setup
 
 $(document).ready(async function(){
     await initialSetup();
-    
+    $(window).keydown(function(event){
+        if( (event.keyCode == 13) && (checkform() == false) ) {
+          event.preventDefault();
+          return false;
+        }
+      });
     
 });
 
@@ -140,5 +145,6 @@ async function initialSetup() {
     loadQuestionsData()
     .then(loadMessagesData)
     .then(fillMainAutocomplete)
+    .then(addMainPlaceholder)
     .then(getTemplateFromUrl)
 }

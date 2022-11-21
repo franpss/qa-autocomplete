@@ -11,6 +11,7 @@ function checkform()
             validInput = false;
             $(this).addClass("error");
             showError(this, lang);
+            $(this).focus();
         }
 
         else if ($(this).data("uiAutocomplete").selectedItem.value != null){
@@ -22,6 +23,7 @@ function checkform()
     if (validInput){
         getResults();
     }
+    return validInput
  
 }
 
@@ -34,6 +36,5 @@ function showError(input, lang){
     $(input).addClass("error");
     $(input).popover({
         content: messagesData["missing-input-error"][lang], 
-        placement: "bottom", 
-        trigger: 'focus'}).popover('show');
+        placement: "top"}).popover('show');
 }

@@ -18,12 +18,33 @@ function showMainInputBox(){
 }
 
 function showQAWikiLink(questionId){
-    $("#qawiki-link").attr("href", "http://qawiki.dcc.uchile.cl/wiki/Item:" + questionId)
+    $("#qawiki-link").attr("href", qaWikiItemUrl + questionId)
     $("#qawiki-link").removeClass("hidden");
 }
 
 function hideQAWikiLink(){
     $("#qawiki-link").addClass("hidden");
+}
+function addMainPlaceholder() {
+    let lang =  $("#lang-select").val();
+    var dataArr = $.map(questionsData, function(item) {
+        if (item["visible_question_"+lang] != null){
+            return item["visible_question_"+lang]
+        }
+    });
+    $("#source").attr("placeholder", dataArr[Math.floor(Math.random()*dataArr.length)]);
+}
+
+function showLangHelp(lang){
+    $("#lang-select").popover({
+        content: "<div class='check-lang'>" + messagesData["no-results-check-lang"][lang] + "</div>", 
+        html: true,
+        placement: "bottom",
+    }).popover('show');
+}
+
+function hideLangHelp() {
+    $("#lang-select").popover('hide');
 }
 
 function goBack(){
@@ -89,7 +110,7 @@ function showResults() {
 }
 
 function loadQueryLink(query) {
-    $("#wikidata-query-link").attr("href", "https://query.wikidata.org/#" + query)
+    $("#wikidata-query-link").attr("href", wikidataQueryLink + query)
 }
 async function loadContQuestionResults(results, query, question){
     let parsedResults = await parser(results);

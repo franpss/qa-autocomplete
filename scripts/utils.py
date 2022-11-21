@@ -3,11 +3,16 @@ import os
 import sys
 import time
 sys.path.insert(0, '.')
-from scripts.templates import get_templates
+from scripts.templates import get_all_templates, get_templates
 from dotenv import load_dotenv
 load_dotenv()
 
-def save_json(dic, path='static/cached_questions', filename='templates.json'):
+BOOLEAN_VALUES_DICT = "static/QAWikiBooleanValues.json"
+LANGS = ["en", "es"] 
+TEMPLATES_PATH = 'static/cached_questions'
+TEMPLATES_FILENAME = 'templates.json'
+
+def save_json(dic, path=TEMPLATES_PATH, filename=TEMPLATES_FILENAME):
         """Saves dictionary in json file.
         Parameters
         ----------
@@ -40,7 +45,7 @@ def read_json(path):
         data = json.load(json_file)
         return data
 
-def templates_update(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict="static/QAWikiBooleanValues.json"):
+def templates_update(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict=BOOLEAN_VALUES_DICT, langs=LANGS):
     """Calls needed functions to update templates.
 
     Parameters
@@ -51,11 +56,51 @@ def templates_update(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict=
         QAWiki entity prefix url
     boolean_values_dict : str
         QAWiki endpoint url
+    langs : list[] str
+        list of languages
     """
     print("Updating templates...")
     t0 = time.time()
-    templates = get_templates(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict)
-    save_json(templates)
-    tf = time.time()
-    print(f"Templates updated. Time elapsed: {tf - t0} seconds.")
- 
+    templates = get_all_templates(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict, langs)
+    if templates is not None and len(templates) > 0:
+        save_json(templates)
+        tf = time.time()
+        print(f"Templates updated. Time elapsed: {tf - t0} seconds.")
+    else:
+        tf = time.time()
+        print(f"Templates were not updated. An empty list or null value was returned. Time elapsed: {tf - t0} seconds.")
+    
+
+def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict=BOOLEAN_VALUES_DICT, langs=LANGS):
+    """Updates (or adds if it doesn't exist) a particular question template from QAWiki.
+
+    Parameters
+    ----------
+    question_id : str
+        QAWiki QID for question to add or update
+    qawiki_endpoint : str
+        QAWiki endpoint url
+    qawiki_entity_prefix : str
+        QAWiki entity prefix url
+    boolean_values_dict : str
+        QAWiki endpoint url
+    langs : list[] str
+        list of languages
+    """
+    t0 = time.time()
+    template = get_templates([question_id], qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict, langs)
+    if template is not None and len(template) > 0:
+        templates = read_json(os.path.join(TEMPLATES_PATH, TEMPLATES_FILENAME))
+        old_template_idx = next((index for (index, d) in enumerate(templates) if d["id"] == question_id), None)
+        if old_template_idx is not None:
+            templates[old_template_idx] = template[0]
+            save_json(templates)
+            tf = time.time()
+            return f"Template {question_id} updated. Time elapsed: {tf - t0} seconds.", 1
+        else:
+            templates.append(template[0])
+            save_json(template)
+            return f"Template {question_id} added. Time elapsed: {tf - t0} seconds.", 1
+    else:
+        tf = time.time()
+        return f"Templates were not updated. An empty list or null value was returned.", 0

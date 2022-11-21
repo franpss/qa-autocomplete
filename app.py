@@ -1,7 +1,8 @@
-from flask import Flask, abort, jsonify, make_response, render_template, request
+from this import d
+from flask import Flask, abort, jsonify, make_response, render_template, request, flash, redirect, url_for
 import sys
 import os
-from scripts.utils import read_json, templates_update
+from scripts.utils import read_json, templates_update, template_update
 sys.path.insert(0, './scripts')
 from scripts.query import get_results, get_wikidata_entities
 from dotenv import load_dotenv
@@ -19,21 +20,30 @@ TEMPLATES_PATH = 'static/cached_questions/templates.json'
 
 sched = BackgroundScheduler(daemon=True)
 boolean_values_dict = read_json("static/QAWikiBooleanValues.json")
-sched.add_job(templates_update, 'interval', args=[QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX, boolean_values_dict], minutes=JOB_INTERVAL_MINUTES)
+sched.add_job(templates_update, 'interval', args=[QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX], minutes=JOB_INTERVAL_MINUTES)
 sched.start()
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY")
 
-@app.route("/wikidata_search", methods=["GET", "POST"])
+@app.route("/wikidata_search", methods=["POST"])
 def wikidata_search():
     data = str(request.form.get("data"))
     lang = request.form.get("lang")
     output = get_wikidata_entities(lang, data, WIKIDATA_ENTITY_SEARCH)
     return {"search": output}
 
-@app.route("/", methods=["GET"])
+
+@app.route('/', methods=["GET"])
 def index():
-    return render_template("index.html")
+    lang = request.args.get('lang')
+    if lang is not None:
+        resp = make_response(render_template('index.html'))
+        resp.set_cookie('lang', lang, secure=True, httponly=False, samesite="Lax")
+        return resp
+    else:
+        return render_template("index.html")
+
 
 @app.route('/wikibase_results', methods=["GET"])
 def wikibase_results():
@@ -50,8 +60,18 @@ def question_template(question_id):
         return render_template("index.html")
     else:
         abort(404)
-  
-@app.route('/setcookie', methods=['POST', 'GET'])
+
+@app.route('/update_template/<question_id>', methods=["GET"])
+def update_template(question_id):
+    output, status = template_update(question_id, QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX)
+    if status:
+        flash(output, category="info")
+        return redirect(url_for('question_template', question_id=question_id))
+    else:
+        flash(output, category="danger")
+        return redirect(url_for('index'))
+
+@app.route('/setcookie', methods=['POST'])
 def setcookie():
     if request.method == 'POST':
         lang = request.form['lang']

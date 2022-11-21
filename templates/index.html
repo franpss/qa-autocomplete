@@ -11,6 +11,7 @@
     <script src="{{ url_for('static' , filename='js/lang.js') }}"></script>
     <script src="{{ url_for('static' , filename='js/js.cookie.js') }}"></script>
     <script src="{{ url_for('static' , filename='js/resultsParser.js') }}"></script>
+    <script src="{{ url_for('static' , filename='js/variables.js') }}"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://kit.fontawesome.com/fd7e4b205d.js" crossorigin="anonymous"></script>
@@ -22,10 +23,21 @@
         let messagesJson = "{{ url_for('static' , filename='messages.json')}}";
         let messagesData = [];   
     </script>    
-
 </head>
 <body>
-    
+    <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                  <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ message }}
+                    
+                  </div>
+              {% endfor %}
+            {% endif %}
+        {% endwith %}
+      </div>
     <form id="set-lang" action="/setcookie" method="POST">
         <select id="lang-select" class="form-select" name="lang">
             <option value="en">English</option>
@@ -35,8 +47,15 @@
     <div class="center">
         <div class="clickable hidden" id="home"><a onclick='goBack()'><h5 class="lang go-back" id="go-back"></h5></a></div>
         <a href="/"><img src="{{ url_for('static' , filename='images/templet3.png') }}" height="30px" alt='Templet'></a>
-        <span><h4 class="lang title" id="title"></h4><a id="qawiki-link" class="hidden lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a></span>
-        <div class="main-input" name="main-input" id="main-input">
+        <span><h4 class="lang title" id="title"></h4></span>
+        <div style="font-size: 10px; margin-bottom: 24px;">
+            <div id="query-link" style="float: left;" class="hidden">
+                <a id="wikidata-query-link" class="wikidata-query-link lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a>
+            </div>
+            <div style="float: right;"><a id="qawiki-link" class="hidden lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
+
+        </div>
+        <div class="clear main-input" name="main-input" id="main-input">
             
             <input name="source" id="source" class="form-control input-lg" type="text">
          </div>
@@ -45,7 +64,6 @@
                     
               </form>
         <div class="bottom-content">
-            <div id="query-link" class="hidden"><a id="wikidata-query-link" class="wikidata-query-link lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
             <div id="loading" class="loading hidden"> 
                 <div style="display: inline-block;"><h3 class="lang loading" id="loading"></h3></div>
                 <div style="display: inline-block; margin-bottom: -3px;"><div class="loader"></div></div>

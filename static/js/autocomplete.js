@@ -13,6 +13,10 @@ function fillMainAutocomplete() {
         }
        
         });
+    dataArr = dataArr.filter(
+        (question, index) => index === dataArr.findIndex(
+        other => question.label === other.label
+    ));
     var accentMap = {
             "á": "a",
             "é": "e",
@@ -37,14 +41,31 @@ function fillMainAutocomplete() {
             );
         },
         focus: function (event, ui) {
-            event.preventDefault();
-            $(event.target).val(ui.item.label);
+            if (ui.item.value != qaWikiHomeUrl) {
+                event.preventDefault();
+                $(event.target).val(ui.item.label);
+            }
         },
         select: function( event, ui ) { 
-            event.preventDefault();
-            window.history.pushState({}, document.title, "/question_template/" + ui.item.value);
-            loadTemplateForm(ui.item.value, lang);
-        },                     
+            if (ui.item.value != qaWikiHomeUrl) {
+                event.preventDefault();
+                window.history.pushState({}, document.title, "/question_template/" + ui.item.value);
+                loadTemplateForm(ui.item.value, lang);
+            }
+            else {
+                window.location.href = ui.item.value;
+            }
+        },     
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = { value: qaWikiHomeUrl, label: messagesData["no-results-new-item"][lang] };
+                ui.content.push(noResult);
+                showLangHelp(lang);
+            }
+            else {
+                hideLangHelp();
+            }
+        }                
     })
 ;
 }
@@ -91,11 +112,14 @@ function autocompleteTemplateForm() {
                         hideError(this);
 
                     }
+                }).on("focus", function () {
+                    $(this).autocomplete("search", this.value);
                 }).autocomplete("instance")._renderItem = function(ul, item) {
                     return $("<li>")
                         .append("<div>" + item.label + "<br> <span class='desc'>" + item.desc + "</span></div>")
                         .appendTo(ul);
                 };
+                
             }
         });
     });
