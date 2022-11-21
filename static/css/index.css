@@ -47,6 +47,7 @@
   position: absolute;
   right: 5%;
   top: 3%; 
+  z-index: -1;
 }
 
 #result{
@@ -119,7 +120,10 @@ a {
 .desc {
   font-size: 12px !important;
 }
-
+.alert {
+   margin: 20px;
+   width: fit-content;
+}
 .entity-img {
   float: right;
 }

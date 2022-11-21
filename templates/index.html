@@ -25,7 +25,19 @@
     </script>    
 </head>
 <body>
-    
+    <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                  <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ message }}
+                    
+                  </div>
+              {% endfor %}
+            {% endif %}
+        {% endwith %}
+      </div>
     <form id="set-lang" action="/setcookie" method="POST">
         <select id="lang-select" class="form-select" name="lang">
             <option value="en">English</option>

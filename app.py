@@ -1,5 +1,5 @@
 from this import d
-from flask import Flask, abort, jsonify, make_response, render_template, request
+from flask import Flask, abort, jsonify, make_response, render_template, request, flash, redirect, url_for
 import sys
 import os
 from scripts.utils import read_json, templates_update, template_update
@@ -24,6 +24,7 @@ sched.add_job(templates_update, 'interval', args=[QAWIKI_ENDPOINT, QAWIKI_ENTITY
 sched.start()
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY")
 
 @app.route("/wikidata_search", methods=["POST"])
 def wikidata_search():
@@ -62,7 +63,13 @@ def question_template(question_id):
 
 @app.route('/update_template/<question_id>', methods=["GET"])
 def update_template(question_id):
-    return template_update(question_id, QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX)
+    output, status = template_update(question_id, QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX)
+    if status:
+        flash(output, category="info")
+        return redirect(url_for('question_template', question_id=question_id))
+    else:
+        flash(output, category="danger")
+        return redirect(url_for('index'))
 
 @app.route('/setcookie', methods=['POST'])
 def setcookie():

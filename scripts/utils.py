@@ -96,11 +96,11 @@ def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, boolean_
             templates[old_template_idx] = template[0]
             save_json(templates)
             tf = time.time()
-            return f"Template {question_id} updated. Time elapsed: {tf - t0} seconds."
+            return f"Template {question_id} updated. Time elapsed: {tf - t0} seconds.", 1
         else:
             templates.append(template[0])
             save_json(template)
-            return f"Template {question_id} added. Time elapsed: {tf - t0} seconds."
+            return f"Template {question_id} added. Time elapsed: {tf - t0} seconds.", 1
     else:
         tf = time.time()
-        return f"Templates were not updated. An empty list or null value was returned. Time elapsed: {tf - t0} seconds."
+        return f"Templates were not updated. An empty list or null value was returned.", 0
