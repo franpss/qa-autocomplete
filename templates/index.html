@@ -46,14 +46,17 @@
     </form>
     <div class="center">
         <div class="clickable hidden" id="home"><a onclick='goBack()'><h5 class="lang go-back" id="go-back"></h5></a></div>
-        <a href="/"><img src="{{ url_for('static' , filename='images/templet3.png') }}" height="30px" alt='Templet'></a>
-        <span><h4 class="lang title" id="title"></h4></span>
-        <div style="font-size: 10px; margin-bottom: 24px;">
-            <div id="query-link" style="float: left;" class="hidden">
-                <a id="wikidata-query-link" class="wikidata-query-link lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <div style="margin-bottom: 76px;">
+            <div style="float: left;">
+                <a href="/"><img src="{{ url_for('static' , filename='images/templet3.png') }}" height="30px" alt='Templet'></a><span><h4 class="lang title" id="title"></h4></span>
             </div>
-            <div style="float: right;"><a id="qawiki-link" class="hidden lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
-
+            <div style="font-size: 10px; float: right;">
+                <div id="query-link" style="text-align: right;" class="hidden">
+                    <a id="wikidata-query-link" class="wikidata-query-link lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+                <div style="text-align: right;"><a id="qawiki-link" class="hidden lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
+                <div style="text-align: right;"><a id="update-link" class="hidden lang" href=""><i style="margin-left: 2px;" class="fa-solid fa-rotate-right"></i></a></div>
+            </div>
         </div>
         <div class="clear main-input" name="main-input" id="main-input">
             

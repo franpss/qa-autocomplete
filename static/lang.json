@@ -35,6 +35,10 @@
     "wikidata-query-link": {
         "en": "View query in Wikidata Query Service",
         "es": "Ver consulta en Servicio de Consultas de Wikidata"
+    },
+    "update-link": {
+        "en": "Update template",
+        "es": "Actualizar plantilla"
     }
     
 }

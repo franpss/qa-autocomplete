@@ -25,6 +25,16 @@ function showQAWikiLink(questionId){
 function hideQAWikiLink(){
     $("#qawiki-link").addClass("hidden");
 }
+
+function showUpdateLink(questionId){
+    $("#update-link").attr("href", "/update_template/" + questionId)
+    $("#update-link").removeClass("hidden");
+}
+
+function hideUpdateLink(){
+    $("#update-link").addClass("hidden");
+}
+
 function addMainPlaceholder() {
     let lang =  $("#lang-select").val();
     var dataArr = $.map(questionsData, function(item) {
@@ -54,6 +64,7 @@ function goBack(){
     hideGoBack();
     hideTemplateForm();
     hideQAWikiLink();
+    hideUpdateLink();
     cleanForm();
     hideResults();
     showMainInputBox();
@@ -128,6 +139,7 @@ function loadTemplateForm(questionId, lang){
     hideMainInputBox();
     questionData = getQuestionData(questionId);
     showQAWikiLink(questionId);
+    showUpdateLink(questionId);
     generateTemplateForm(questionData, lang);
     autocompleteTemplateForm();
     showTemplateForm();
