@@ -15,9 +15,10 @@ WHERE {
   BIND(CONCAT("https://upload.wikimedia.org/wikipedia/commons/thumb/", 
               SUBSTR(?fileNameMD5, 1, 1), "/", 
               SUBSTR(?fileNameMD5, 1, 2), "/", 
-              ?safeFileName, "/100px-", ?safeFileName) as ?thumb)
+              ?safeFileName, "/100px-", ?safeFileName, IF(regex(?safeFileName, ".svg"), ".png", "")) as ?thumb)
   BIND(COALESCE(?labelLang,?labelEn) AS ?label)
 }
+
 
 `
 var wikidataUrl = "http://www.wikidata.org/entity/";
