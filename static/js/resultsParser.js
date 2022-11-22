@@ -61,7 +61,7 @@ function booleanAnswer(results, lang){
     }
 
 function literalAnswer(result){
-    let answer = result.value;
+    let answer = result.value.replace("T00:00:00Z", "");;
     return "<h4>{}</h4>".replace("{}", answer);
 }
 
