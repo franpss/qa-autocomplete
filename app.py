@@ -7,6 +7,7 @@ sys.path.insert(0, './scripts')
 from scripts.query import get_results, get_wikidata_entities
 from dotenv import load_dotenv
 from apscheduler.schedulers.background import BackgroundScheduler
+import datetime
 load_dotenv()
 
 
@@ -20,7 +21,7 @@ TEMPLATES_PATH = 'static/cached_questions/templates.json'
 
 sched = BackgroundScheduler(daemon=True)
 boolean_values_dict = read_json("static/QAWikiBooleanValues.json")
-sched.add_job(templates_update, 'interval', args=[QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX], minutes=JOB_INTERVAL_MINUTES)
+sched.add_job(templates_update, 'interval', next_run_time=datetime.datetime.now(), args=[QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX], minutes=JOB_INTERVAL_MINUTES)
 sched.start()
 
 app = Flask(__name__)

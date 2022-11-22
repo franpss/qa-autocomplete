@@ -1,11 +1,13 @@
 import re
 from scripts.query import get_props_qualif, get_qawiki_question_query, get_results
-
+import traceback
 
 def generate_templates_cont_question(cont_question_dict, matches, lang):
+    cont_question_dict[f"question_template_{lang}"] = cont_question_dict[f"question_raw_{lang}"]
+    cont_question_dict[f"query_template_{lang}"] = cont_question_dict[f"query_raw"]
     for idx in range(len(matches)):
-        cont_question_dict[f"question_template_{lang}"] = re.sub(r'\b' + re.escape(matches[idx]["mention"]) + r'((?= )|(?=\?))', f"$mention_{idx}", cont_question_dict[f"question_raw_{lang}"])
-        cont_question_dict[f"query_template_{lang}"] = re.sub(r'\b' + re.escape("wd:" + matches[idx]["entity"]) + r'((?= )|(?=\?))',  f"$entity_{idx}", cont_question_dict[f"query_raw"])
+        cont_question_dict[f"question_template_{lang}"] = re.sub(r'\b' + re.escape(matches[idx]["mention"]) + r'((?= )|(?=\?))', f"$mention_{idx}", cont_question_dict[f"question_template_{lang}"])
+        cont_question_dict[f"query_template_{lang}"] = re.sub(r'\b' + re.escape("wd:" + matches[idx]["entity"]) + r'((?= )|(?=\?))',  f"$entity_{idx}", cont_question_dict[f"query_template_{lang}"])
     return cont_question_dict
 
 
@@ -54,7 +56,7 @@ def get_all_templates(qawiki_endpoint_url, entity_prefix, boolean_values_dict, l
     query = """SELECT * WHERE { ?q wdt:P1 wd:Q1 }"""
     questions =  get_results(qawiki_endpoint_url, query)
     questions_ids = [question[0]["value"].removeprefix(entity_prefix) for question in questions]
-    return get_templates(questions_ids, qawiki_endpoint_url, entity_prefix, boolean_values_dict)
+    return get_templates(questions_ids, qawiki_endpoint_url, entity_prefix, boolean_values_dict, langs)
 
 def get_templates(questions_ids, qawiki_endpoint_url, entity_prefix, boolean_values_dict, langs):
     get_question_query = """
@@ -99,5 +101,7 @@ def get_templates(questions_ids, qawiki_endpoint_url, entity_prefix, boolean_val
         
             questions_output.append(item)
         except:
+            print(question_id)
+            traceback.print_exc()
             continue
     return questions_output

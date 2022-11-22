@@ -7,7 +7,7 @@ from scripts.templates import get_all_templates, get_templates
 from dotenv import load_dotenv
 load_dotenv()
 
-BOOLEAN_VALUES_DICT = "static/QAWikiBooleanValues.json"
+BOOLEAN_VALUES_DICT_PATH = "static/QAWikiBooleanValues.json"
 LANGS = ["en", "es"] 
 TEMPLATES_PATH = 'static/cached_questions'
 TEMPLATES_FILENAME = 'templates.json'
@@ -45,7 +45,7 @@ def read_json(path):
         data = json.load(json_file)
         return data
 
-def templates_update(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict=BOOLEAN_VALUES_DICT, langs=LANGS):
+def templates_update(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict=read_json(BOOLEAN_VALUES_DICT_PATH), langs=LANGS):
     """Calls needed functions to update templates.
 
     Parameters
@@ -71,7 +71,7 @@ def templates_update(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict=
         print(f"Templates were not updated. An empty list or null value was returned. Time elapsed: {tf - t0} seconds.")
     
 
-def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict=BOOLEAN_VALUES_DICT, langs=LANGS):
+def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict=read_json(BOOLEAN_VALUES_DICT_PATH), langs=LANGS):
     """Updates (or adds if it doesn't exist) a particular question template from QAWiki.
 
     Parameters
