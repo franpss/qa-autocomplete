@@ -100,6 +100,7 @@ def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, boolean_
         else:
             templates.append(template[0])
             save_json(template)
+            tf = time.time()
             return f"Template {question_id} added. Time elapsed: {tf - t0} seconds.", 1
     else:
         tf = time.time()
