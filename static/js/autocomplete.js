@@ -4,6 +4,10 @@ Autocomplete functions (main and templates)
 
 function fillMainAutocomplete() {
     let lang =  $("#lang-select").val();    
+    console.log("lang", lang)
+    hideTemplateHelp();
+    hideLangHelp();
+    var results = false
     var dataArr = $.map(questionsData, function(item) {
         if (item["visible_question_"+lang] != null){
             return {
@@ -35,9 +39,9 @@ function fillMainAutocomplete() {
           }
     $("#source").autocomplete({
         source: function( request, response ) {
-            var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
+            var matcher = new RegExp( $.ui.autocomplete.escapeRegex( normalize(request.term) ), "i" );
             response($.grep(dataArr, function(value) {
-                return matcher.test(value.label) || matcher.test(normalize(value.label));
+                return matcher.test(normalize(value.label));
                 }) 
             );
         },
@@ -51,6 +55,7 @@ function fillMainAutocomplete() {
             if (ui.item.value != qaWikiHomeUrl) {
                 event.preventDefault();
                 window.history.pushState({}, document.title, "/question_template/" + ui.item.value);
+                hideTemplateHelp();
                 loadTemplateForm(ui.item.value, lang);
             }
             else {
@@ -59,18 +64,29 @@ function fillMainAutocomplete() {
         },     
         response: function(event, ui) {
             if (!ui.content.length) {
+                results = false;
                 var noResult = { value: qaWikiHomeUrl, label: messagesData["no-results-new-item"][lang] };
                 ui.content.push(noResult);
                 showLangHelp(lang);
+                hideTemplateHelp();
             }
             else {
+                results = true;
                 hideLangHelp();
+                showTemplateHelp(lang);
             }
         }                
     }).autocomplete("instance")._renderItem = function(ul, item) {
-        return $("<li>")
-        .append("<div>" + item.styledLabel + "</div>")
-        .appendTo(ul);
+        if (!results) {
+            return $("<li>")
+            .append("<div>" + item.label + "</div>")
+            .appendTo(ul);
+        }
+        else {
+            return $("<li>")
+            .append("<div>" + item.styledLabel + "</div>")
+            .appendTo(ul);
+        }
     };
 ;
 }

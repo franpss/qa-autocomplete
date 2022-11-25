@@ -2,9 +2,11 @@ import re
 from scripts.query import get_props_qualif, get_qawiki_question_query, get_results
 import traceback
 def generate_templates_cont_question(cont_question_dict, matches, lang):
+    cont_question_dict[f"question_template_{lang}"] = cont_question_dict[f"question_raw_{lang}"]
+    cont_question_dict[f"query_template_{lang}"] = cont_question_dict[f"query_raw"]
     for idx in range(len(matches)):
-        cont_question_dict[f"question_template_{lang}"] = re.sub(r'\b' + re.escape(matches[idx]["mention"]) + r'((?= )|(?=\?))', f"$mention_{idx}", cont_question_dict[f"question_raw_{lang}"])
-        cont_question_dict[f"query_template_{lang}"] = re.sub(r'\b' + re.escape("wd:" + matches[idx]["entity"]) + r'((?= )|(?=\?))',  f"$entity_{idx}", cont_question_dict[f"query_raw"])
+        cont_question_dict[f"question_template_{lang}"] = re.sub(r'\b' + re.escape(matches[idx]["mention"]) + r'((?= )|(?=\?))', f"$mention_{idx}", cont_question_dict[f"question_template_{lang}"])
+        cont_question_dict[f"query_template_{lang}"] = re.sub(r'\b' + re.escape("wd:" + matches[idx]["entity"]) + r'((?= )|(?=\?))',  f"$entity_{idx}", cont_question_dict[f"query_template_{lang}"])
     return cont_question_dict
 
 

@@ -54,7 +54,19 @@ function showLangHelp(lang){
 }
 
 function hideLangHelp() {
-    $("#lang-select").popover('hide');
+    $("#lang-select").popover('destroy');
+}
+
+function showTemplateHelp(lang){
+    $("#source").popover({
+        content: "<div>" + messagesData["template-help"][lang] + "</div>", 
+        html: true,
+        placement: "top",
+    }).popover('show');
+}
+
+function hideTemplateHelp() {
+    $("#source").popover('destroy');
 }
 
 function goBack(){

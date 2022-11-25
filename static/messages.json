@@ -26,6 +26,9 @@
     "no-results-check-lang": {
         "en": "Did you select the correct language?",
         "es": "¿Seleccionaste el idioma correcto?"
+    },
+    "template-help": {
+        "en":"Italicized text can be replaced by any Wikidata entity",
+        "es": "El texto en cursiva puede ser reemplazado por cualquier entidad de Wikidata"
     }
-    
 }
