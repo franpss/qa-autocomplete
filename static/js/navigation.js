@@ -110,11 +110,13 @@ function hideContQuestionResults(){
 
 function loadScreen(){
     let loadingScreen = $("#loading");
+    $("#query").prop('disabled', true);
     loadingScreen.removeClass("hidden");
 }
 
 function hideLoadScreen(){
     let loadingScreen = $("#loading");
+    $("#query").prop('disabled', false);
     loadingScreen.addClass("hidden");
 }
 

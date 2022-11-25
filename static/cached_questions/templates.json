@@ -355,14 +355,14 @@
     "id": "Q68",
     "contingent_question": {
       "id": "Q69",
-      "query_raw": "ASK WHERE { wd:Q36 wdt:P1906 ?obj . ?obj (wdt:P279|wdt:P31)* wd:Q30461 }",
+      "query_raw": "ASK WHERE { ?sbj (wdt:P279|wdt:P31)* wd:Q30461 . ?sbj wdt:P1001 wd:Q36 }",
       "expected_value": 1,
       "question_raw_en": "Does Poland have a president?",
       "question_template_en": "Does $mention_0 have a $mention_1?",
-      "query_template_en": "ASK WHERE { $entity_0 wdt:P1906 ?obj . ?obj (wdt:P279|wdt:P31)* $entity_1 }",
+      "query_template_en": "ASK WHERE { ?sbj (wdt:P279|wdt:P31)* $entity_1 . ?sbj wdt:P1001 $entity_0 }",
       "question_raw_es": "¿Tiene Polonia un presidente?",
       "question_template_es": "¿Tiene $mention_0 un $mention_1?",
-      "query_template_es": "ASK WHERE { $entity_0 wdt:P1906 ?obj . ?obj (wdt:P279|wdt:P31)* $entity_1 }"
+      "query_template_es": "ASK WHERE { ?sbj (wdt:P279|wdt:P31)* $entity_1 . ?sbj wdt:P1001 $entity_0 }"
     },
     "question_en": "Who is the president of Poland?",
     "matches_en": [
@@ -376,7 +376,7 @@
       }
     ],
     "question_template_en": "Who is the $mention_1 of $mention_0?",
-    "query_template_en": "SELECT DISTINCT ?obj WHERE { ?sbj wdt:P31*/wdt:P279* $entity_1 . ?sbj wdt:P1001|wdt:P17 $entity_0 . ?sbj wdt:P1308 ?obj  }",
+    "query_template_en": "SELECT DISTINCT ?obj WHERE { ?sbj wdt:P31*/wdt:P279* $entity_1 . ?sbj wdt:P1001 $entity_0 . ?sbj wdt:P1308 ?obj }",
     "visible_question_en": "Who is the {president} of {Poland}?",
     "question_es": "¿Quién es el presidente de Polonia?",
     "matches_es": [
@@ -390,7 +390,7 @@
       }
     ],
     "question_template_es": "¿Quién es el $mention_1 de $mention_0?",
-    "query_template_es": "SELECT DISTINCT ?obj WHERE { ?sbj wdt:P31*/wdt:P279* $entity_1 . ?sbj wdt:P1001|wdt:P17 $entity_0 . ?sbj wdt:P1308 ?obj  }",
+    "query_template_es": "SELECT DISTINCT ?obj WHERE { ?sbj wdt:P31*/wdt:P279* $entity_1 . ?sbj wdt:P1001 $entity_0 . ?sbj wdt:P1308 ?obj }",
     "visible_question_es": "¿Quién es el {presidente} de {Polonia}?"
   },
   {
@@ -408,7 +408,7 @@
       }
     ],
     "question_template_en": "Does $mention_0 have a $mention_1?",
-    "query_template_en": "ASK WHERE { $entity_0 wdt:P1906 ?obj . ?obj (wdt:P279|wdt:P31)* $entity_1 }",
+    "query_template_en": "ASK WHERE { ?sbj (wdt:P279|wdt:P31)* $entity_1 . ?sbj wdt:P1001 $entity_0 }",
     "visible_question_en": "Does {Poland} have a {president}?",
     "question_es": "¿Tiene Polonia un presidente?",
     "matches_es": [
@@ -422,7 +422,7 @@
       }
     ],
     "question_template_es": "¿Tiene $mention_0 un $mention_1?",
-    "query_template_es": "ASK WHERE { $entity_0 wdt:P1906 ?obj . ?obj (wdt:P279|wdt:P31)* $entity_1 }",
+    "query_template_es": "ASK WHERE { ?sbj (wdt:P279|wdt:P31)* $entity_1 . ?sbj wdt:P1001 $entity_0 }",
     "visible_question_es": "¿Tiene {Polonia} un {presidente}?"
   },
   {
@@ -4303,7 +4303,7 @@
       }
     ],
     "question_template_en": "From which country did $mention_0 secede?",
-    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P807 ?obj }",
+    "query_template_en": "SELECT DISTINCT ?obj WHERE { OPTIONAL { $entity_0 wdt:P807 ?obj1 } OPTIONAL { $entity_0 wdt:P1365 ?obj2 } OPTIONAL { $entity_0 wdt:P155 ?obj3 } BIND(COALESCE(?obj1,?obj2,?obj3) AS ?obj) }",
     "visible_question_en": "From which country did {Botswana} secede?",
     "question_es": "¿De cuál país se escindió Botsuana?",
     "matches_es": [
@@ -4313,7 +4313,7 @@
       }
     ],
     "question_template_es": "¿De cuál país se escindió $mention_0?",
-    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P807 ?obj }",
+    "query_template_es": "SELECT DISTINCT ?obj WHERE { OPTIONAL { $entity_0 wdt:P807 ?obj1 } OPTIONAL { $entity_0 wdt:P1365 ?obj2 } OPTIONAL { $entity_0 wdt:P155 ?obj3 } BIND(COALESCE(?obj1,?obj2,?obj3) AS ?obj) }",
     "visible_question_es": "¿De cuál país se escindió {Botsuana}?"
   },
   {
@@ -5677,6 +5677,939 @@
     "question_template_es": "¿Cuáles $mention_0 están en $mention_1?",
     "query_template_es": "SELECT ?sbj WHERE { ?sbj wdt:P31/wdt:P279* $entity_0 . ?sbj wdt:P131+ $entity_1 }",
     "visible_question_es": "¿Cuáles {parques} están en {Perth}?"
+  },
+  {
+    "id": "Q376",
+    "contingent_question": null,
+    "question_en": "What HBO series has the highest Tomatometer score?",
+    "matches_en": [
+      {
+        "mention": "HBO",
+        "entity": "Q23633"
+      },
+      {
+        "mention": "Tomatometer score",
+        "entity": "Q108403393"
+      }
+    ],
+    "question_template_en": "What $mention_0 series has the highest $mention_1?",
+    "query_template_en": "SELECT ?sbj WHERE { ?sbj wdt:P449 $entity_0 . ?sbj wdt:P31/wdt:P279* wd:Q5398426 . ?sbj p:P444 ?obj1 . ?obj1 pq:P459 $entity_1 . ?obj1 ps:P444 ?obj2 . { SELECT ?obj2 WHERE { ?sbj wdt:P449 $entity_0 . ?sbj wdt:P31/wdt:P279* wd:Q5398426 . ?sbj p:P444 ?obj1 . ?obj1 pq:P459 $entity_1 . ?obj1 ps:P444 ?obj2 . BIND(xsd:integer(IF(CONTAINS(STR(?obj2),\"%\"),STRBEFORE(STR(?obj2),\"%\"),IF(CONTAINS(STR(?obj2),\"/\"),STRBEFORE(STR(?obj2),\"/\"),?obj2))) AS ?obj3) } ORDER BY DESC(?obj3) LIMIT 1 } }",
+    "visible_question_en": "What {HBO} series has the highest {Tomatometer score}?",
+    "question_es": "¿Cuál serie de HBO tiene el mejor puntaje de Tomatometer?",
+    "matches_es": [
+      {
+        "mention": "serie",
+        "entity": "Q5398426"
+      },
+      {
+        "mention": "HBO",
+        "entity": "Q23633"
+      },
+      {
+        "mention": "puntaje de Tomatometer",
+        "entity": "Q108403393"
+      }
+    ],
+    "question_template_es": "¿Cuál $mention_0 de $mention_1 tiene el mejor $mention_2?",
+    "query_template_es": "SELECT ?sbj WHERE { ?sbj wdt:P449 $entity_1 . ?sbj wdt:P31/wdt:P279* $entity_0 . ?sbj p:P444 ?obj1 . ?obj1 pq:P459 $entity_2 . ?obj1 ps:P444 ?obj2 . { SELECT ?obj2 WHERE { ?sbj wdt:P449 $entity_1 . ?sbj wdt:P31/wdt:P279* $entity_0 . ?sbj p:P444 ?obj1 . ?obj1 pq:P459 $entity_2 . ?obj1 ps:P444 ?obj2 . BIND(xsd:integer(IF(CONTAINS(STR(?obj2),\"%\"),STRBEFORE(STR(?obj2),\"%\"),IF(CONTAINS(STR(?obj2),\"/\"),STRBEFORE(STR(?obj2),\"/\"),?obj2))) AS ?obj3) } ORDER BY DESC(?obj3) LIMIT 1 } }",
+    "visible_question_es": "¿Cuál {serie} de {HBO} tiene el mejor {puntaje de Tomatometer}?"
+  },
+  {
+    "id": "Q380",
+    "contingent_question": null,
+    "question_en": "What is the postal code of Alberobello?",
+    "matches_en": [
+      {
+        "mention": "Alberobello",
+        "entity": "Q51812"
+      }
+    ],
+    "question_template_en": "What is the postal code of $mention_0?",
+    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P281 ?obj }",
+    "visible_question_en": "What is the postal code of {Alberobello}?",
+    "question_es": "¿Qué es el código postal de Alberobello?",
+    "matches_es": [
+      {
+        "mention": "Alberobello",
+        "entity": "Q51812"
+      }
+    ],
+    "question_template_es": "¿Qué es el código postal de $mention_0?",
+    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P281 ?obj }",
+    "visible_question_es": "¿Qué es el código postal de {Alberobello}?"
+  },
+  {
+    "id": "Q381",
+    "contingent_question": null,
+    "question_en": "Who is the patron saint of photographers?",
+    "matches_en": [
+      {
+        "mention": "photographers",
+        "entity": "Q33231"
+      }
+    ],
+    "question_template_en": "Who is the patron saint of $mention_0?",
+    "query_template_en": "SELECT DISTINCT ?obj WHERE { $entity_0 (wdt:P417|^wdt:P2925) ?obj . }",
+    "visible_question_en": "Who is the patron saint of {photographers}?",
+    "question_es": "¿Quién es el santo patrón de fotógrafos?",
+    "matches_es": [
+      {
+        "mention": "fotógrafos",
+        "entity": "Q33231"
+      }
+    ],
+    "question_template_es": "¿Quién es el santo patrón de $mention_0?",
+    "query_template_es": "SELECT DISTINCT ?obj WHERE { $entity_0 (wdt:P417|^wdt:P2925) ?obj . }",
+    "visible_question_es": "¿Quién es el santo patrón de {fotógrafos}?"
+  },
+  {
+    "id": "Q382",
+    "contingent_question": null,
+    "question_en": "Who is the composer for Celeste?",
+    "matches_en": [
+      {
+        "mention": "Celeste",
+        "entity": "Q28451532"
+      }
+    ],
+    "question_template_en": "Who is the composer for $mention_0?",
+    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P86 ?obj }",
+    "visible_question_en": "Who is the composer for {Celeste}?",
+    "question_es": "¿Quién es el compositor de Celeste?",
+    "matches_es": [
+      {
+        "mention": "Celeste",
+        "entity": "Q28451532"
+      }
+    ],
+    "question_template_es": "¿Quién es el compositor de $mention_0?",
+    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P86 ?obj }",
+    "visible_question_es": "¿Quién es el compositor de {Celeste}?"
+  },
+  {
+    "id": "Q383",
+    "contingent_question": null,
+    "question_en": "Who is the current world record holder for the men's 200 meter sprint?",
+    "matches_en": [
+      {
+        "mention": "men's 200 meter sprint",
+        "entity": "Q55243755"
+      },
+      {
+        "mention": "world record",
+        "entity": "Q688615"
+      }
+    ],
+    "question_template_en": "Who is the current $mention_1 holder for the $mention_0?",
+    "query_template_en": "SELECT DISTINCT ?sbj WHERE { ?sbj p:P1000 ?obj1 . ?obj1 ps:P1000 ?obj2 . ?obj2 p:P360 ?obj3 . ?obj3 ps:P360 $entity_1 . ?obj3 pq:P641 $entity_0 . MINUS { ?obj1 pq:P582 ?obj4 } }",
+    "visible_question_en": "Who is the current {world record} holder for the {men's 200 meter sprint}?",
+    "question_es": "¿Quién es el plusmarquista mundial actual de los 200 metros lisos masculinos?",
+    "matches_es": [
+      {
+        "mention": "200 metros lisos masculinos",
+        "entity": "Q55243755"
+      }
+    ],
+    "question_template_es": "¿Quién es el plusmarquista mundial actual de los $mention_0?",
+    "query_template_es": "SELECT DISTINCT ?sbj WHERE { ?sbj p:P1000 ?obj1 . ?obj1 ps:P1000 ?obj2 . ?obj2 p:P360 ?obj3 . ?obj3 ps:P360 wd:Q688615 . ?obj3 pq:P641 $entity_0 . MINUS { ?obj1 pq:P582 ?obj4 } }",
+    "visible_question_es": "¿Quién es el plusmarquista mundial actual de los {200 metros lisos masculinos}?"
+  },
+  {
+    "id": "Q384",
+    "contingent_question": null,
+    "question_en": "What is the highest dan in Go?",
+    "matches_en": [
+      {
+        "mention": "dan",
+        "entity": "Q373498"
+      },
+      {
+        "mention": "Go",
+        "entity": "Q11413"
+      }
+    ],
+    "question_template_en": "What is the highest $mention_0 in $mention_1?",
+    "query_template_en": "SELECT DISTINCT ?sbj WHERE { ?sbj p:P31 ?obj1 . ?obj1 ps:P31 ?obj2 . ?obj2 (wdt:P31|wdt:P279)* $entity_0 . ?obj2 wdt:P641 $entity_1 . ?obj1 pq:P1545 ?obj3 . } ORDER BY DESC(?obj3) LIMIT 1",
+    "visible_question_en": "What is the highest {dan} in {Go}?",
+    "question_es": "¿Cuál es el dan de Go más alto?",
+    "matches_es": [
+      {
+        "mention": "dan",
+        "entity": "Q373498"
+      },
+      {
+        "mention": "Go",
+        "entity": "Q11413"
+      }
+    ],
+    "question_template_es": "¿Cuál es el $mention_0 de $mention_1 más alto?",
+    "query_template_es": "SELECT DISTINCT ?sbj WHERE { ?sbj p:P31 ?obj1 . ?obj1 ps:P31 ?obj2 . ?obj2 (wdt:P31|wdt:P279)* $entity_0 . ?obj2 wdt:P641 $entity_1 . ?obj1 pq:P1545 ?obj3 . } ORDER BY DESC(?obj3) LIMIT 1",
+    "visible_question_es": "¿Cuál es el {dan} de {Go} más alto?"
+  },
+  {
+    "id": "Q385",
+    "contingent_question": null,
+    "question_en": "What languages did Kofi Annan speak?",
+    "matches_en": [
+      {
+        "mention": "Kofi Annan",
+        "entity": "Q1254"
+      }
+    ],
+    "question_template_en": "What languages did $mention_0 speak?",
+    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P1412 ?obj }",
+    "visible_question_en": "What languages did {Kofi Annan} speak?",
+    "question_es": "¿Qué idiomas hablaba Kofi Annan?",
+    "matches_es": [
+      {
+        "mention": "Kofi Annan",
+        "entity": "Q1254"
+      }
+    ],
+    "question_template_es": "¿Qué idiomas hablaba $mention_0?",
+    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P1412 ?obj }",
+    "visible_question_es": "¿Qué idiomas hablaba {Kofi Annan}?"
+  },
+  {
+    "id": "Q386",
+    "contingent_question": null,
+    "question_en": "What is the fastest species of mammal?",
+    "matches_en": [
+      {
+        "mention": "mammal",
+        "entity": "Q7377"
+      },
+      {
+        "mention": "species",
+        "entity": "Q7432"
+      }
+    ],
+    "question_template_en": "What is the fastest $mention_1 of $mention_0?",
+    "query_template_en": "SELECT ?sbj WHERE { ?sbj p:P2052/psn:P2052/wikibase:quantityAmount ?obj . ?sbj wdt:P105 $entity_1 . ?sbj wdt:P171+ $entity_0 . } ORDER BY DESC(?obj) LIMIT 1",
+    "visible_question_en": "What is the fastest {species} of {mammal}?",
+    "question_es": "¿Qué especie de mamífero es la más rápida?",
+    "matches_es": [
+      {
+        "mention": "mamífero",
+        "entity": "Q7377"
+      },
+      {
+        "mention": "especie",
+        "entity": "Q7432"
+      }
+    ],
+    "question_template_es": "¿Qué $mention_1 de $mention_0 es la más rápida?",
+    "query_template_es": "SELECT ?sbj WHERE { ?sbj p:P2052/psn:P2052/wikibase:quantityAmount ?obj . ?sbj wdt:P105 $entity_1 . ?sbj wdt:P171+ $entity_0 . } ORDER BY DESC(?obj) LIMIT 1",
+    "visible_question_es": "¿Qué {especie} de {mamífero} es la más rápida?"
+  },
+  {
+    "id": "Q387",
+    "contingent_question": null,
+    "question_en": "What profession studies butterflies?",
+    "matches_en": [
+      {
+        "mention": "profession",
+        "entity": "Q28640"
+      },
+      {
+        "mention": "butterflies",
+        "entity": "Q11946202"
+      }
+    ],
+    "question_template_en": "What $mention_0 studies $mention_1?",
+    "query_template_en": "SELECT DISTINCT ?sbj WHERE { ?sbj wdt:P31?/wdt:P279* $entity_0 . ?sbj wdt:P425 ?obj1 . ?obj1 (wdt:P101|wdt:P2578)/^pq:P642?/^p:P31? $entity_1 }",
+    "visible_question_en": "What {profession} studies {butterflies}?",
+    "question_es": "¿Qué profesión estudia las mariposas?",
+    "matches_es": [
+      {
+        "mention": "profesión",
+        "entity": "Q28640"
+      },
+      {
+        "mention": "mariposas",
+        "entity": "Q11946202"
+      }
+    ],
+    "question_template_es": "¿Qué $mention_0 estudia las $mention_1?",
+    "query_template_es": "SELECT DISTINCT ?sbj WHERE { ?sbj wdt:P31?/wdt:P279* $entity_0 . ?sbj wdt:P425 ?obj1 . ?obj1 (wdt:P101|wdt:P2578)/^pq:P642?/^p:P31? $entity_1 }",
+    "visible_question_es": "¿Qué {profesión} estudia las {mariposas}?"
+  },
+  {
+    "id": "Q388",
+    "contingent_question": null,
+    "question_en": "Who discovered Pluto?",
+    "matches_en": [
+      {
+        "mention": "Pluto",
+        "entity": "Q339"
+      }
+    ],
+    "question_template_en": "Who discovered $mention_0?",
+    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P61 ?obj }",
+    "visible_question_en": "Who discovered {Pluto}?",
+    "question_es": "¿Quién descubrió a  Plutón?",
+    "matches_es": [
+      {
+        "mention": "Plutón",
+        "entity": "Q339"
+      }
+    ],
+    "question_template_es": "¿Quién descubrió a  $mention_0?",
+    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P61 ?obj }",
+    "visible_question_es": "¿Quién descubrió a  {Plutón}?"
+  },
+  {
+    "id": "Q389",
+    "contingent_question": null,
+    "question_en": "Who is the manager of Crystal Palace F.C.?",
+    "matches_en": [
+      {
+        "mention": "Crystal Palace F.C.",
+        "entity": "Q19467"
+      }
+    ],
+    "question_template_en": "Who is the manager of $mention_0?",
+    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P286 ?obj }",
+    "visible_question_en": "Who is the manager of {Crystal Palace F.C.}?",
+    "question_es": "¿Quién es el entrenador de Crystal Palace F.C.?",
+    "matches_es": [
+      {
+        "mention": "Crystal Palace F.C.",
+        "entity": "Q19467"
+      }
+    ],
+    "question_template_es": "¿Quién es el entrenador de $mention_0?",
+    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P286 ?obj }",
+    "visible_question_es": "¿Quién es el entrenador de {Crystal Palace F.C.}?"
+  },
+  {
+    "id": "Q390",
+    "contingent_question": null,
+    "question_en": "What collections outside of Africa exhibit Benin Bronzes?",
+    "matches_en": [
+      {
+        "mention": "Benin Bronzes",
+        "entity": "Q248101"
+      },
+      {
+        "mention": "Africa",
+        "entity": "Q15"
+      }
+    ],
+    "question_template_en": "What collections outside of $mention_1 exhibit $mention_0?",
+    "query_template_en": "SELECT DISTINCT ?obj WHERE { ?sbj (wdt:P361|wdt:P31)/wdt:P279* $entity_0 . ?sbj wdt:P195 ?obj . MINUS { ?obj wdt:P131*/wdt:P17?/wdt:P30? $entity_1 }  }",
+    "visible_question_en": "What collections outside of {Africa} exhibit {Benin Bronzes}?",
+    "question_es": "¿Qué colecciones fuera de África exponen Bronces de Benín?",
+    "matches_es": [
+      {
+        "mention": "Bronces de Benín",
+        "entity": "Q248101"
+      },
+      {
+        "mention": "África",
+        "entity": "Q15"
+      }
+    ],
+    "question_template_es": "¿Qué colecciones fuera de $mention_1 exponen $mention_0?",
+    "query_template_es": "SELECT DISTINCT ?obj WHERE { ?sbj (wdt:P361|wdt:P31)/wdt:P279* $entity_0 . ?sbj wdt:P195 ?obj . MINUS { ?obj wdt:P131*/wdt:P17?/wdt:P30? $entity_1 }  }",
+    "visible_question_es": "¿Qué colecciones fuera de {África} exponen {Bronces de Benín}?"
+  },
+  {
+    "id": "Q391",
+    "contingent_question": null,
+    "question_en": "What operas are based on works by Alexander Pushkin?",
+    "matches_en": [
+      {
+        "mention": "operas",
+        "entity": "Q1344"
+      },
+      {
+        "mention": "Alexander Pushkin",
+        "entity": "Q7200"
+      }
+    ],
+    "question_template_en": "What $mention_0 are based on works by $mention_1?",
+    "query_template_en": "SELECT DISTINCT ?sbj WHERE { ?sbj (wdt:P31|wdt:P7937)/wdt:P279* $entity_0 . ?sbj wdt:P144 ?obj . ?obj wdt:P50 $entity_1 . }",
+    "visible_question_en": "What {operas} are based on works by {Alexander Pushkin}?",
+    "question_es": "¿Qué óperas se basan en obras por Alexander Pushkin?",
+    "matches_es": [
+      {
+        "mention": "óperas",
+        "entity": "Q1344"
+      },
+      {
+        "mention": "Alexander Pushkin",
+        "entity": "Q7200"
+      }
+    ],
+    "question_template_es": "¿Qué $mention_0 se basan en obras por $mention_1?",
+    "query_template_es": "SELECT DISTINCT ?sbj WHERE { ?sbj (wdt:P31|wdt:P7937)/wdt:P279* $entity_0 . ?sbj wdt:P144 ?obj . ?obj wdt:P50 $entity_1 . }",
+    "visible_question_es": "¿Qué {óperas} se basan en obras por {Alexander Pushkin}?"
+  },
+  {
+    "id": "Q392",
+    "contingent_question": null,
+    "question_en": "In which countries are tepuis found?",
+    "matches_en": [
+      {
+        "mention": "tepuis",
+        "entity": "Q828329"
+      }
+    ],
+    "question_template_en": "In which countries are $mention_0 found?",
+    "query_template_en": "SELECT DISTINCT ?obj WHERE { ?sbj wdt:P31/wdt:P279* $entity_0 . ?sbj wdt:P131*/wdt:P17 ?obj }",
+    "visible_question_en": "In which countries are {tepuis} found?",
+    "question_es": "¿En qué países se encuentran tepuis?",
+    "matches_es": [
+      {
+        "mention": "tepuis",
+        "entity": "Q828329"
+      }
+    ],
+    "question_template_es": "¿En qué países se encuentran $mention_0?",
+    "query_template_es": "SELECT DISTINCT ?obj WHERE { ?sbj wdt:P31/wdt:P279* $entity_0 . ?sbj wdt:P131*/wdt:P17 ?obj }",
+    "visible_question_es": "¿En qué países se encuentran {tepuis}?"
+  },
+  {
+    "id": "Q394",
+    "contingent_question": null,
+    "question_en": "What is the largest moon of the Solar System by mass?",
+    "matches_en": [],
+    "question_template_en": "What is the largest moon of the Solar System by mass?",
+    "query_template_en": "SELECT DISTINCT ?sbj WHERE { ?sbj wdt:P31/wdt:P279* wd:Q2537 . ?sbj wdt:P397+ wd:Q525 . ?sbj p:P2067/psn:P2067/wikibase:quantityAmount ?obj . } ORDER BY DESC(?obj) LIMIT 1",
+    "visible_question_en": "What is the largest moon of the Solar System by mass?",
+    "question_es": "¿Cuál es la luna más grande del Sistema Solar por masa?",
+    "matches_es": [],
+    "question_template_es": "¿Cuál es la luna más grande del Sistema Solar por masa?",
+    "query_template_es": "SELECT DISTINCT ?sbj WHERE { ?sbj wdt:P31/wdt:P279* wd:Q2537 . ?sbj wdt:P397+ wd:Q525 . ?sbj p:P2067/psn:P2067/wikibase:quantityAmount ?obj . } ORDER BY DESC(?obj) LIMIT 1",
+    "visible_question_es": "¿Cuál es la luna más grande del Sistema Solar por masa?"
+  },
+  {
+    "id": "Q395",
+    "contingent_question": null,
+    "question_en": "What is the largest moon of the Solar System by radius?",
+    "matches_en": [],
+    "question_template_en": "What is the largest moon of the Solar System by radius?",
+    "query_template_en": "SELECT DISTINCT ?sbj WHERE { ?sbj wdt:P31/wdt:P279* wd:Q2537 . ?sbj wdt:P397+ wd:Q525 . ?sbj p:P2120/psn:P2120/wikibase:quantityAmount ?obj . } ORDER BY DESC(?obj) LIMIT 1",
+    "visible_question_en": "What is the largest moon of the Solar System by radius?",
+    "question_es": "¿Cuál es la luna más grande del Sistema Solar por radio?",
+    "matches_es": [],
+    "question_template_es": "¿Cuál es la luna más grande del Sistema Solar por radio?",
+    "query_template_es": "SELECT DISTINCT ?sbj WHERE { ?sbj wdt:P31/wdt:P279* wd:Q2537 . ?sbj wdt:P397+ wd:Q525 . ?sbj p:P2120/psn:P2120/wikibase:quantityAmount ?obj . } ORDER BY DESC(?obj) LIMIT 1",
+    "visible_question_es": "¿Cuál es la luna más grande del Sistema Solar por radio?"
+  },
+  {
+    "id": "Q396",
+    "contingent_question": null,
+    "question_en": "What hybrid species can have offspring?",
+    "matches_en": [
+      {
+        "mention": "hybrid species",
+        "entity": "Q42621"
+      }
+    ],
+    "question_template_en": "What $mention_0 can have offspring?",
+    "query_template_en": "SELECT DISTINCT ?obj WHERE { ?sbj wdt:P1531 ?obj . ?obj (wdt:P31|wdt:P279)* $entity_0 . }",
+    "visible_question_en": "What {hybrid species} can have offspring?",
+    "question_es": "¿Qué especies híbridas pueden tener crías?",
+    "matches_es": [
+      {
+        "mention": "especies híbridas",
+        "entity": "Q42621"
+      }
+    ],
+    "question_template_es": "¿Qué $mention_0 pueden tener crías?",
+    "query_template_es": "SELECT DISTINCT ?obj WHERE { ?sbj wdt:P1531 ?obj . ?obj (wdt:P31|wdt:P279)* $entity_0 . }",
+    "visible_question_es": "¿Qué {especies híbridas} pueden tener crías?"
+  },
+  {
+    "id": "Q397",
+    "contingent_question": null,
+    "question_en": "What is the wheelbase of the Enzo Ferrari?",
+    "matches_en": [
+      {
+        "mention": "Enzo Ferrari",
+        "entity": "Q269880"
+      }
+    ],
+    "question_template_en": "What is the wheelbase of the $mention_0?",
+    "query_template_en": "SELECT ?obj WHERE { $entity_0 p:P3039/psn:P3039/wikibase:quantityAmount ?obj }",
+    "visible_question_en": "What is the wheelbase of the {Enzo Ferrari}?",
+    "question_es": "¿Qué es la distancia entre ejes del Enzo Ferrari?",
+    "matches_es": [
+      {
+        "mention": "Enzo Ferrari",
+        "entity": "Q269880"
+      }
+    ],
+    "question_template_es": "¿Qué es la distancia entre ejes del $mention_0?",
+    "query_template_es": "SELECT ?obj WHERE { $entity_0 p:P3039/psn:P3039/wikibase:quantityAmount ?obj }",
+    "visible_question_es": "¿Qué es la distancia entre ejes del {Enzo Ferrari}?"
+  },
+  {
+    "id": "Q399",
+    "contingent_question": {
+      "id": "Q400",
+      "query_raw": "ASK WHERE { wd:Q4484215 p:P108 ?obj1 . ?obj1 ps:P108 wd:Q169889 . }",
+      "expected_value": 1,
+      "question_raw_en": "Has Kyra Phillips worked with ABC?",
+      "question_template_en": "Has $mention_1 worked with $mention_0?",
+      "query_template_en": "ASK WHERE { $entity_1 p:P108 ?obj1 . ?obj1 ps:P108 $entity_0 . }",
+      "question_raw_es": "¿Ha trabajado Kyra Phillips con ABC?",
+      "question_template_es": "¿Ha trabajado $mention_1 con $mention_0?",
+      "query_template_es": "ASK WHERE { $entity_1 p:P108 ?obj1 . ?obj1 ps:P108 $entity_0 . }"
+    },
+    "question_en": "When did Kyra Phillips join ABC?",
+    "matches_en": [
+      {
+        "mention": "ABC",
+        "entity": "Q169889"
+      },
+      {
+        "mention": "Kyra Phillips",
+        "entity": "Q4484215"
+      }
+    ],
+    "question_template_en": "When did $mention_1 join $mention_0?",
+    "query_template_en": "SELECT DISTINCT ?obj2 WHERE { $entity_1 p:P108 ?obj1 . ?obj1 ps:P108 $entity_0 . ?obj1 pq:P580 ?obj2 }",
+    "visible_question_en": "When did {Kyra Phillips} join {ABC}?",
+    "question_es": "¿Cuándo se incorporó Kyra Phillips a ABC?",
+    "matches_es": [
+      {
+        "mention": "ABC",
+        "entity": "Q169889"
+      },
+      {
+        "mention": "Kyra Phillips",
+        "entity": "Q4484215"
+      }
+    ],
+    "question_template_es": "¿Cuándo se incorporó $mention_1 a $mention_0?",
+    "query_template_es": "SELECT DISTINCT ?obj2 WHERE { $entity_1 p:P108 ?obj1 . ?obj1 ps:P108 $entity_0 . ?obj1 pq:P580 ?obj2 }",
+    "visible_question_es": "¿Cuándo se incorporó {Kyra Phillips} a {ABC}?"
+  },
+  {
+    "id": "Q400",
+    "contingent_question": null,
+    "question_en": "Has Kyra Phillips worked with ABC?",
+    "matches_en": [
+      {
+        "mention": "ABC",
+        "entity": "Q169889"
+      },
+      {
+        "mention": "Kyra Phillips",
+        "entity": "Q4484215"
+      }
+    ],
+    "question_template_en": "Has $mention_1 worked with $mention_0?",
+    "query_template_en": "ASK WHERE { $entity_1 p:P108 ?obj1 . ?obj1 ps:P108 $entity_0 . }",
+    "visible_question_en": "Has {Kyra Phillips} worked with {ABC}?",
+    "question_es": "¿Ha trabajado Kyra Phillips con ABC?",
+    "matches_es": [
+      {
+        "mention": "ABC",
+        "entity": "Q169889"
+      },
+      {
+        "mention": "Kyra Phillips",
+        "entity": "Q4484215"
+      }
+    ],
+    "question_template_es": "¿Ha trabajado $mention_1 con $mention_0?",
+    "query_template_es": "ASK WHERE { $entity_1 p:P108 ?obj1 . ?obj1 ps:P108 $entity_0 . }",
+    "visible_question_es": "¿Ha trabajado {Kyra Phillips} con {ABC}?"
+  },
+  {
+    "id": "Q401",
+    "contingent_question": {
+      "id": "Q402",
+      "query_raw": "ASK WHERE { wd:Q46239 p:P793 ?obj1 . ?obj1 ps:P793 wd:Q17781833 . }",
+      "expected_value": 1,
+      "question_raw_en": "Was the Statue of Zeus at Olympia destroyed?",
+      "question_template_en": "Was the $mention_0 $mention_1?",
+      "query_template_en": "ASK WHERE { $entity_0 p:P793 ?obj1 . ?obj1 ps:P793 $entity_1 . }",
+      "question_raw_es": "¿Fue destruida la Estatua de Zeus en Olimpia?",
+      "question_template_es": "¿Fue $mention_1 la $mention_0?",
+      "query_template_es": "ASK WHERE { $entity_0 p:P793 ?obj1 . ?obj1 ps:P793 $entity_1 . }"
+    },
+    "question_en": "When was the Statue of Zeus at Olympia destroyed?",
+    "matches_en": [
+      {
+        "mention": "Statue of Zeus at Olympia",
+        "entity": "Q46239"
+      },
+      {
+        "mention": "destroyed",
+        "entity": "Q17781833"
+      }
+    ],
+    "question_template_en": "When was the $mention_0 $mention_1?",
+    "query_template_en": "SELECT DISTINCT ?obj2 WHERE { $entity_0 p:P793 ?obj1 . ?obj1 ps:P793 $entity_1 . ?obj1 pq:P585 ?obj2 . }",
+    "visible_question_en": "When was the {Statue of Zeus at Olympia} {destroyed}?",
+    "question_es": "¿Cuándo fue destruida la Estatua de Zeus en Olimpia?",
+    "matches_es": [
+      {
+        "mention": "Estatua de Zeus en Olimpia",
+        "entity": "Q46239"
+      },
+      {
+        "mention": "destruida",
+        "entity": "Q17781833"
+      }
+    ],
+    "question_template_es": "¿Cuándo fue $mention_1 la $mention_0?",
+    "query_template_es": "SELECT DISTINCT ?obj2 WHERE { $entity_0 p:P793 ?obj1 . ?obj1 ps:P793 $entity_1 . ?obj1 pq:P585 ?obj2 . }",
+    "visible_question_es": "¿Cuándo fue {destruida} la {Estatua de Zeus en Olimpia}?"
+  },
+  {
+    "id": "Q402",
+    "contingent_question": null,
+    "question_en": "Was the Statue of Zeus at Olympia destroyed?",
+    "matches_en": [],
+    "question_template_en": "Was the Statue of Zeus at Olympia destroyed?",
+    "query_template_en": "ASK WHERE { wd:Q46239 p:P793 ?obj1 . ?obj1 ps:P793 wd:Q17781833 . }",
+    "visible_question_en": "Was the Statue of Zeus at Olympia destroyed?",
+    "question_es": "¿Fue destruida la Estatua de Zeus en Olimpia?",
+    "matches_es": [],
+    "question_template_es": "¿Fue destruida la Estatua de Zeus en Olimpia?",
+    "query_template_es": "ASK WHERE { wd:Q46239 p:P793 ?obj1 . ?obj1 ps:P793 wd:Q17781833 . }",
+    "visible_question_es": "¿Fue destruida la Estatua de Zeus en Olimpia?"
+  },
+  {
+    "id": "Q403",
+    "contingent_question": null,
+    "question_en": "Who was the Democratic party candidate in the 1972 United States Presidential Election?",
+    "matches_en": [
+      {
+        "mention": "1972 United States Presidential Election",
+        "entity": "Q644161"
+      },
+      {
+        "mention": "Democratic party",
+        "entity": "Q29552"
+      }
+    ],
+    "question_template_en": "Who was the $mention_1 candidate in the $mention_0?",
+    "query_template_en": "SELECT DISTINCT ?obj2 WHERE { $entity_0 p:P726 ?obj1 . ?obj1 ps:P726 ?obj2 . ?obj1 pq:P102 $entity_1 . }",
+    "visible_question_en": "Who was the {Democratic party} candidate in the {1972 United States Presidential Election}?",
+    "question_es": "¿Quién fue el candidato del Partido Demócrata en las elecciones presidenciales de Estados Unidos de 1972?",
+    "matches_es": [
+      {
+        "mention": "elecciones presidenciales de Estados Unidos de 1972",
+        "entity": "Q644161"
+      },
+      {
+        "mention": "Partido Demócrata",
+        "entity": "Q29552"
+      }
+    ],
+    "question_template_es": "¿Quién fue el candidato del $mention_1 en las $mention_0?",
+    "query_template_es": "SELECT DISTINCT ?obj2 WHERE { $entity_0 p:P726 ?obj1 . ?obj1 ps:P726 ?obj2 . ?obj1 pq:P102 $entity_1 . }",
+    "visible_question_es": "¿Quién fue el candidato del {Partido Demócrata} en las {elecciones presidenciales de Estados Unidos de 1972}?"
+  },
+  {
+    "id": "Q404",
+    "contingent_question": null,
+    "question_en": "When is the feast day of Saint Kizito?",
+    "matches_en": [
+      {
+        "mention": "Saint Kizito",
+        "entity": "Q3463928"
+      }
+    ],
+    "question_template_en": "When is the feast day of $mention_0?",
+    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P841 ?obj }",
+    "visible_question_en": "When is the feast day of {Saint Kizito}?",
+    "question_es": "¿Cuándo es el día de festividad de Saint Kizito?",
+    "matches_es": [
+      {
+        "mention": "Kizito",
+        "entity": "Q3463928"
+      }
+    ],
+    "question_template_es": "¿Cuándo es el día de festividad de Saint $mention_0?",
+    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P841 ?obj }",
+    "visible_question_es": "¿Cuándo es el día de festividad de Saint {Kizito}?"
+  },
+  {
+    "id": "Q405",
+    "contingent_question": null,
+    "question_en": "In which country was Elon Musk born?",
+    "matches_en": [
+      {
+        "mention": "Elon Musk",
+        "entity": "Q317521"
+      }
+    ],
+    "question_template_en": "In which country was $mention_0 born?",
+    "query_template_en": "SELECT DISTINCT ?obj2 WHERE { $entity_0 wdt:P19 ?obj1 . ?obj1 wdt:P17 ?obj2 . }",
+    "visible_question_en": "In which country was {Elon Musk} born?",
+    "question_es": "¿En qué país nació Elon Musk?",
+    "matches_es": [
+      {
+        "mention": "Elon Musk",
+        "entity": "Q317521"
+      }
+    ],
+    "question_template_es": "¿En qué país nació $mention_0?",
+    "query_template_es": "SELECT DISTINCT ?obj2 WHERE { $entity_0 wdt:P19 ?obj1 . ?obj1 wdt:P17 ?obj2 . }",
+    "visible_question_es": "¿En qué país nació {Elon Musk}?"
+  },
+  {
+    "id": "Q406",
+    "contingent_question": null,
+    "question_en": "How many polish Grandmasters have there been?",
+    "matches_en": [
+      {
+        "mention": "Grandmaster",
+        "entity": "Q105269"
+      }
+    ],
+    "question_template_en": "How many polish Grandmasters have there been?",
+    "query_template_en": "SELECT (COUNT(?grandmaster) as ?count) WHERE { ?grandmaster wdt:P2962 $entity_0 .  ?grandmaster wdt:P27 wd:Q36 }",
+    "visible_question_en": "How many polish Grandmasters have there been?",
+    "question_es": "¿Cuántos Gran Maestros Internacionales polacos ha habido?",
+    "matches_es": [],
+    "question_template_es": "¿Cuántos Gran Maestros Internacionales polacos ha habido?",
+    "query_template_es": "SELECT (COUNT(?grandmaster) as ?count) WHERE { ?grandmaster wdt:P2962 wd:Q105269 .  ?grandmaster wdt:P27 wd:Q36 }",
+    "visible_question_es": "¿Cuántos Gran Maestros Internacionales polacos ha habido?"
+  },
+  {
+    "id": "Q407",
+    "contingent_question": null,
+    "question_en": "Which countries have diplomatic relations with Chile?",
+    "matches_en": [
+      {
+        "mention": "Chile",
+        "entity": "Q298"
+      }
+    ],
+    "question_template_en": "Which countries have diplomatic relations with $mention_0?",
+    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P530 ?obj }",
+    "visible_question_en": "Which countries have diplomatic relations with {Chile}?",
+    "question_es": "¿Qué países tienen relaciones diplomáticas con Chile?",
+    "matches_es": [
+      {
+        "mention": "Chile",
+        "entity": "Q298"
+      }
+    ],
+    "question_template_es": "¿Qué países tienen relaciones diplomáticas con $mention_0?",
+    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P530 ?obj }",
+    "visible_question_es": "¿Qué países tienen relaciones diplomáticas con {Chile}?"
+  },
+  {
+    "id": "Q408",
+    "contingent_question": null,
+    "question_en": "Which companies are sponsors of Barcelona soccer club?",
+    "matches_en": [],
+    "question_template_en": "Which companies are sponsors of Barcelona soccer club?",
+    "query_template_en": "SELECT ?obj WHERE { wd:Q7156 wdt:P859 ?obj }",
+    "visible_question_en": "Which companies are sponsors of Barcelona soccer club?",
+    "question_es": "¿Qué empresas son patrocinadores del fútbol club Barcelona?",
+    "matches_es": [],
+    "question_template_es": "¿Qué empresas son patrocinadores del fútbol club Barcelona?",
+    "query_template_es": "SELECT ?obj WHERE { wd:Q7156 wdt:P859 ?obj }",
+    "visible_question_es": "¿Qué empresas son patrocinadores del fútbol club Barcelona?"
+  },
+  {
+    "id": "Q409",
+    "contingent_question": null,
+    "question_en": "What video game series has been the best seller?",
+    "matches_en": [
+      {
+        "mention": "video game series",
+        "entity": "Q7058673"
+      }
+    ],
+    "question_template_en": "What $mention_0 has been the best seller?",
+    "query_template_en": "SELECT ?gameSeries WHERE { ?gameSeries wdt:P31 $entity_0 . ?gameSeries wdt:P2664 ?num .} ORDER BY DESC (?num) LIMIT 1",
+    "visible_question_en": "What {video game series} has been the best seller?",
+    "question_es": "¿Qué serie de videojuegos ha sido la más vendida?",
+    "matches_es": [
+      {
+        "mention": "serie de videojuegos",
+        "entity": "Q7058673"
+      }
+    ],
+    "question_template_es": "¿Qué $mention_0 ha sido la más vendida?",
+    "query_template_es": "SELECT ?gameSeries WHERE { ?gameSeries wdt:P31 $entity_0 . ?gameSeries wdt:P2664 ?num .} ORDER BY DESC (?num) LIMIT 1",
+    "visible_question_es": "¿Qué {serie de videojuegos} ha sido la más vendida?"
+  },
+  {
+    "id": "Q410",
+    "contingent_question": null,
+    "question_en": "Which video game series has the most video games?",
+    "matches_en": [
+      {
+        "mention": "video game series",
+        "entity": "Q7058673"
+      }
+    ],
+    "question_template_en": "Which $mention_0 has the most video games?",
+    "query_template_en": "SELECT ?gameSeries WHERE { SELECT ?gameSeries (COUNT(?game) as ?numGames) WHERE { ?gameSeries wdt:P31 $entity_0 . ?game wdt:P179 ?gameSeries . } GROUP BY (?gameSeries) ORDER BY DESC (?numGames) LIMIT 1 }",
+    "visible_question_en": "Which {video game series} has the most video games?",
+    "question_es": "¿Qué serie de videojuegos tiene más videojuegos?",
+    "matches_es": [
+      {
+        "mention": "serie de videojuegos",
+        "entity": "Q7058673"
+      }
+    ],
+    "question_template_es": "¿Qué $mention_0 tiene más videojuegos?",
+    "query_template_es": "SELECT ?gameSeries WHERE { SELECT ?gameSeries (COUNT(?game) as ?numGames) WHERE { ?gameSeries wdt:P31 $entity_0 . ?game wdt:P179 ?gameSeries . } GROUP BY (?gameSeries) ORDER BY DESC (?numGames) LIMIT 1 }",
+    "visible_question_es": "¿Qué {serie de videojuegos} tiene más videojuegos?"
+  },
+  {
+    "id": "Q411",
+    "contingent_question": null,
+    "question_en": "Which planet has the least mass?",
+    "matches_en": [
+      {
+        "mention": "planet",
+        "entity": "Q634"
+      }
+    ],
+    "question_template_en": "Which $mention_0 has the least mass?",
+    "query_template_en": "SELECT ?planet WHERE { ?planet wdt:P31/wdt:P279* $entity_0 . ?planet wdt:P2067 ?mass .} ORDER BY ASC(?mass) LIMIT 1",
+    "visible_question_en": "Which {planet} has the least mass?",
+    "question_es": "¿Qué planeta tiene menos masa?",
+    "matches_es": [
+      {
+        "mention": "planeta",
+        "entity": "Q634"
+      }
+    ],
+    "question_template_es": "¿Qué $mention_0 tiene menos masa?",
+    "query_template_es": "SELECT ?planet WHERE { ?planet wdt:P31/wdt:P279* $entity_0 . ?planet wdt:P2067 ?mass .} ORDER BY ASC(?mass) LIMIT 1",
+    "visible_question_es": "¿Qué {planeta} tiene menos masa?"
+  },
+  {
+    "id": "Q412",
+    "contingent_question": null,
+    "question_en": "Which painter has painted the most paintings?",
+    "matches_en": [
+      {
+        "mention": "painting",
+        "entity": "Q3305213"
+      },
+      {
+        "mention": "painter",
+        "entity": "Q1028181"
+      }
+    ],
+    "question_template_en": "Which $mention_1 has painted the most paintings?",
+    "query_template_en": "SELECT ?artist WHERE { SELECT ?artist (COUNT (DISTINCT ?artwork) as ?pieces) WHERE { ?artist wdt:P106/wdt:P279* $entity_1 . ?artwork wdt:P170 ?artist . ?artwork wdt:P31/wdt:P279* $entity_0 .} GROUP BY (?artist) ORDER BY DESC(?pieces) LIMIT 1 }",
+    "visible_question_en": "Which {painter} has painted the most paintings?",
+    "question_es": "¿Qué pintor ha pintado más pinturas?",
+    "matches_es": [
+      {
+        "mention": "pintura",
+        "entity": "Q3305213"
+      },
+      {
+        "mention": "pintor",
+        "entity": "Q1028181"
+      }
+    ],
+    "question_template_es": "¿Qué $mention_1 ha pintado más pinturas?",
+    "query_template_es": "SELECT ?artist WHERE { SELECT ?artist (COUNT (DISTINCT ?artwork) as ?pieces) WHERE { ?artist wdt:P106/wdt:P279* $entity_1 . ?artwork wdt:P170 ?artist . ?artwork wdt:P31/wdt:P279* $entity_0 .} GROUP BY (?artist) ORDER BY DESC(?pieces) LIMIT 1 }",
+    "visible_question_es": "¿Qué {pintor} ha pintado más pinturas?"
+  },
+  {
+    "id": "Q413",
+    "contingent_question": null,
+    "question_en": "Which was the last programming language created?",
+    "matches_en": [
+      {
+        "mention": "programming language",
+        "entity": "Q9143"
+      }
+    ],
+    "question_template_en": "Which was the last $mention_0 created?",
+    "query_template_en": "SELECT ?language WHERE { ?language wdt:P31/wdt:P279* $entity_0 . ?language wdt:P571 ?fecha . } ORDER BY DESC(?fecha) LIMIT 1",
+    "visible_question_en": "Which was the last {programming language} created?",
+    "question_es": "¿Cuál fue el último lenguaje de programación creado?",
+    "matches_es": [
+      {
+        "mention": "lenguaje de programación",
+        "entity": "Q9143"
+      }
+    ],
+    "question_template_es": "¿Cuál fue el último $mention_0 creado?",
+    "query_template_es": "SELECT ?language WHERE { ?language wdt:P31/wdt:P279* $entity_0 . ?language wdt:P571 ?fecha . } ORDER BY DESC(?fecha) LIMIT 1",
+    "visible_question_es": "¿Cuál fue el último {lenguaje de programación} creado?"
+  },
+  {
+    "id": "Q414",
+    "contingent_question": null,
+    "question_en": "Which musical groups started the same year as Soda Stereo?",
+    "matches_en": [
+      {
+        "mention": "Soda Stereo",
+        "entity": "Q1816849"
+      },
+      {
+        "mention": "musical group",
+        "entity": "Q215380"
+      }
+    ],
+    "question_template_en": "Which musical groups started the same year as $mention_0?",
+    "query_template_en": "SELECT ?group WHERE { ?group wdt:P31 $entity_1 . $entity_0 wdt:P571 ?year . ?group wdt:P571 ?inception . FILTER(?inception=?year) }",
+    "visible_question_en": "Which musical groups started the same year as {Soda Stereo}?",
+    "question_es": "¿Qué grupos musicales comenzaron el mismo año que Soda Stereo?",
+    "matches_es": [],
+    "question_template_es": "¿Qué grupos musicales comenzaron el mismo año que Soda Stereo?",
+    "query_template_es": "SELECT ?group WHERE { ?group wdt:P31 wd:Q215380 . wd:Q1816849 wdt:P571 ?year . ?group wdt:P571 ?inception . FILTER(?inception=?year) }",
+    "visible_question_es": "¿Qué grupos musicales comenzaron el mismo año que Soda Stereo?"
+  },
+  {
+    "id": "Q415",
+    "contingent_question": null,
+    "question_en": "Which soccer players have at least 2 nationalities?",
+    "matches_en": [],
+    "question_template_en": "Which soccer players have at least 2 nationalities?",
+    "query_template_en": "SELECT ?player ?num WHERE { SELECT ?player (COUNT (DISTINCT ?nationality) as ?num) WHERE { ?player wdt:P106 wd:Q937857 . ?player wdt:P27 ?nationality . } GROUP BY (?player) HAVING(COUNT(DISTINCT ?nationality) > 1) }",
+    "visible_question_en": "Which soccer players have at least 2 nationalities?",
+    "question_es": "¿Qué jugadores de futbol tienen al menos 2 nacionalidades?",
+    "matches_es": [],
+    "question_template_es": "¿Qué jugadores de futbol tienen al menos 2 nacionalidades?",
+    "query_template_es": "SELECT ?player ?num WHERE { SELECT ?player (COUNT (DISTINCT ?nationality) as ?num) WHERE { ?player wdt:P106 wd:Q937857 . ?player wdt:P27 ?nationality . } GROUP BY (?player) HAVING(COUNT(DISTINCT ?nationality) > 1) }",
+    "visible_question_es": "¿Qué jugadores de futbol tienen al menos 2 nacionalidades?"
+  },
+  {
+    "id": "Q416",
+    "contingent_question": null,
+    "question_en": "Which games have won the best esports game of the year award?",
+    "matches_en": [],
+    "question_template_en": "Which games have won the best esports game of the year award?",
+    "query_template_en": "SELECT ?game WHERE { ?game wdt:P31 wd:Q7889 . ?game wdt:P166 wd:Q104117257 . }",
+    "visible_question_en": "Which games have won the best esports game of the year award?",
+    "question_es": "¿Qué juegos han ganado el premio de mejor juego de Esports del año?",
+    "matches_es": [],
+    "question_template_es": "¿Qué juegos han ganado el premio de mejor juego de Esports del año?",
+    "query_template_es": "SELECT ?game WHERE { ?game wdt:P31 wd:Q7889 . ?game wdt:P166 wd:Q104117257 . }",
+    "visible_question_es": "¿Qué juegos han ganado el premio de mejor juego de Esports del año?"
+  },
+  {
+    "id": "Q417",
+    "contingent_question": null,
+    "question_en": null,
+    "matches_en": [],
+    "question_template_en": null,
+    "query_template_en": null,
+    "visible_question_en": null,
+    "question_es": "¿Cuándo nació J. K. Rowling?",
+    "matches_es": [
+      {
+        "mention": "J. K. Rowling",
+        "entity": "Q34660"
+      }
+    ],
+    "question_template_es": "¿Cuándo nació $mention_0?",
+    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P569 ?obj }",
+    "visible_question_es": "¿Cuándo nació {J. K. Rowling}?"
   },
   {
     "id": "Q276",
@@ -8456,962 +9389,5 @@
     "question_template_es": "¿Cuál $mention_0 en $mention_1 tiene el número máximo de estudiantes?",
     "query_template_es": "SELECT ?sbj WHERE { ?sbj wdt:P31/wdt:P279* $entity_0 . ?sbj wdt:P131*/wdt:P17?/wdt:P30? $entity_1 . ?sbj wdt:P2196 ?obj . } ORDER BY DESC(?obj) LIMIT 1",
     "visible_question_es": "¿Cuál {universidad} en {Pakistán} tiene el número máximo de estudiantes?"
-  },
-  {
-    "id": "Q376",
-    "contingent_question": null,
-    "question_en": "What HBO series has the highest Tomatometer score?",
-    "matches_en": [
-      {
-        "mention": "HBO",
-        "entity": "Q23633"
-      },
-      {
-        "mention": "Tomatometer score",
-        "entity": "Q108403393"
-      }
-    ],
-    "question_template_en": "What $mention_0 series has the highest $mention_1?",
-    "query_template_en": "SELECT ?sbj WHERE { ?sbj wdt:P449 $entity_0 . ?sbj wdt:P31/wdt:P279* wd:Q5398426 . ?sbj p:P444 ?obj1 . ?obj1 pq:P459 $entity_1 . ?obj1 ps:P444 ?obj2 . { SELECT ?obj2 WHERE { ?sbj wdt:P449 $entity_0 . ?sbj wdt:P31/wdt:P279* wd:Q5398426 . ?sbj p:P444 ?obj1 . ?obj1 pq:P459 $entity_1 . ?obj1 ps:P444 ?obj2 . BIND(xsd:integer(IF(CONTAINS(STR(?obj2),\"%\"),STRBEFORE(STR(?obj2),\"%\"),IF(CONTAINS(STR(?obj2),\"/\"),STRBEFORE(STR(?obj2),\"/\"),?obj2))) AS ?obj3) } ORDER BY DESC(?obj3) LIMIT 1 } }",
-    "visible_question_en": "What {HBO} series has the highest {Tomatometer score}?",
-    "question_es": "¿Cuál serie de HBO tiene el mejor puntaje de Tomatometer?",
-    "matches_es": [
-      {
-        "mention": "serie",
-        "entity": "Q5398426"
-      },
-      {
-        "mention": "HBO",
-        "entity": "Q23633"
-      },
-      {
-        "mention": "puntaje de Tomatometer",
-        "entity": "Q108403393"
-      }
-    ],
-    "question_template_es": "¿Cuál $mention_0 de $mention_1 tiene el mejor $mention_2?",
-    "query_template_es": "SELECT ?sbj WHERE { ?sbj wdt:P449 $entity_1 . ?sbj wdt:P31/wdt:P279* $entity_0 . ?sbj p:P444 ?obj1 . ?obj1 pq:P459 $entity_2 . ?obj1 ps:P444 ?obj2 . { SELECT ?obj2 WHERE { ?sbj wdt:P449 $entity_1 . ?sbj wdt:P31/wdt:P279* $entity_0 . ?sbj p:P444 ?obj1 . ?obj1 pq:P459 $entity_2 . ?obj1 ps:P444 ?obj2 . BIND(xsd:integer(IF(CONTAINS(STR(?obj2),\"%\"),STRBEFORE(STR(?obj2),\"%\"),IF(CONTAINS(STR(?obj2),\"/\"),STRBEFORE(STR(?obj2),\"/\"),?obj2))) AS ?obj3) } ORDER BY DESC(?obj3) LIMIT 1 } }",
-    "visible_question_es": "¿Cuál {serie} de {HBO} tiene el mejor {puntaje de Tomatometer}?"
-  },
-  {
-    "id": "Q377",
-    "contingent_question": null,
-    "question_en": "What is the area of New South Wales?",
-    "matches_en": [
-      {
-        "mention": "New South Wales",
-        "entity": "Q3224"
-      }
-    ],
-    "question_template_en": "What is the area of $mention_0?",
-    "query_template_en": "SELECT ?obj2 WHERE { $entity_0 p:P2046/psn:P2046/wikibase:quantityAmount ?obj2 }",
-    "visible_question_en": "What is the area of {New South Wales}?",
-    "question_es": "¿Qué área tiene Nueva Gales del Sur?",
-    "matches_es": [
-      {
-        "mention": "Nueva Gales del Sur",
-        "entity": "Q3224"
-      }
-    ],
-    "question_template_es": "¿Qué área tiene $mention_0?",
-    "query_template_es": "SELECT ?obj2 WHERE { $entity_0 p:P2046/psn:P2046/wikibase:quantityAmount ?obj2 }",
-    "visible_question_es": "¿Qué área tiene {Nueva Gales del Sur}?"
-  },
-  {
-    "id": "Q380",
-    "contingent_question": null,
-    "question_en": "What is the postal code of Alberobello?",
-    "matches_en": [
-      {
-        "mention": "Alberobello",
-        "entity": "Q51812"
-      }
-    ],
-    "question_template_en": "What is the postal code of $mention_0?",
-    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P281 ?obj }",
-    "visible_question_en": "What is the postal code of {Alberobello}?",
-    "question_es": "¿Qué es el código postal de Alberobello?",
-    "matches_es": [
-      {
-        "mention": "Alberobello",
-        "entity": "Q51812"
-      }
-    ],
-    "question_template_es": "¿Qué es el código postal de $mention_0?",
-    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P281 ?obj }",
-    "visible_question_es": "¿Qué es el código postal de {Alberobello}?"
-  },
-  {
-    "id": "Q381",
-    "contingent_question": null,
-    "question_en": "Who is the patron saint of photographers?",
-    "matches_en": [
-      {
-        "mention": "photographers",
-        "entity": "Q33231"
-      }
-    ],
-    "question_template_en": "Who is the patron saint of $mention_0?",
-    "query_template_en": "SELECT DISTINCT ?obj WHERE { $entity_0 (wdt:P417|^wdt:P2925) ?obj . }",
-    "visible_question_en": "Who is the patron saint of {photographers}?",
-    "question_es": "¿Quién es el santo patrón de fotógrafos?",
-    "matches_es": [
-      {
-        "mention": "fotógrafos",
-        "entity": "Q33231"
-      }
-    ],
-    "question_template_es": "¿Quién es el santo patrón de $mention_0?",
-    "query_template_es": "SELECT DISTINCT ?obj WHERE { $entity_0 (wdt:P417|^wdt:P2925) ?obj . }",
-    "visible_question_es": "¿Quién es el santo patrón de {fotógrafos}?"
-  },
-  {
-    "id": "Q382",
-    "contingent_question": null,
-    "question_en": "Who is the composer for Celeste?",
-    "matches_en": [
-      {
-        "mention": "Celeste",
-        "entity": "Q28451532"
-      }
-    ],
-    "question_template_en": "Who is the composer for $mention_0?",
-    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P86 ?obj }",
-    "visible_question_en": "Who is the composer for {Celeste}?",
-    "question_es": "¿Quién es el compositor de Celeste?",
-    "matches_es": [
-      {
-        "mention": "Celeste",
-        "entity": "Q28451532"
-      }
-    ],
-    "question_template_es": "¿Quién es el compositor de $mention_0?",
-    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P86 ?obj }",
-    "visible_question_es": "¿Quién es el compositor de {Celeste}?"
-  },
-  {
-    "id": "Q383",
-    "contingent_question": null,
-    "question_en": "Who is the current world record holder for the men's 200 meter sprint?",
-    "matches_en": [
-      {
-        "mention": "men's 200 meter sprint",
-        "entity": "Q55243755"
-      },
-      {
-        "mention": "world record",
-        "entity": "Q688615"
-      }
-    ],
-    "question_template_en": "Who is the current $mention_1 holder for the $mention_0?",
-    "query_template_en": "SELECT DISTINCT ?sbj WHERE { ?sbj p:P1000 ?obj1 . ?obj1 ps:P1000 ?obj2 . ?obj2 p:P360 ?obj3 . ?obj3 ps:P360 $entity_1 . ?obj3 pq:P641 $entity_0 . MINUS { ?obj1 pq:P582 ?obj4 } }",
-    "visible_question_en": "Who is the current {world record} holder for the {men's 200 meter sprint}?",
-    "question_es": "¿Quién es el plusmarquista mundial actual de los 200 metros lisos masculinos?",
-    "matches_es": [
-      {
-        "mention": "200 metros lisos masculinos",
-        "entity": "Q55243755"
-      }
-    ],
-    "question_template_es": "¿Quién es el plusmarquista mundial actual de los $mention_0?",
-    "query_template_es": "SELECT DISTINCT ?sbj WHERE { ?sbj p:P1000 ?obj1 . ?obj1 ps:P1000 ?obj2 . ?obj2 p:P360 ?obj3 . ?obj3 ps:P360 wd:Q688615 . ?obj3 pq:P641 $entity_0 . MINUS { ?obj1 pq:P582 ?obj4 } }",
-    "visible_question_es": "¿Quién es el plusmarquista mundial actual de los {200 metros lisos masculinos}?"
-  },
-  {
-    "id": "Q384",
-    "contingent_question": null,
-    "question_en": "What is the highest dan in Go?",
-    "matches_en": [
-      {
-        "mention": "dan",
-        "entity": "Q373498"
-      },
-      {
-        "mention": "Go",
-        "entity": "Q11413"
-      }
-    ],
-    "question_template_en": "What is the highest $mention_0 in $mention_1?",
-    "query_template_en": "SELECT DISTINCT ?sbj WHERE { ?sbj p:P31 ?obj1 . ?obj1 ps:P31 ?obj2 . ?obj2 (wdt:P31|wdt:P279)* $entity_0 . ?obj2 wdt:P641 $entity_1 . ?obj1 pq:P1545 ?obj3 . } ORDER BY DESC(?obj3) LIMIT 1",
-    "visible_question_en": "What is the highest {dan} in {Go}?",
-    "question_es": "¿Cuál es el dan de Go más alto?",
-    "matches_es": [
-      {
-        "mention": "dan",
-        "entity": "Q373498"
-      },
-      {
-        "mention": "Go",
-        "entity": "Q11413"
-      }
-    ],
-    "question_template_es": "¿Cuál es el $mention_0 de $mention_1 más alto?",
-    "query_template_es": "SELECT DISTINCT ?sbj WHERE { ?sbj p:P31 ?obj1 . ?obj1 ps:P31 ?obj2 . ?obj2 (wdt:P31|wdt:P279)* $entity_0 . ?obj2 wdt:P641 $entity_1 . ?obj1 pq:P1545 ?obj3 . } ORDER BY DESC(?obj3) LIMIT 1",
-    "visible_question_es": "¿Cuál es el {dan} de {Go} más alto?"
-  },
-  {
-    "id": "Q385",
-    "contingent_question": null,
-    "question_en": "What languages did Kofi Annan speak?",
-    "matches_en": [
-      {
-        "mention": "Kofi Annan",
-        "entity": "Q1254"
-      }
-    ],
-    "question_template_en": "What languages did $mention_0 speak?",
-    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P1412 ?obj }",
-    "visible_question_en": "What languages did {Kofi Annan} speak?",
-    "question_es": "¿Qué idiomas hablaba Kofi Annan?",
-    "matches_es": [
-      {
-        "mention": "Kofi Annan",
-        "entity": "Q1254"
-      }
-    ],
-    "question_template_es": "¿Qué idiomas hablaba $mention_0?",
-    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P1412 ?obj }",
-    "visible_question_es": "¿Qué idiomas hablaba {Kofi Annan}?"
-  },
-  {
-    "id": "Q386",
-    "contingent_question": null,
-    "question_en": "What is the fastest species of mammal?",
-    "matches_en": [
-      {
-        "mention": "mammal",
-        "entity": "Q7377"
-      },
-      {
-        "mention": "species",
-        "entity": "Q7432"
-      }
-    ],
-    "question_template_en": "What is the fastest $mention_1 of $mention_0?",
-    "query_template_en": "SELECT ?sbj WHERE { ?sbj p:P2052/psn:P2052/wikibase:quantityAmount ?obj . ?sbj wdt:P105 $entity_1 . ?sbj wdt:P171+ $entity_0 . } ORDER BY DESC(?obj) LIMIT 1",
-    "visible_question_en": "What is the fastest {species} of {mammal}?",
-    "question_es": "¿Qué especie de mamífero es la más rápida?",
-    "matches_es": [
-      {
-        "mention": "mamífero",
-        "entity": "Q7377"
-      },
-      {
-        "mention": "especie",
-        "entity": "Q7432"
-      }
-    ],
-    "question_template_es": "¿Qué $mention_1 de $mention_0 es la más rápida?",
-    "query_template_es": "SELECT ?sbj WHERE { ?sbj p:P2052/psn:P2052/wikibase:quantityAmount ?obj . ?sbj wdt:P105 $entity_1 . ?sbj wdt:P171+ $entity_0 . } ORDER BY DESC(?obj) LIMIT 1",
-    "visible_question_es": "¿Qué {especie} de {mamífero} es la más rápida?"
-  },
-  {
-    "id": "Q387",
-    "contingent_question": null,
-    "question_en": "What profession studies butterflies?",
-    "matches_en": [
-      {
-        "mention": "profession",
-        "entity": "Q28640"
-      },
-      {
-        "mention": "butterflies",
-        "entity": "Q11946202"
-      }
-    ],
-    "question_template_en": "What $mention_0 studies $mention_1?",
-    "query_template_en": "SELECT DISTINCT ?sbj WHERE { ?sbj wdt:P31?/wdt:P279* $entity_0 . ?sbj wdt:P425 ?obj1 . ?obj1 (wdt:P101|wdt:P2578)/^pq:P642?/^p:P31? $entity_1 }",
-    "visible_question_en": "What {profession} studies {butterflies}?",
-    "question_es": "¿Qué profesión estudia las mariposas?",
-    "matches_es": [
-      {
-        "mention": "profesión",
-        "entity": "Q28640"
-      },
-      {
-        "mention": "mariposas",
-        "entity": "Q11946202"
-      }
-    ],
-    "question_template_es": "¿Qué $mention_0 estudia las $mention_1?",
-    "query_template_es": "SELECT DISTINCT ?sbj WHERE { ?sbj wdt:P31?/wdt:P279* $entity_0 . ?sbj wdt:P425 ?obj1 . ?obj1 (wdt:P101|wdt:P2578)/^pq:P642?/^p:P31? $entity_1 }",
-    "visible_question_es": "¿Qué {profesión} estudia las {mariposas}?"
-  },
-  {
-    "id": "Q388",
-    "contingent_question": null,
-    "question_en": "Who discovered Pluto?",
-    "matches_en": [
-      {
-        "mention": "Pluto",
-        "entity": "Q339"
-      }
-    ],
-    "question_template_en": "Who discovered $mention_0?",
-    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P61 ?obj }",
-    "visible_question_en": "Who discovered {Pluto}?",
-    "question_es": "¿Quién descubrió a  Plutón?",
-    "matches_es": [
-      {
-        "mention": "Plutón",
-        "entity": "Q339"
-      }
-    ],
-    "question_template_es": "¿Quién descubrió a  $mention_0?",
-    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P61 ?obj }",
-    "visible_question_es": "¿Quién descubrió a  {Plutón}?"
-  },
-  {
-    "id": "Q389",
-    "contingent_question": null,
-    "question_en": "Who is the manager of Crystal Palace F.C.?",
-    "matches_en": [
-      {
-        "mention": "Crystal Palace F.C.",
-        "entity": "Q19467"
-      }
-    ],
-    "question_template_en": "Who is the manager of $mention_0?",
-    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P286 ?obj }",
-    "visible_question_en": "Who is the manager of {Crystal Palace F.C.}?",
-    "question_es": "¿Quién es el entrenador de Crystal Palace F.C.?",
-    "matches_es": [
-      {
-        "mention": "Crystal Palace F.C.",
-        "entity": "Q19467"
-      }
-    ],
-    "question_template_es": "¿Quién es el entrenador de $mention_0?",
-    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P286 ?obj }",
-    "visible_question_es": "¿Quién es el entrenador de {Crystal Palace F.C.}?"
-  },
-  {
-    "id": "Q390",
-    "contingent_question": null,
-    "question_en": "What collections outside of Africa exhibit Benin Bronzes?",
-    "matches_en": [
-      {
-        "mention": "Benin Bronzes",
-        "entity": "Q248101"
-      },
-      {
-        "mention": "Africa",
-        "entity": "Q15"
-      }
-    ],
-    "question_template_en": "What collections outside of $mention_1 exhibit $mention_0?",
-    "query_template_en": "SELECT DISTINCT ?obj WHERE { ?sbj (wdt:P361|wdt:P31)/wdt:P279* $entity_0 . ?sbj wdt:P195 ?obj . MINUS { ?obj wdt:P131*/wdt:P17?/wdt:P30? $entity_1 }  }",
-    "visible_question_en": "What collections outside of {Africa} exhibit {Benin Bronzes}?",
-    "question_es": "¿Qué colecciones fuera de África exponen Bronces de Benín?",
-    "matches_es": [
-      {
-        "mention": "Bronces de Benín",
-        "entity": "Q248101"
-      },
-      {
-        "mention": "África",
-        "entity": "Q15"
-      }
-    ],
-    "question_template_es": "¿Qué colecciones fuera de $mention_1 exponen $mention_0?",
-    "query_template_es": "SELECT DISTINCT ?obj WHERE { ?sbj (wdt:P361|wdt:P31)/wdt:P279* $entity_0 . ?sbj wdt:P195 ?obj . MINUS { ?obj wdt:P131*/wdt:P17?/wdt:P30? $entity_1 }  }",
-    "visible_question_es": "¿Qué colecciones fuera de {África} exponen {Bronces de Benín}?"
-  },
-  {
-    "id": "Q391",
-    "contingent_question": null,
-    "question_en": "What operas are based on works by Alexander Pushkin?",
-    "matches_en": [
-      {
-        "mention": "operas",
-        "entity": "Q1344"
-      },
-      {
-        "mention": "Alexander Pushkin",
-        "entity": "Q7200"
-      }
-    ],
-    "question_template_en": "What $mention_0 are based on works by $mention_1?",
-    "query_template_en": "SELECT DISTINCT ?sbj WHERE { ?sbj (wdt:P31|wdt:P7937)/wdt:P279* $entity_0 . ?sbj wdt:P144 ?obj . ?obj wdt:P50 $entity_1 . }",
-    "visible_question_en": "What {operas} are based on works by {Alexander Pushkin}?",
-    "question_es": "¿Qué óperas se basan en obras por Alexander Pushkin?",
-    "matches_es": [
-      {
-        "mention": "óperas",
-        "entity": "Q1344"
-      },
-      {
-        "mention": "Alexander Pushkin",
-        "entity": "Q7200"
-      }
-    ],
-    "question_template_es": "¿Qué $mention_0 se basan en obras por $mention_1?",
-    "query_template_es": "SELECT DISTINCT ?sbj WHERE { ?sbj (wdt:P31|wdt:P7937)/wdt:P279* $entity_0 . ?sbj wdt:P144 ?obj . ?obj wdt:P50 $entity_1 . }",
-    "visible_question_es": "¿Qué {óperas} se basan en obras por {Alexander Pushkin}?"
-  },
-  {
-    "id": "Q392",
-    "contingent_question": null,
-    "question_en": "In which countries are tepuis found?",
-    "matches_en": [
-      {
-        "mention": "tepuis",
-        "entity": "Q828329"
-      }
-    ],
-    "question_template_en": "In which countries are $mention_0 found?",
-    "query_template_en": "SELECT DISTINCT ?obj WHERE { ?sbj wdt:P31/wdt:P279* $entity_0 . ?sbj wdt:P131*/wdt:P17 ?obj }",
-    "visible_question_en": "In which countries are {tepuis} found?",
-    "question_es": "¿En qué países se encuentran tepuis?",
-    "matches_es": [
-      {
-        "mention": "tepuis",
-        "entity": "Q828329"
-      }
-    ],
-    "question_template_es": "¿En qué países se encuentran $mention_0?",
-    "query_template_es": "SELECT DISTINCT ?obj WHERE { ?sbj wdt:P31/wdt:P279* $entity_0 . ?sbj wdt:P131*/wdt:P17 ?obj }",
-    "visible_question_es": "¿En qué países se encuentran {tepuis}?"
-  },
-  {
-    "id": "Q394",
-    "contingent_question": null,
-    "question_en": "What is the largest moon of the Solar System by mass?",
-    "matches_en": [],
-    "question_template_en": "What is the largest moon of the Solar System by mass?",
-    "query_template_en": "SELECT DISTINCT ?sbj WHERE { ?sbj wdt:P31/wdt:P279* wd:Q2537 . ?sbj wdt:P397+ wd:Q525 . ?sbj p:P2067/psn:P2067/wikibase:quantityAmount ?obj . } ORDER BY DESC(?obj) LIMIT 1",
-    "visible_question_en": "What is the largest moon of the Solar System by mass?",
-    "question_es": "¿Cuál es la luna más grande del Sistema Solar por masa?",
-    "matches_es": [],
-    "question_template_es": "¿Cuál es la luna más grande del Sistema Solar por masa?",
-    "query_template_es": "SELECT DISTINCT ?sbj WHERE { ?sbj wdt:P31/wdt:P279* wd:Q2537 . ?sbj wdt:P397+ wd:Q525 . ?sbj p:P2067/psn:P2067/wikibase:quantityAmount ?obj . } ORDER BY DESC(?obj) LIMIT 1",
-    "visible_question_es": "¿Cuál es la luna más grande del Sistema Solar por masa?"
-  },
-  {
-    "id": "Q395",
-    "contingent_question": null,
-    "question_en": "What is the largest moon of the Solar System by radius?",
-    "matches_en": [],
-    "question_template_en": "What is the largest moon of the Solar System by radius?",
-    "query_template_en": "SELECT DISTINCT ?sbj WHERE { ?sbj wdt:P31/wdt:P279* wd:Q2537 . ?sbj wdt:P397+ wd:Q525 . ?sbj p:P2120/psn:P2120/wikibase:quantityAmount ?obj . } ORDER BY DESC(?obj) LIMIT 1",
-    "visible_question_en": "What is the largest moon of the Solar System by radius?",
-    "question_es": "¿Cuál es la luna más grande del Sistema Solar por radio?",
-    "matches_es": [],
-    "question_template_es": "¿Cuál es la luna más grande del Sistema Solar por radio?",
-    "query_template_es": "SELECT DISTINCT ?sbj WHERE { ?sbj wdt:P31/wdt:P279* wd:Q2537 . ?sbj wdt:P397+ wd:Q525 . ?sbj p:P2120/psn:P2120/wikibase:quantityAmount ?obj . } ORDER BY DESC(?obj) LIMIT 1",
-    "visible_question_es": "¿Cuál es la luna más grande del Sistema Solar por radio?"
-  },
-  {
-    "id": "Q396",
-    "contingent_question": null,
-    "question_en": "What hybrid species can have offspring?",
-    "matches_en": [
-      {
-        "mention": "hybrid species",
-        "entity": "Q42621"
-      }
-    ],
-    "question_template_en": "What $mention_0 can have offspring?",
-    "query_template_en": "SELECT DISTINCT ?obj WHERE { ?sbj wdt:P1531 ?obj . ?obj (wdt:P31|wdt:P279)* $entity_0 . }",
-    "visible_question_en": "What {hybrid species} can have offspring?",
-    "question_es": "¿Qué especies híbridas pueden tener crías?",
-    "matches_es": [
-      {
-        "mention": "especies híbridas",
-        "entity": "Q42621"
-      }
-    ],
-    "question_template_es": "¿Qué $mention_0 pueden tener crías?",
-    "query_template_es": "SELECT DISTINCT ?obj WHERE { ?sbj wdt:P1531 ?obj . ?obj (wdt:P31|wdt:P279)* $entity_0 . }",
-    "visible_question_es": "¿Qué {especies híbridas} pueden tener crías?"
-  },
-  {
-    "id": "Q397",
-    "contingent_question": null,
-    "question_en": "What is the wheelbase of the Enzo Ferrari?",
-    "matches_en": [
-      {
-        "mention": "Enzo Ferrari",
-        "entity": "Q269880"
-      }
-    ],
-    "question_template_en": "What is the wheelbase of the $mention_0?",
-    "query_template_en": "SELECT ?obj WHERE { $entity_0 p:P3039/psn:P3039/wikibase:quantityAmount ?obj }",
-    "visible_question_en": "What is the wheelbase of the {Enzo Ferrari}?",
-    "question_es": "¿Qué es la distancia entre ejes del Enzo Ferrari?",
-    "matches_es": [
-      {
-        "mention": "Enzo Ferrari",
-        "entity": "Q269880"
-      }
-    ],
-    "question_template_es": "¿Qué es la distancia entre ejes del $mention_0?",
-    "query_template_es": "SELECT ?obj WHERE { $entity_0 p:P3039/psn:P3039/wikibase:quantityAmount ?obj }",
-    "visible_question_es": "¿Qué es la distancia entre ejes del {Enzo Ferrari}?"
-  },
-  {
-    "id": "Q399",
-    "contingent_question": {
-      "id": "Q400",
-      "query_raw": "ASK WHERE { wd:Q4484215 p:P108 ?obj1 . ?obj1 ps:P108 wd:Q169889 . }",
-      "expected_value": 1,
-      "question_raw_en": "Has Kyra Phillips worked with ABC?",
-      "question_template_en": "Has $mention_1 worked with $mention_0?",
-      "query_template_en": "ASK WHERE { $entity_1 p:P108 ?obj1 . ?obj1 ps:P108 $entity_0 . }",
-      "question_raw_es": "¿Ha trabajado Kyra Phillips con ABC?",
-      "question_template_es": "¿Ha trabajado $mention_1 con $mention_0?",
-      "query_template_es": "ASK WHERE { $entity_1 p:P108 ?obj1 . ?obj1 ps:P108 $entity_0 . }"
-    },
-    "question_en": "When did Kyra Phillips join ABC?",
-    "matches_en": [
-      {
-        "mention": "ABC",
-        "entity": "Q169889"
-      },
-      {
-        "mention": "Kyra Phillips",
-        "entity": "Q4484215"
-      }
-    ],
-    "question_template_en": "When did $mention_1 join $mention_0?",
-    "query_template_en": "SELECT DISTINCT ?obj2 WHERE { $entity_1 p:P108 ?obj1 . ?obj1 ps:P108 $entity_0 . ?obj1 pq:P580 ?obj2 }",
-    "visible_question_en": "When did {Kyra Phillips} join {ABC}?",
-    "question_es": "¿Cuándo se incorporó Kyra Phillips a ABC?",
-    "matches_es": [
-      {
-        "mention": "ABC",
-        "entity": "Q169889"
-      },
-      {
-        "mention": "Kyra Phillips",
-        "entity": "Q4484215"
-      }
-    ],
-    "question_template_es": "¿Cuándo se incorporó $mention_1 a $mention_0?",
-    "query_template_es": "SELECT DISTINCT ?obj2 WHERE { $entity_1 p:P108 ?obj1 . ?obj1 ps:P108 $entity_0 . ?obj1 pq:P580 ?obj2 }",
-    "visible_question_es": "¿Cuándo se incorporó {Kyra Phillips} a {ABC}?"
-  },
-  {
-    "id": "Q400",
-    "contingent_question": null,
-    "question_en": "Has Kyra Phillips worked with ABC?",
-    "matches_en": [
-      {
-        "mention": "ABC",
-        "entity": "Q169889"
-      },
-      {
-        "mention": "Kyra Phillips",
-        "entity": "Q4484215"
-      }
-    ],
-    "question_template_en": "Has $mention_1 worked with $mention_0?",
-    "query_template_en": "ASK WHERE { $entity_1 p:P108 ?obj1 . ?obj1 ps:P108 $entity_0 . }",
-    "visible_question_en": "Has {Kyra Phillips} worked with {ABC}?",
-    "question_es": "¿Ha trabajado Kyra Phillips con ABC?",
-    "matches_es": [
-      {
-        "mention": "ABC",
-        "entity": "Q169889"
-      },
-      {
-        "mention": "Kyra Phillips",
-        "entity": "Q4484215"
-      }
-    ],
-    "question_template_es": "¿Ha trabajado $mention_1 con $mention_0?",
-    "query_template_es": "ASK WHERE { $entity_1 p:P108 ?obj1 . ?obj1 ps:P108 $entity_0 . }",
-    "visible_question_es": "¿Ha trabajado {Kyra Phillips} con {ABC}?"
-  },
-  {
-    "id": "Q401",
-    "contingent_question": {
-      "id": "Q402",
-      "query_raw": "ASK WHERE { wd:Q46239 p:P793 ?obj1 . ?obj1 ps:P793 wd:Q17781833 . }",
-      "expected_value": 1,
-      "question_raw_en": "Was the Statue of Zeus at Olympia destroyed?",
-      "question_template_en": "Was the $mention_0 $mention_1?",
-      "query_template_en": "ASK WHERE { $entity_0 p:P793 ?obj1 . ?obj1 ps:P793 $entity_1 . }",
-      "question_raw_es": "¿Fue destruida la Estatua de Zeus en Olimpia?",
-      "question_template_es": "¿Fue $mention_1 la $mention_0?",
-      "query_template_es": "ASK WHERE { $entity_0 p:P793 ?obj1 . ?obj1 ps:P793 $entity_1 . }"
-    },
-    "question_en": "When was the Statue of Zeus at Olympia destroyed?",
-    "matches_en": [
-      {
-        "mention": "Statue of Zeus at Olympia",
-        "entity": "Q46239"
-      },
-      {
-        "mention": "destroyed",
-        "entity": "Q17781833"
-      }
-    ],
-    "question_template_en": "When was the $mention_0 $mention_1?",
-    "query_template_en": "SELECT DISTINCT ?obj2 WHERE { $entity_0 p:P793 ?obj1 . ?obj1 ps:P793 $entity_1 . ?obj1 pq:P585 ?obj2 . }",
-    "visible_question_en": "When was the {Statue of Zeus at Olympia} {destroyed}?",
-    "question_es": "¿Cuándo fue destruida la Estatua de Zeus en Olimpia?",
-    "matches_es": [
-      {
-        "mention": "Estatua de Zeus en Olimpia",
-        "entity": "Q46239"
-      },
-      {
-        "mention": "destruida",
-        "entity": "Q17781833"
-      }
-    ],
-    "question_template_es": "¿Cuándo fue $mention_1 la $mention_0?",
-    "query_template_es": "SELECT DISTINCT ?obj2 WHERE { $entity_0 p:P793 ?obj1 . ?obj1 ps:P793 $entity_1 . ?obj1 pq:P585 ?obj2 . }",
-    "visible_question_es": "¿Cuándo fue {destruida} la {Estatua de Zeus en Olimpia}?"
-  },
-  {
-    "id": "Q402",
-    "contingent_question": null,
-    "question_en": "Was the Statue of Zeus at Olympia destroyed?",
-    "matches_en": [],
-    "question_template_en": "Was the Statue of Zeus at Olympia destroyed?",
-    "query_template_en": "ASK WHERE { wd:Q46239 p:P793 ?obj1 . ?obj1 ps:P793 wd:Q17781833 . }",
-    "visible_question_en": "Was the Statue of Zeus at Olympia destroyed?",
-    "question_es": "¿Fue destruida la Estatua de Zeus en Olimpia?",
-    "matches_es": [],
-    "question_template_es": "¿Fue destruida la Estatua de Zeus en Olimpia?",
-    "query_template_es": "ASK WHERE { wd:Q46239 p:P793 ?obj1 . ?obj1 ps:P793 wd:Q17781833 . }",
-    "visible_question_es": "¿Fue destruida la Estatua de Zeus en Olimpia?"
-  },
-  {
-    "id": "Q403",
-    "contingent_question": null,
-    "question_en": "Who was the Democratic party candidate in the 1972 United States Presidential Election?",
-    "matches_en": [
-      {
-        "mention": "1972 United States Presidential Election",
-        "entity": "Q644161"
-      },
-      {
-        "mention": "Democratic party",
-        "entity": "Q29552"
-      }
-    ],
-    "question_template_en": "Who was the $mention_1 candidate in the $mention_0?",
-    "query_template_en": "SELECT DISTINCT ?obj2 WHERE { $entity_0 p:P726 ?obj1 . ?obj1 ps:P726 ?obj2 . ?obj1 pq:P102 $entity_1 . }",
-    "visible_question_en": "Who was the {Democratic party} candidate in the {1972 United States Presidential Election}?",
-    "question_es": "¿Quién fue el candidato del Partido Demócrata en las elecciones presidenciales de Estados Unidos de 1972?",
-    "matches_es": [
-      {
-        "mention": "elecciones presidenciales de Estados Unidos de 1972",
-        "entity": "Q644161"
-      },
-      {
-        "mention": "Partido Demócrata",
-        "entity": "Q29552"
-      }
-    ],
-    "question_template_es": "¿Quién fue el candidato del $mention_1 en las $mention_0?",
-    "query_template_es": "SELECT DISTINCT ?obj2 WHERE { $entity_0 p:P726 ?obj1 . ?obj1 ps:P726 ?obj2 . ?obj1 pq:P102 $entity_1 . }",
-    "visible_question_es": "¿Quién fue el candidato del {Partido Demócrata} en las {elecciones presidenciales de Estados Unidos de 1972}?"
-  },
-  {
-    "id": "Q404",
-    "contingent_question": null,
-    "question_en": "When is the feast day of Saint Kizito?",
-    "matches_en": [
-      {
-        "mention": "Saint Kizito",
-        "entity": "Q3463928"
-      }
-    ],
-    "question_template_en": "When is the feast day of $mention_0?",
-    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P841 ?obj }",
-    "visible_question_en": "When is the feast day of {Saint Kizito}?",
-    "question_es": "¿Cuándo es el día de festividad de Saint Kizito?",
-    "matches_es": [
-      {
-        "mention": "Kizito",
-        "entity": "Q3463928"
-      }
-    ],
-    "question_template_es": "¿Cuándo es el día de festividad de Saint $mention_0?",
-    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P841 ?obj }",
-    "visible_question_es": "¿Cuándo es el día de festividad de Saint {Kizito}?"
-  },
-  {
-    "id": "Q405",
-    "contingent_question": null,
-    "question_en": "In which country was Elon Musk born?",
-    "matches_en": [
-      {
-        "mention": "Elon Musk",
-        "entity": "Q317521"
-      }
-    ],
-    "question_template_en": "In which country was $mention_0 born?",
-    "query_template_en": "SELECT DISTINCT ?obj2 WHERE { $entity_0 wdt:P19 ?obj1 . ?obj1 wdt:P17 ?obj2 . }",
-    "visible_question_en": "In which country was {Elon Musk} born?",
-    "question_es": "¿En qué país nació Elon Musk?",
-    "matches_es": [
-      {
-        "mention": "Elon Musk",
-        "entity": "Q317521"
-      }
-    ],
-    "question_template_es": "¿En qué país nació $mention_0?",
-    "query_template_es": "SELECT DISTINCT ?obj2 WHERE { $entity_0 wdt:P19 ?obj1 . ?obj1 wdt:P17 ?obj2 . }",
-    "visible_question_es": "¿En qué país nació {Elon Musk}?"
-  },
-  {
-    "id": "Q406",
-    "contingent_question": null,
-    "question_en": "How many polish Grandmasters have there been?",
-    "matches_en": [
-      {
-        "mention": "Grandmaster",
-        "entity": "Q105269"
-      }
-    ],
-    "question_template_en": "How many polish Grandmasters have there been?",
-    "query_template_en": "SELECT (COUNT(?grandmaster) as ?count) WHERE { ?grandmaster wdt:P2962 $entity_0 .  ?grandmaster wdt:P27 wd:Q36 }",
-    "visible_question_en": "How many polish Grandmasters have there been?",
-    "question_es": "¿Cuántos Gran Maestros Internacionales polacos ha habido?",
-    "matches_es": [],
-    "question_template_es": "¿Cuántos Gran Maestros Internacionales polacos ha habido?",
-    "query_template_es": "SELECT (COUNT(?grandmaster) as ?count) WHERE { ?grandmaster wdt:P2962 wd:Q105269 .  ?grandmaster wdt:P27 wd:Q36 }",
-    "visible_question_es": "¿Cuántos Gran Maestros Internacionales polacos ha habido?"
-  },
-  {
-    "id": "Q407",
-    "contingent_question": null,
-    "question_en": "Which countries have diplomatic relations with Chile?",
-    "matches_en": [
-      {
-        "mention": "Chile",
-        "entity": "Q298"
-      }
-    ],
-    "question_template_en": "Which countries have diplomatic relations with $mention_0?",
-    "query_template_en": "SELECT ?obj WHERE { $entity_0 wdt:P530 ?obj }",
-    "visible_question_en": "Which countries have diplomatic relations with {Chile}?",
-    "question_es": "¿Qué países tienen relaciones diplomáticas con Chile?",
-    "matches_es": [
-      {
-        "mention": "Chile",
-        "entity": "Q298"
-      }
-    ],
-    "question_template_es": "¿Qué países tienen relaciones diplomáticas con $mention_0?",
-    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P530 ?obj }",
-    "visible_question_es": "¿Qué países tienen relaciones diplomáticas con {Chile}?"
-  },
-  {
-    "id": "Q408",
-    "contingent_question": null,
-    "question_en": "Which companies are sponsors of Barcelona soccer club?",
-    "matches_en": [],
-    "question_template_en": "Which companies are sponsors of Barcelona soccer club?",
-    "query_template_en": "SELECT ?obj WHERE { wd:Q7156 wdt:P859 ?obj }",
-    "visible_question_en": "Which companies are sponsors of Barcelona soccer club?",
-    "question_es": "¿Qué empresas son patrocinadores del fútbol club Barcelona?",
-    "matches_es": [],
-    "question_template_es": "¿Qué empresas son patrocinadores del fútbol club Barcelona?",
-    "query_template_es": "SELECT ?obj WHERE { wd:Q7156 wdt:P859 ?obj }",
-    "visible_question_es": "¿Qué empresas son patrocinadores del fútbol club Barcelona?"
-  },
-  {
-    "id": "Q409",
-    "contingent_question": null,
-    "question_en": "What video game series has been the best seller?",
-    "matches_en": [
-      {
-        "mention": "video game series",
-        "entity": "Q7058673"
-      }
-    ],
-    "question_template_en": "What $mention_0 has been the best seller?",
-    "query_template_en": "SELECT ?gameSeries WHERE { ?gameSeries wdt:P31 $entity_0 . ?gameSeries wdt:P2664 ?num .} ORDER BY DESC (?num) LIMIT 1",
-    "visible_question_en": "What {video game series} has been the best seller?",
-    "question_es": "¿Qué serie de videojuegos ha sido la más vendida?",
-    "matches_es": [
-      {
-        "mention": "serie de videojuegos",
-        "entity": "Q7058673"
-      }
-    ],
-    "question_template_es": "¿Qué $mention_0 ha sido la más vendida?",
-    "query_template_es": "SELECT ?gameSeries WHERE { ?gameSeries wdt:P31 $entity_0 . ?gameSeries wdt:P2664 ?num .} ORDER BY DESC (?num) LIMIT 1",
-    "visible_question_es": "¿Qué {serie de videojuegos} ha sido la más vendida?"
-  },
-  {
-    "id": "Q410",
-    "contingent_question": null,
-    "question_en": "Which video game series has the most video games?",
-    "matches_en": [
-      {
-        "mention": "video game series",
-        "entity": "Q7058673"
-      }
-    ],
-    "question_template_en": "Which $mention_0 has the most video games?",
-    "query_template_en": "SELECT ?gameSeries WHERE { SELECT ?gameSeries (COUNT(?game) as ?numGames) WHERE { ?gameSeries wdt:P31 $entity_0 . ?game wdt:P179 ?gameSeries . } GROUP BY (?gameSeries) ORDER BY DESC (?numGames) LIMIT 1 }",
-    "visible_question_en": "Which {video game series} has the most video games?",
-    "question_es": "¿Qué serie de videojuegos tiene más videojuegos?",
-    "matches_es": [
-      {
-        "mention": "serie de videojuegos",
-        "entity": "Q7058673"
-      }
-    ],
-    "question_template_es": "¿Qué $mention_0 tiene más videojuegos?",
-    "query_template_es": "SELECT ?gameSeries WHERE { SELECT ?gameSeries (COUNT(?game) as ?numGames) WHERE { ?gameSeries wdt:P31 $entity_0 . ?game wdt:P179 ?gameSeries . } GROUP BY (?gameSeries) ORDER BY DESC (?numGames) LIMIT 1 }",
-    "visible_question_es": "¿Qué {serie de videojuegos} tiene más videojuegos?"
-  },
-  {
-    "id": "Q411",
-    "contingent_question": null,
-    "question_en": "Which planet has the least mass?",
-    "matches_en": [
-      {
-        "mention": "planet",
-        "entity": "Q634"
-      }
-    ],
-    "question_template_en": "Which $mention_0 has the least mass?",
-    "query_template_en": "SELECT ?planet WHERE { ?planet wdt:P31/wdt:P279* $entity_0 . ?planet wdt:P2067 ?mass .} ORDER BY ASC(?mass) LIMIT 1",
-    "visible_question_en": "Which {planet} has the least mass?",
-    "question_es": "¿Qué planeta tiene menos masa?",
-    "matches_es": [
-      {
-        "mention": "planeta",
-        "entity": "Q634"
-      }
-    ],
-    "question_template_es": "¿Qué $mention_0 tiene menos masa?",
-    "query_template_es": "SELECT ?planet WHERE { ?planet wdt:P31/wdt:P279* $entity_0 . ?planet wdt:P2067 ?mass .} ORDER BY ASC(?mass) LIMIT 1",
-    "visible_question_es": "¿Qué {planeta} tiene menos masa?"
-  },
-  {
-    "id": "Q412",
-    "contingent_question": null,
-    "question_en": "Which painter has painted the most paintings?",
-    "matches_en": [
-      {
-        "mention": "painting",
-        "entity": "Q3305213"
-      },
-      {
-        "mention": "painter",
-        "entity": "Q1028181"
-      }
-    ],
-    "question_template_en": "Which $mention_1 has painted the most paintings?",
-    "query_template_en": "SELECT ?artist WHERE { SELECT ?artist (COUNT (DISTINCT ?artwork) as ?pieces) WHERE { ?artist wdt:P106/wdt:P279* $entity_1 . ?artwork wdt:P170 ?artist . ?artwork wdt:P31/wdt:P279* $entity_0 .} GROUP BY (?artist) ORDER BY DESC(?pieces) LIMIT 1 }",
-    "visible_question_en": "Which {painter} has painted the most paintings?",
-    "question_es": "¿Qué pintor ha pintado más pinturas?",
-    "matches_es": [
-      {
-        "mention": "pintura",
-        "entity": "Q3305213"
-      },
-      {
-        "mention": "pintor",
-        "entity": "Q1028181"
-      }
-    ],
-    "question_template_es": "¿Qué $mention_1 ha pintado más pinturas?",
-    "query_template_es": "SELECT ?artist WHERE { SELECT ?artist (COUNT (DISTINCT ?artwork) as ?pieces) WHERE { ?artist wdt:P106/wdt:P279* $entity_1 . ?artwork wdt:P170 ?artist . ?artwork wdt:P31/wdt:P279* $entity_0 .} GROUP BY (?artist) ORDER BY DESC(?pieces) LIMIT 1 }",
-    "visible_question_es": "¿Qué {pintor} ha pintado más pinturas?"
-  },
-  {
-    "id": "Q413",
-    "contingent_question": null,
-    "question_en": "Which was the last programming language created?",
-    "matches_en": [
-      {
-        "mention": "programming language",
-        "entity": "Q9143"
-      }
-    ],
-    "question_template_en": "Which was the last $mention_0 created?",
-    "query_template_en": "SELECT ?language WHERE { ?language wdt:P31/wdt:P279* $entity_0 . ?language wdt:P571 ?fecha . } ORDER BY DESC(?fecha) LIMIT 1",
-    "visible_question_en": "Which was the last {programming language} created?",
-    "question_es": "¿Cuál fue el último lenguaje de programación creado?",
-    "matches_es": [
-      {
-        "mention": "lenguaje de programación",
-        "entity": "Q9143"
-      }
-    ],
-    "question_template_es": "¿Cuál fue el último $mention_0 creado?",
-    "query_template_es": "SELECT ?language WHERE { ?language wdt:P31/wdt:P279* $entity_0 . ?language wdt:P571 ?fecha . } ORDER BY DESC(?fecha) LIMIT 1",
-    "visible_question_es": "¿Cuál fue el último {lenguaje de programación} creado?"
-  },
-  {
-    "id": "Q414",
-    "contingent_question": null,
-    "question_en": "Which musical groups started the same year as Soda Stereo?",
-    "matches_en": [
-      {
-        "mention": "Soda Stereo",
-        "entity": "Q1816849"
-      },
-      {
-        "mention": "musical group",
-        "entity": "Q215380"
-      }
-    ],
-    "question_template_en": "Which musical groups started the same year as $mention_0?",
-    "query_template_en": "SELECT ?group WHERE { ?group wdt:P31 $entity_1 . $entity_0 wdt:P571 ?year . ?group wdt:P571 ?inception . FILTER(?inception=?year) }",
-    "visible_question_en": "Which musical groups started the same year as {Soda Stereo}?",
-    "question_es": "¿Qué grupos musicales comenzaron el mismo año que Soda Stereo?",
-    "matches_es": [],
-    "question_template_es": "¿Qué grupos musicales comenzaron el mismo año que Soda Stereo?",
-    "query_template_es": "SELECT ?group WHERE { ?group wdt:P31 wd:Q215380 . wd:Q1816849 wdt:P571 ?year . ?group wdt:P571 ?inception . FILTER(?inception=?year) }",
-    "visible_question_es": "¿Qué grupos musicales comenzaron el mismo año que Soda Stereo?"
-  },
-  {
-    "id": "Q415",
-    "contingent_question": null,
-    "question_en": "Which soccer players have at least 2 nationalities?",
-    "matches_en": [],
-    "question_template_en": "Which soccer players have at least 2 nationalities?",
-    "query_template_en": "SELECT ?player ?num WHERE { SELECT ?player (COUNT (DISTINCT ?nationality) as ?num) WHERE { ?player wdt:P106 wd:Q937857 . ?player wdt:P27 ?nationality . } GROUP BY (?player) HAVING(COUNT(DISTINCT ?nationality) > 1) }",
-    "visible_question_en": "Which soccer players have at least 2 nationalities?",
-    "question_es": "¿Qué jugadores de futbol tienen al menos 2 nacionalidades?",
-    "matches_es": [],
-    "question_template_es": "¿Qué jugadores de futbol tienen al menos 2 nacionalidades?",
-    "query_template_es": "SELECT ?player ?num WHERE { SELECT ?player (COUNT (DISTINCT ?nationality) as ?num) WHERE { ?player wdt:P106 wd:Q937857 . ?player wdt:P27 ?nationality . } GROUP BY (?player) HAVING(COUNT(DISTINCT ?nationality) > 1) }",
-    "visible_question_es": "¿Qué jugadores de futbol tienen al menos 2 nacionalidades?"
-  },
-  {
-    "id": "Q416",
-    "contingent_question": null,
-    "question_en": "Which games have won the best esports game of the year award?",
-    "matches_en": [],
-    "question_template_en": "Which games have won the best esports game of the year award?",
-    "query_template_en": "SELECT ?game WHERE { ?game wdt:P31 wd:Q7889 . ?game wdt:P166 wd:Q104117257 . }",
-    "visible_question_en": "Which games have won the best esports game of the year award?",
-    "question_es": "¿Qué juegos han ganado el premio de mejor juego de Esports del año?",
-    "matches_es": [],
-    "question_template_es": "¿Qué juegos han ganado el premio de mejor juego de Esports del año?",
-    "query_template_es": "SELECT ?game WHERE { ?game wdt:P31 wd:Q7889 . ?game wdt:P166 wd:Q104117257 . }",
-    "visible_question_es": "¿Qué juegos han ganado el premio de mejor juego de Esports del año?"
-  },
-  {
-    "id": "Q417",
-    "contingent_question": null,
-    "question_en": null,
-    "matches_en": [],
-    "question_template_en": null,
-    "query_template_en": null,
-    "visible_question_en": null,
-    "question_es": "¿Cuándo nació J. K. Rowling?",
-    "matches_es": [
-      {
-        "mention": "J. K. Rowling",
-        "entity": "Q34660"
-      }
-    ],
-    "question_template_es": "¿Cuándo nació $mention_0?",
-    "query_template_es": "SELECT ?obj WHERE { $entity_0 wdt:P569 ?obj }",
-    "visible_question_es": "¿Cuándo nació {J. K. Rowling}?"
   }
 ]
