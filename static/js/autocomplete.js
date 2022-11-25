@@ -7,8 +7,9 @@ function fillMainAutocomplete() {
     var dataArr = $.map(questionsData, function(item) {
         if (item["visible_question_"+lang] != null){
             return {
-                label: item["visible_question_"+lang],
+                label: item["visible_question_"+lang].replaceAll("{", "").replaceAll("}", ""),
                 value: item.id,
+                styledLabel: item["visible_question_"+lang].replaceAll("{", "<i class='mention'>").replaceAll("}", "</i>")
                 };
         }
        
@@ -66,7 +67,11 @@ function fillMainAutocomplete() {
                 hideLangHelp();
             }
         }                
-    })
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        return $("<li>")
+        .append("<div>" + item.styledLabel + "</div>")
+        .appendTo(ul);
+    };
 ;
 }
 
@@ -119,7 +124,11 @@ function autocompleteTemplateForm() {
                         .append("<div>" + item.label + "<br> <span class='desc'>" + item.desc + "</span></div>")
                         .appendTo(ul);
                 };
-                
+            $(this).bind("paste", function () {
+                setTimeout(function () {
+                    $(this).autocomplete("search", $(this).val());
+                }, 0);
+            });    
             }
         });
     });

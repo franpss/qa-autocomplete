@@ -1,13 +1,10 @@
 import re
 from scripts.query import get_props_qualif, get_qawiki_question_query, get_results
 import traceback
-
 def generate_templates_cont_question(cont_question_dict, matches, lang):
-    cont_question_dict[f"question_template_{lang}"] = cont_question_dict[f"question_raw_{lang}"]
-    cont_question_dict[f"query_template_{lang}"] = cont_question_dict[f"query_raw"]
     for idx in range(len(matches)):
-        cont_question_dict[f"question_template_{lang}"] = re.sub(r'\b' + re.escape(matches[idx]["mention"]) + r'((?= )|(?=\?)|(?=\'s))', f"$mention_{idx}", cont_question_dict[f"question_template_{lang}"])
-        cont_question_dict[f"query_template_{lang}"] = re.sub(r'\b' + re.escape("wd:" + matches[idx]["entity"]) + r'((?= )|(?=\?)|(?=\'s))',  f"$entity_{idx}", cont_question_dict[f"query_template_{lang}"])
+        cont_question_dict[f"question_template_{lang}"] = re.sub(r'\b' + re.escape(matches[idx]["mention"]) + r'((?= )|(?=\?))', f"$mention_{idx}", cont_question_dict[f"question_raw_{lang}"])
+        cont_question_dict[f"query_template_{lang}"] = re.sub(r'\b' + re.escape("wd:" + matches[idx]["entity"]) + r'((?= )|(?=\?))',  f"$entity_{idx}", cont_question_dict[f"query_raw"])
     return cont_question_dict
 
 
@@ -30,10 +27,11 @@ def generate_templates(lang, question_id, qawiki_query, qawiki_endpoint):
     get_question_query = """SELECT ?label {{ VALUES (?item) {{(wd:{0})}} . ?item rdfs:label ?label . FILTER (langMatches( lang(?label), "{1}" ))}}"""
     results_question_query = get_results(qawiki_endpoint, get_question_query.format(question_id, lang))
     if len(results_question_query) == 0:
-        return None, [], None, None
+        return None, [], None, None, None
     else:
         original_question = results_question_query[0][0]["value"]
         question_template = original_question
+        visible_question = original_question
         query_template = qawiki_query
         matched_mentions = []
         for e in entities:
@@ -42,10 +40,11 @@ def generate_templates(lang, question_id, qawiki_query, qawiki_endpoint):
                 matched_mentions.append(first_match)
         
         for idx in range(len(matched_mentions)):
-            question_template = re.sub(r'\b' + re.escape(matched_mentions[idx]["mention"]) + r'((?= )|(?=\?)|(?=\'s))', f"$mention_{idx}", question_template)
-            query_template = re.sub(r'\b' + re.escape("wd:" + matched_mentions[idx]["entity"]) + r'((?= )|(?=\?)|(?=\'s))', f"$entity_{idx}", query_template)
-        
-        return original_question, matched_mentions, question_template, query_template
+            
+            visible_question = re.sub(r'\b' + re.escape(matched_mentions[idx]["mention"]) + r'((?= )|(?=\?))', "{" + matched_mentions[idx]["mention"] + "}", visible_question)
+            question_template = re.sub(r'\b' + re.escape(matched_mentions[idx]["mention"]) + r'((?= )|(?=\?))', f"$mention_{idx}", question_template)
+            query_template = re.sub(r'\b' + re.escape("wd:" + matched_mentions[idx]["entity"]) + r'((?= )|(?=\?))', f"$entity_{idx}", query_template)
+        return original_question, matched_mentions, question_template, query_template, visible_question
 
 # (para documentar luego) preguntas contingentes se hacen en esta itteración general debido a que 
 # el resultado de estas (booleano) no depende del idioma. En la función generate_templates se generan
@@ -89,8 +88,7 @@ def get_templates(questions_ids, qawiki_endpoint_url, entity_prefix, boolean_val
             else:
                 item["contingent_question"] = None
             for lang in langs:
-                item[f"question_{lang}"], item[f"matches_{lang}"], item[f"question_template_{lang}"], item[f"query_template_{lang}"] = generate_templates(lang, item["id"], raw_query, qawiki_endpoint_url)
-                item[f"visible_question_{lang}"] = None if item[f"question_template_{lang}"] is None else re.sub(r"(\$[a-z]+_[0-9]+)", "(...)", item[f"question_template_{lang}"])
+                item[f"question_{lang}"], item[f"matches_{lang}"], item[f"question_template_{lang}"], item[f"query_template_{lang}"], item[f"visible_question_{lang}"] = generate_templates(lang, item["id"], raw_query, qawiki_endpoint_url)
                 if item["contingent_question"] != None:
                     contingent_question_label = get_results(qawiki_endpoint_url, get_question_query.format(item["contingent_question"]["id"], lang))
                     if len(contingent_question_label) == 0:
@@ -101,7 +99,5 @@ def get_templates(questions_ids, qawiki_endpoint_url, entity_prefix, boolean_val
         
             questions_output.append(item)
         except:
-            print(question_id)
-            traceback.print_exc()
             continue
     return questions_output

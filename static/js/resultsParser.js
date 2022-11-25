@@ -74,7 +74,7 @@ function answerParser(answer, infoUriAnswers) {
             let desc = "value" in answerInfo[2]? answerInfo[2].value : null;
             let img = "value" in answerInfo[3]? answerInfo[3].value : null;
             return `
-            <div style="overflow: hidden;">
+            <div style="overflow: hidden;margin-bottom: 10px">
             <p>
             {img}
             {label}

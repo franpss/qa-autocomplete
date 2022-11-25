@@ -81,7 +81,9 @@ a {
 .italic-placeholder:-ms-input-placeholder {  
   font-style: italic; 
 }
-
+.mention {
+  color:#969696
+}
 .error {
   border: solid 1.4px #ff000055 !important;  
 }
@@ -130,7 +132,7 @@ a {
 
 .title {
   margin-top: 3px !important;
-  margin-bottom: 0px;
+  margin-bottom: 7px;
 }
 .clear { 
   clear:both; 

@@ -38,8 +38,8 @@ function hideUpdateLink(){
 function addMainPlaceholder() {
     let lang =  $("#lang-select").val();
     var dataArr = $.map(questionsData, function(item) {
-        if (item["visible_question_"+lang] != null){
-            return item["visible_question_"+lang]
+        if (item["question_"+lang] != null){
+            return item["question_"+lang]
         }
     });
     $("#source").attr("placeholder", dataArr[Math.floor(Math.random()*dataArr.length)]);
