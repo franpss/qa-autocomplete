@@ -25,3 +25,10 @@ var wikidataUrl = "http://www.wikidata.org/entity/";
 var qaWikiHomeUrl = "http://qawiki.dcc.uchile.cl/wiki/Main_Page"
 var wikidataQueryLink = "https://query.wikidata.org/#"
 var qaWikiItemUrl = "http://qawiki.dcc.uchile.cl/wiki/Item:"
+var accentMap = {
+    "á": "a",
+    "é": "e",
+    "í": "i",
+    "ó": "o",
+    "ú": "u"
+  };

@@ -17,6 +17,12 @@ async function loadMessagesData() {
     await result;
 }
 
+async function loadInputTokens() {
+    let result = $.getJSON(inputTokensJson, function (data) {
+        inputTokens = data;
+    });
+    await result;
+}
 
 /*
 General auxiliary functions
@@ -144,6 +150,7 @@ $(document).ready(async function(){
 async function initialSetup() {
     loadQuestionsData()
     .then(loadMessagesData)
+    .then(loadInputTokens)
     .then(fillMainAutocomplete)
     .then(addMainPlaceholder)
     .then(getTemplateFromUrl)

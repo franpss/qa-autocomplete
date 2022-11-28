@@ -1,19 +1,60 @@
 /*
+Auxiliary functions to autocomplete
+*/
+
+function normalize(term){
+    var ret = "";
+    for ( var i = 0; i < term.length; i++ ) {
+        ret += accentMap[ term.charAt(i) ] || term.charAt(i);
+    }
+    return ret;
+}
+
+function replaceTokensFromQuestion(question, lang){
+    let output = normalize(question.toLowerCase());
+    inputTokens[lang].forEach((token, tokenIdx) => {
+        token.forEach(word => {
+            let normWord = normalize(word);
+            let wordRegex = new RegExp("\\b" + normWord + "((?= )|(?=\\?))", "g");
+            output = output.replaceAll(wordRegex, "TOK" + tokenIdx.toString())
+        }) 
+    })
+    return output;
+}
+
+function replaceTokensFromInput(input, lang, minChar=2){
+    let output = normalize(input.toLowerCase());
+    inputTokens[lang].forEach((token, tokenIdx) => {
+        token.forEach(word => {
+            let normWord = normalize(word);
+            let wordRegex = normWord;
+            for (let i = normWord.length - 1; i >= minChar; i--) {
+                wordRegex = wordRegex + "|" + normWord.slice(0, i)
+            }
+            wordRegex = new RegExp("\\b(" + wordRegex + ")(?= |$)", "g");
+            output = output.replaceAll(wordRegex, "TOK" + tokenIdx.toString())
+        }) 
+    })
+    return output;
+}
+
+/*
 Autocomplete functions (main and templates)
 */
 
 function fillMainAutocomplete() {
     let lang =  $("#lang-select").val();    
-    console.log("lang", lang)
     hideTemplateHelp();
     hideLangHelp();
     var results = false
     var dataArr = $.map(questionsData, function(item) {
         if (item["visible_question_"+lang] != null){
+            let rawLabel = item["visible_question_"+lang].replaceAll("{", "").replaceAll("}", "")
             return {
-                label: item["visible_question_"+lang].replaceAll("{", "").replaceAll("}", ""),
+                label: rawLabel,
                 value: item.id,
-                styledLabel: item["visible_question_"+lang].replaceAll("{", "<i class='mention'>").replaceAll("}", "</i>")
+                styledLabel: item["visible_question_"+lang].replaceAll("{", "<i class='mention'>").replaceAll("}", "</i>"),
+                tokLabel: replaceTokensFromQuestion(rawLabel, lang)
                 };
         }
        
@@ -22,26 +63,13 @@ function fillMainAutocomplete() {
         (question, index) => index === dataArr.findIndex(
         other => question.label === other.label
     ));
-    var accentMap = {
-            "á": "a",
-            "é": "e",
-            "í": "i",
-            "ó": "o",
-            "ú": "u"
-          };
       
-    var normalize = function( term ) {
-            var ret = "";
-            for ( var i = 0; i < term.length; i++ ) {
-              ret += accentMap[ term.charAt(i) ] || term.charAt(i);
-            }
-            return ret;
-          }
     $("#source").autocomplete({
         source: function( request, response ) {
-            var matcher = new RegExp( $.ui.autocomplete.escapeRegex( normalize(request.term) ), "i" );
+            let tokReqTerm = replaceTokensFromInput(request.term, lang)
+            var matcher = new RegExp( $.ui.autocomplete.escapeRegex( tokReqTerm ), "i" );
             response($.grep(dataArr, function(value) {
-                return matcher.test(normalize(value.label));
+                return matcher.test(value.tokLabel);
                 }) 
             );
         },
@@ -75,7 +103,8 @@ function fillMainAutocomplete() {
                 hideLangHelp();
                 showTemplateHelp(lang);
             }
-        }                
+        },
+        minLength: 2                
     }).autocomplete("instance")._renderItem = function(ul, item) {
         if (!results) {
             return $("<li>")
