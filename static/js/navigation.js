@@ -57,16 +57,22 @@ function hideLangHelp() {
     $("#lang-select").popover('destroy');
 }
 
-function showTemplateHelp(lang){
+function initTemplateHelp(){
     $("#source").popover({
-        content: "<div>" + messagesData["template-help"][lang] + "</div>", 
+        content: "",
         html: true,
         placement: "top",
-    }).popover('show');
+    });
 }
 
+function updateTemplateHelp(lang){
+    let forcedContent = "<div class='bolded'> ⚠️" + messagesData["template-help"][lang] + "</div>"
+    let content = "<div>" + messagesData["template-help"][lang] + "</div>"
+    $('#source').data('bs.popover').options.content = forcedResults? forcedContent : content
+    $("#source").popover('show');
+}   
 function hideTemplateHelp() {
-    $("#source").popover('destroy');
+    $("#source").popover('hide');
 }
 
 function goBack(){

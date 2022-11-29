@@ -153,5 +153,6 @@ async function initialSetup() {
     .then(loadInputTokens)
     .then(fillMainAutocomplete)
     .then(addMainPlaceholder)
+    .then(initTemplateHelp)
     .then(getTemplateFromUrl)
 }

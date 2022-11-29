@@ -32,3 +32,4 @@ var accentMap = {
     "ó": "o",
     "ú": "u"
   };
+var forcedResults = false;

@@ -46,7 +46,6 @@ function fillMainAutocomplete() {
     let lang =  $("#lang-select").val();    
     hideTemplateHelp();
     hideLangHelp();
-    var results = false
     var dataArr = $.map(questionsData, function(item) {
         if (item["visible_question_"+lang] != null){
             let rawLabel = item["visible_question_"+lang].replaceAll("{", "").replaceAll("}", "")
@@ -92,30 +91,43 @@ function fillMainAutocomplete() {
         },     
         response: function(event, ui) {
             if (!ui.content.length) {
-                results = false;
-                var noResult = { value: qaWikiHomeUrl, label: messagesData["no-results-new-item"][lang] };
-                ui.content.push(noResult);
-                showLangHelp(lang);
-                hideTemplateHelp();
+                let input = $(this).data("uiAutocomplete").term
+                let inputList = input.split(" ");
+                
+                while (inputList.length > 1){
+                    inputList = inputList.slice(0, -1);;
+                    let newInput = inputList.join(" ")
+                    let tokReqTerm = replaceTokensFromInput(newInput, lang)
+                    var matcher = new RegExp( $.ui.autocomplete.escapeRegex( tokReqTerm ), "i" );
+                    let matchedItems = $.grep(dataArr, function(value) {
+                        return matcher.test(value.tokLabel);
+                    })
+                    if (matchedItems.length > 0) {
+                        ui.content.push.apply(ui.content, matchedItems);
+                        forcedResults = true;
+                        updateTemplateHelp(lang);
+                        break;
+                    }
+                }
+                if (!ui.content.length) {
+                    var noResult = { value: qaWikiHomeUrl, styledLabel: messagesData["no-results-new-item"][lang] };
+                    ui.content.push(noResult);
+                    showLangHelp(lang);
+                    hideTemplateHelp();
+                }
+                
             }
             else {
-                results = true;
+                forcedResults = false;
                 hideLangHelp();
-                showTemplateHelp(lang);
+                updateTemplateHelp(lang);
             }
         },
         minLength: 2                
     }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (!results) {
-            return $("<li>")
-            .append("<div>" + item.label + "</div>")
-            .appendTo(ul);
-        }
-        else {
-            return $("<li>")
-            .append("<div>" + item.styledLabel + "</div>")
-            .appendTo(ul);
-        }
+        return $("<li>")
+        .append("<div>" + item.styledLabel + "</div>")
+        .appendTo(ul);
     };
 ;
 }
