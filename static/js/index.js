@@ -139,11 +139,16 @@ Initial setup
 $(document).ready(async function(){
     await initialSetup();
     $(window).keydown(function(event){
-        if( (event.keyCode == 13) && (checkform() == false) ) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+        else if( (event.keyCode == 13) && (checkform() == false) ) {
           event.preventDefault();
           return false;
         }
       });
+
     
 });
 
