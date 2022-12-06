@@ -73,10 +73,11 @@ function fillMainAutocomplete() {
             );
         },
         focus: function (event, ui) {
-            if (ui.item.value != qaWikiHomeUrl) {
-                event.preventDefault();
-                $(event.target).val(ui.item.label);
-            }
+            event.preventDefault();
+            // if (ui.item.value != qaWikiHomeUrl) {
+            //     event.preventDefault();
+            //     $(event.target).val(ui.item.label);
+            // }
         },
         select: function( event, ui ) { 
             if (ui.item.value != qaWikiHomeUrl) {

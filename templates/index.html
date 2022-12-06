@@ -40,15 +40,20 @@
             {% endif %}
         {% endwith %}
       </div>
-    <form id="set-lang" action="/setcookie" method="POST">
-        <select id="lang-select" class="form-select" name="lang">
-            <option value="en">English</option>
-            <option value="es">Español</option>
-        </select>
-    </form>
+    <div class="header">
+      <div id="about-link" style="display: inline-block;"><a onclick='showAbout()'><h5 class="lang about-link" id="about-link"></h5></a></div>
+      <div style="display: inline-block; margin-left: 10px;">
+      <form id="set-lang" action="/setcookie" method="POST">
+            <select id="lang-select" class="form-select" name="lang">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+            </select>
+        </form>
+    </div>  
+    </div>
     <div class="center">
         <div class="clickable hidden" id="home"><a onclick='goBack()'><h5 class="lang go-back" id="go-back"></h5></a></div>
-        <div style="margin-bottom: 76px;">
+        <div style="margin-bottom: 90px;">
             <div style="float: left;">
                 <a href="/"><img src="{{ url_for('static' , filename='images/templet3.png') }}" height="30px" alt='Templet'></a><span><h4 class="lang title" id="title"></h4></span>
             </div>
@@ -58,6 +63,13 @@
                 </div>
                 <div style="text-align: right;"><a id="qawiki-link" class="hidden lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
                 <div style="text-align: right;"><a id="update-link" class="hidden lang" href=""><i style="margin-left: 2px;" class="fa-solid fa-rotate-right"></i></a></div>
+            </div>
+        </div>
+        <div class="hidden animate-bottom" id="about-container">
+            <div class="about-text lang" id="about-text" style="text-align: justify;text-justify: inter-word;"></div>
+            <div style="text-align: center; margin-top: 25px;padding-bottom: 25px;"">
+                <a href="https://www.dcc.uchile.cl/" target="_blank"><img src="{{ url_for('static' , filename='images/dcc-logo.png') }}" height="40px" alt='dcc-logo'></a>
+                <a href="https://www.wikidata.org/" target="_blank"><img src="{{ url_for('static' , filename='images/wikidata-logo.png') }}" height="43px" alt='wikidata-logo'></a>
             </div>
         </div>
         <div class="clear main-input" name="main-input" id="main-input">

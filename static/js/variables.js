@@ -21,10 +21,12 @@ WHERE {
 
 
 `
+var qaWikiUrl = "http://qawiki.org/"
 var wikidataUrl = "http://www.wikidata.org/entity/";
-var qaWikiHomeUrl = "http://qawiki.dcc.uchile.cl/wiki/Main_Page"
+var qaWikiHomeUrl = qaWikiUrl + "wiki/Main_Page"
 var wikidataQueryLink = "https://query.wikidata.org/#"
-var qaWikiItemUrl = "http://qawiki.dcc.uchile.cl/wiki/Item:"
+var qaWikiItemUrl = qaWikiUrl + "wiki/Item:"
+var repoUrl = "https://github.com/franpss/qa-autocomplete"
 var accentMap = {
     "á": "a",
     "é": "e",

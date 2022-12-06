@@ -75,23 +75,52 @@ function hideTemplateHelp() {
     $("#source").popover('hide');
 }
 
-function goBack(){
-    window.history.replaceState({}, document.title, "/");
+function showAbout() {
+    hideMainInputBox();
+    clearUrl();
+    cleanMainForm();
     hideLoadScreen();
     hideQueryLink();
-    hideGoBack();
+    showGoBack();
     hideTemplateForm();
     hideQAWikiLink();
     hideUpdateLink();
-    cleanForm();
+    cleanTemplateForm();
+    hideResults();
+    showAboutText();
+}
+
+function showAboutText() {
+    $("#about-container").removeClass('hidden');
+}
+
+function hideAboutText() {
+    $("#about-container").addClass('hidden');
+}
+
+function goBack(){
+    clearUrl();
+    cleanMainForm();
+    hideLoadScreen();
+    hideQueryLink();
+    hideGoBack();
+    hideAboutText();
+    hideTemplateForm();
+    hideQAWikiLink();
+    hideUpdateLink();
+    cleanTemplateForm();
     hideResults();
     showMainInputBox();
 }
+
 
 function showGoBack(){
     $("#home").removeClass("hidden");
 }
 
+function clearUrl() {
+    window.history.replaceState({}, document.title, "/");
+}
 function hideGoBack(){
     $("#home").addClass("hidden");
 }
@@ -126,7 +155,11 @@ function hideLoadScreen(){
     loadingScreen.addClass("hidden");
 }
 
-function cleanForm(){
+function cleanMainForm(){
+    $('#source').val('');
+}
+
+function cleanTemplateForm(){
     $("#template-form").find("*").not(".search-button").remove();
 }
 

@@ -1,14 +1,14 @@
 function applyLanguageText(lang){
     $.getJSON(langJson, function(data){
         $(".lang").each(function(){
-            if ($(this).contents().length > 0) {
+            if ($(this).contents().length > 0 && (this.id  != "about-text")) {
                 let contents = $(this).contents().filter(function(){ return this.nodeType != 3; }).first().replaceWith(data[$(this).attr("id")][lang]);
-                $(this).text(data[$(this).attr("id")][lang]);
+                $(this).html(data[$(this).attr("id")][lang]);
                 $(this).append(contents);
             }
             
             else {
-                $(this).text(data[$(this).attr("id")][lang]);
+                $(this).html(data[$(this).attr("id")][lang]);
             }
         });
     });
