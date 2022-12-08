@@ -2,12 +2,13 @@ from this import d
 from flask import Flask, abort, jsonify, make_response, render_template, request, flash, redirect, url_for
 import sys
 import os
-from scripts.utils import read_json, templates_update, template_update
+from scripts.utils import read_json, templates_update, template_update, logger
 sys.path.insert(0, './scripts')
 from scripts.query import get_results, get_wikidata_entities
 from dotenv import load_dotenv
 from apscheduler.schedulers.background import BackgroundScheduler
 import datetime
+import time
 load_dotenv()
 
 
@@ -21,7 +22,7 @@ TEMPLATES_PATH = 'static/cached_questions/templates.json'
 
 sched = BackgroundScheduler(daemon=True)
 boolean_values_dict = read_json("static/QAWikiBooleanValues.json")
-sched.add_job(templates_update, 'interval', args=[QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX], minutes=JOB_INTERVAL_MINUTES, next_run_time=datetime.datetime.now())
+sched.add_job(templates_update, 'interval', args=[QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX, logger], minutes=JOB_INTERVAL_MINUTES, next_run_time=datetime.datetime.now())
 sched.start()
 
 app = Flask(__name__)
@@ -29,9 +30,13 @@ app.secret_key = os.environ.get("SECRET_KEY")
 
 @app.route("/wikidata_search", methods=["POST"])
 def wikidata_search():
+    t0 = time.time()
     data = str(request.form.get("data"))
+    logger.warning(f"Test: '{data}' requested from input")
     lang = request.form.get("lang")
-    output = get_wikidata_entities(lang, data, WIKIDATA_ENTITY_SEARCH)
+    output = get_wikidata_entities(lang, data, WIKIDATA_ENTITY_SEARCH, logger)
+    tf = time.time()
+    logger.warning(f"Test: successfully returned '{data}' search results from Wikidata. Time elapsed: {str(tf-t0)} seconds")
     return {"search": output}
 
 
@@ -50,7 +55,7 @@ def index():
 def wikibase_results():
     params = request.args.to_dict() 
     replaced_query= params["query"] 
-    answer = get_results(WIKIBASE_ENDPOINT, replaced_query)
+    answer = get_results(WIKIBASE_ENDPOINT, replaced_query, logger)
     return {"answer": answer}
 
 @app.route('/question_template/<question_id>', methods=["GET"])
@@ -64,7 +69,7 @@ def question_template(question_id):
 
 @app.route('/update_template/<question_id>', methods=["GET"])
 def update_template(question_id):
-    output, status = template_update(question_id, QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX)
+    output, status = template_update(question_id, QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX, logger)
     if status:
         flash(output, category="info")
         return redirect(url_for('question_template', question_id=question_id))

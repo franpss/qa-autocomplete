@@ -5,28 +5,66 @@ import time
 sys.path.insert(0, '.')
 from scripts.templates import get_all_templates, get_templates
 from dotenv import load_dotenv
+import logging
 load_dotenv()
 
 BOOLEAN_VALUES_DICT_PATH = "static/QAWikiBooleanValues.json"
 LANGS = ["en", "es"] 
 TEMPLATES_PATH = 'static/cached_questions'
 TEMPLATES_FILENAME = 'templates.json'
+LOG_PATH = 'logs'
+
+def setup_logger(name, log_filename, log_dir, level="info"):
+    """Loads or sets up a new log.
+
+    Parameters
+    ----------
+    name : str
+        Logger name.
+    log_filename : str
+        Path to log file.
+    level : str
+        Base level of the logger.
+
+    Returns
+    -------
+    logging.Logger
+        The loaded or new log.
+    """
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    handler = logging.FileHandler(os.path.join(log_dir, log_filename))
+    logs_formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    handler.setFormatter(logs_formatter)
+    logger = logging.getLogger(name)
+    if level == "debug":
+        logger.setLevel(logging.DEBUG)
+    elif level == "info":
+        logger.setLevel(logging.INFO)
+    elif level == "warning":
+        logger.setLevel(logging.WARNING)
+    elif level == "error":
+        logger.setLevel(logging.ERROR)
+    elif level == "critical":
+        logger.setLevel(logging.CRITICAL)
+    logger.addHandler(handler)
+    return logger
 
 def save_json(dic, path=TEMPLATES_PATH, filename=TEMPLATES_FILENAME):
-        """Saves dictionary in json file.
-        Parameters
-        ----------
-        dic : Dict[]
-            dictionary to save
-        path : str
-            path where the json file will be saved
-        filename : str
-            name for the json file
-        """
-        if not os.path.exists(path):
-            os.makedirs(path)
-        with open(os.path.join(path, filename), 'w', encoding='utf8') as f:
-            json.dump(dic, f, indent=2, ensure_ascii=False)   
+    """Saves dictionary in json file.
+    Parameters
+    ----------
+    dic : Dict[]
+        dictionary to save
+    path : str
+        path where the json file will be saved
+    filename : str
+        name for the json file
+    """
+    if not os.path.exists(path):
+        os.makedirs(path)
+    with open(os.path.join(path, filename), 'w', encoding='utf8') as f:
+        json.dump(dic, f, indent=2, ensure_ascii=False)   
 
 def read_json(path):
     """Reads a json file and returns it as a dict.
@@ -45,7 +83,7 @@ def read_json(path):
         data = json.load(json_file)
         return data
 
-def templates_update(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict=read_json(BOOLEAN_VALUES_DICT_PATH), langs=LANGS):
+def templates_update(qawiki_endpoint, qawiki_entity_prefix, logger, boolean_values_dict=read_json(BOOLEAN_VALUES_DICT_PATH), langs=LANGS):
     """Calls needed functions to update templates.
 
     Parameters
@@ -59,19 +97,19 @@ def templates_update(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict=
     langs : list[] str
         list of languages
     """
-    print("Updating templates...")
+    logger.info(f"Updating templates by scheduled task...")
     t0 = time.time()
-    templates = get_all_templates(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict, langs)
+    templates = get_all_templates(qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict, langs, logger)
     if templates is not None and len(templates) > 0:
         save_json(templates)
         tf = time.time()
-        print(f"Templates updated. Time elapsed: {tf - t0} seconds.")
+        logger.info(f"Templates updated. Time elapsed: {tf - t0} seconds.")
     else:
         tf = time.time()
-        print(f"Templates were not updated. An empty list or null value was returned. Time elapsed: {tf - t0} seconds.")
+        logger.error(f"Templates were not updated. An empty list or null value was returned. Time elapsed: {tf - t0} seconds.")
     
 
-def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict=read_json(BOOLEAN_VALUES_DICT_PATH), langs=LANGS):
+def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, logger, boolean_values_dict=read_json(BOOLEAN_VALUES_DICT_PATH), langs=LANGS):
     """Updates (or adds if it doesn't exist) a particular question template from QAWiki.
 
     Parameters
@@ -87,8 +125,9 @@ def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, boolean_
     langs : list[] str
         list of languages
     """
+    logger.info(f"{question_id}: Requested template update")
     t0 = time.time()
-    template = get_templates([question_id], qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict, langs)
+    template = get_templates([question_id], qawiki_endpoint, qawiki_entity_prefix, boolean_values_dict, langs, logger)
     if template is not None and len(template) > 0:
         templates = read_json(os.path.join(TEMPLATES_PATH, TEMPLATES_FILENAME))
         old_template_idx = next((index for (index, d) in enumerate(templates) if d["id"] == question_id), None)
@@ -96,12 +135,16 @@ def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, boolean_
             templates[old_template_idx] = template[0]
             save_json(templates)
             tf = time.time()
+            logger.info(f"{question_id}: Template updated. Time elapsed: {tf - t0} seconds.")
             return f"Template {question_id} updated. Time elapsed: {tf - t0} seconds.", 1
         else:
             templates.append(template[0])
             save_json(template)
             tf = time.time()
+            logger.info(f"{question_id}: Template added. Time elapsed: {tf - t0} seconds.")
             return f"Template {question_id} added. Time elapsed: {tf - t0} seconds.", 1
     else:
-        tf = time.time()
-        return f"Templates were not updated. An empty list or null value was returned.", 0
+        logger.error(f"{question_id}: Template was not updated. An empty list or null value was returned.")
+        return f"Template was not updated. An empty list or null value was returned.", 0
+
+logger = setup_logger(str(time.time()), "logs.log", LOG_PATH)
