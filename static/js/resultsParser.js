@@ -82,14 +82,14 @@ function answerParser(answer, infoUriAnswers) {
             </p>
             </div>
             `
-            .replace("{label}", label? "<h4><a href='{url}'>{label}</a></h4>"
+            .replace("{label}", label? "<h4><a href='{url}' target='_blank'>{label}</a></h4>"
                 .replace("{url}", url).replace("{label}", label) : "<h4><a href='{url}'>{entityId}</a></h4>"
                     .replace("{url}", url)).replace("{entityId}", url.replace(wikidataUrl, ""))
             .replace("{desc}", desc? "<h5>{desc}</h5>".replace("{desc}", desc) : "")
             .replace("{img}", img? "<img src='{img}' alt='entity image' class='entity-img'>".replace("{img}", img.replace(/'/g, "%27")) : "");
         }
         else {
-            return "<h4><a href='{url}'>{url}</a></h4>".replaceAll("{url}", answer.value)
+            return "<h4><a href='{url}' target='_blank'>{url}</a></h4>".replaceAll("{url}", answer.value)
         }
     }
     else if (answer.type == "literal"){

@@ -31,9 +31,9 @@ function applyLanguage() {
 function handleLanguageChange() {
     // Language selector change handler
     $("#lang-select").on("change", function(){
-        if (!$("#template-form").hasClass("hidden")){
+        if ($('#template-form:visible').length > 0){
             $('#set-lang').submit();
-            window.location.href = "/";
+            location.reload();
         }
         else {
             applyLanguageText($("#lang-select").val());

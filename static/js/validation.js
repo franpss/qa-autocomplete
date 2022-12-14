@@ -10,7 +10,7 @@ function checkform()
         $(this).data("uiAutocomplete").selectedItem == null)  {
             validInput = false;
             $(this).addClass("error");
-            showError(this, lang);
+            showError(this, messagesData["missing-input-error"][lang]);
             $(this).focus();
         }
 
@@ -27,14 +27,31 @@ function checkform()
  
 }
 
+function checkUpdateTempInput()
+{
+    var intRegex = /^\d+$/;
+    let lang =  $("#lang-select").val();
+    let input = $("#id-input").val()
+    if (!intRegex.test(input) || !input) {
+        showError($("#id-input"), messagesData["not-num-qid-input-error"][lang]);
+        return false;
+    }
+    else {
+        hideError($("#id-input"))
+        window.location.href = "/update_template/Q" + input.toString()
+        return true;
+    }
+        
+
+}
 function hideError(input){
     $(input).removeClass("error"); 
     $(input).popover('hide');
 }
 
-function showError(input, lang){
+function showError(input, msg){
     $(input).addClass("error");
     $(input).popover({
-        content: messagesData["missing-input-error"][lang], 
+        content: msg, 
         placement: "top"}).popover('show');
 }

@@ -7,15 +7,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="{{ url_for('static' , filename='css/index.css')}}" rel="stylesheet" type="text/css"/>
     <script src="{{ url_for('static' , filename='js/lang.js') }}"></script>
     <script src="{{ url_for('static' , filename='js/js.cookie.js') }}"></script>
     <script src="{{ url_for('static' , filename='js/resultsParser.js') }}"></script>
     <script src="{{ url_for('static' , filename='js/variables.js') }}"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="{{ url_for('static' , filename='css/bootstrap.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url_for('static' , filename='css/index.css')}}" rel="stylesheet" type="text/css"/>
     <script src="https://kit.fontawesome.com/fd7e4b205d.js" crossorigin="anonymous"></script>
     <link href="{{ url_for('static' , filename='images/favicon.ico') }}" rel="shortcut icon" type="ico"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
     <script charset="utf-8" type="text/javascript">
         let langJson = "{{ url_for('static' , filename='lang.json')}}";
         let questionsJson = "{{ url_for('static' , filename='cached_questions/templates.json')}}";
@@ -27,6 +28,7 @@
     </script>    
 </head>
 <body>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
     <div>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -40,8 +42,10 @@
             {% endif %}
         {% endwith %}
       </div>
+    
     <div class="header">
-      <div id="about-link" style="display: inline-block;"><a onclick='showAbout()'><h5 class="lang about-link" id="about-link"></h5></a></div>
+      <div id="update-template" style="display: inline-block; margin-left: 10px;"><a onclick='showUpdateTemplateModal()'><h5 class="lang update-template" id="update-template"></h5></a></div>
+      <div id="about-link" style="display: inline-block; margin-left: 10px;"><a onclick='showAbout()'><h5 class="lang about-link" id="about-link"></h5></a></div>
       <div style="display: inline-block; margin-left: 10px;">
       <form id="set-lang" action="/setcookie" method="POST">
             <select id="lang-select" class="form-select" name="lang">
@@ -53,11 +57,13 @@
     </div>
     <div class="center">
         <div class="clickable hidden" id="home"><a onclick='goBack()'><h5 class="lang go-back" id="go-back"></h5></a></div>
-        <div style="margin-bottom: 90px;">
+        <div style="margin-bottom: 106px;">
             <div style="float: left;">
-                <a href="/"><img src="{{ url_for('static' , filename='images/templet3.png') }}" height="30px" alt='Templet'></a><span><h4 class="lang title" id="title"></h4></span>
+            <div class="main-title"><a href="/"><span class="auto-type"></span></a></div>
+              <span><h4 class="lang title" id="title"></h4></span>
+              
             </div>
-            <div style="font-size: 10px; float: right;">
+            <div class="question-links">
                 <div id="query-link" style="text-align: right;" class="hidden">
                     <a id="wikidata-query-link" class="wikidata-query-link lang" href="" target="_blank"><i style="margin-left: 2px;" class="fa-solid fa-arrow-up-right-from-square"></i></a>
                 </div>
@@ -101,7 +107,43 @@
         </div>
 
     </div>
+    <script>
+        var options = {
+            strings: ["Templet"],
+            typeSpeed: 355,
+            onStringTyped: function() {
+                return setTimeout(
+                    function() 
+                    {
+                        $('.auto-type').siblings('.typed-cursor').remove();
+                    }, 3700);
+            }
+        };
 
+        var typed = new Typed('.auto-type', options);
+    </script>
+<!-- Modal -->
+<div class="modal fade" id="my-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div id="modal-update-desc" class="lang"></div>
+            <div class="qid-input">
+                <input id="id-input" class="form-control input-sm" type="text" value="" autofocus="autofocus"/>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button id="cancel-update" type="button" class="btn btn-secondary lang" data-dismiss="modal"></button>
+          <button id="update-template-modal-btn" type="button" onclick="checkUpdateTempInput()" class="btn btn-dark lang"></button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 <script src="{{ url_for('static' , filename='js/index.js') }}"></script>
 <script src="{{ url_for('static' , filename='js/validation.js') }}"></script>

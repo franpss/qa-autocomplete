@@ -49,6 +49,10 @@ $("#lang-select").on("change", function(){
     fillMainAutocomplete()
 });
 
+$("body").click(function(){  
+    $(".alert").alert("close");
+});
+
 async function getContQuestionResults(contQuery, contQuestion) {
     let questionData = window.questionData;
     let expectedValue = questionData["contingent_question"]["expected_value"]

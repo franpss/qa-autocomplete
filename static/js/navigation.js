@@ -2,37 +2,37 @@
 Navigation/displaying functions
 */
 function hideQueryLink(){
-    $("#query-link").addClass("hidden");
+    $("#query-link").attr("style", "display: none !important");;
 }
 
 function showQueryLink(){
-    $("#query-link").removeClass("hidden");
+    $("#query-link").fadeIn('slow');
 }
 
 function hideMainInputBox(){
-    $("#source").addClass("hidden");
+    $("#source").attr("style", "display: none !important");;
 }
 
 function showMainInputBox(){
-    $("#source").removeClass("hidden");
+    $("#source").fadeIn('slow');
 }
 
 function showQAWikiLink(questionId){
     $("#qawiki-link").attr("href", qaWikiItemUrl + questionId)
-    $("#qawiki-link").removeClass("hidden");
+    $("#qawiki-link").fadeIn('slow');
 }
 
 function hideQAWikiLink(){
-    $("#qawiki-link").addClass("hidden");
+    $("#qawiki-link").attr("style", "display: none !important");;
 }
 
 function showUpdateLink(questionId){
     $("#update-link").attr("href", "/update_template/" + questionId)
-    $("#update-link").removeClass("hidden");
+    $("#update-link").fadeIn('slow');
 }
 
 function hideUpdateLink(){
-    $("#update-link").addClass("hidden");
+    $("#update-link").attr("style", "display: none !important");;
 }
 
 function addMainPlaceholder() {
@@ -89,13 +89,16 @@ function showAbout() {
     hideResults();
     showAboutText();
 }
+function showUpdateTemplateModal(){
+    $('#my-modal').modal();
+}
 
 function showAboutText() {
-    $("#about-container").removeClass('hidden');
+    $("#about-container").fadeIn('slow');
 }
 
 function hideAboutText() {
-    $("#about-container").addClass('hidden');
+    $("#about-container").attr("style", "display: none !important");;
 }
 
 function goBack(){
@@ -115,44 +118,44 @@ function goBack(){
 
 
 function showGoBack(){
-    $("#home").removeClass("hidden");
+    $("#home").fadeIn('slow');
 }
 
 function clearUrl() {
     window.history.replaceState({}, document.title, "/");
 }
 function hideGoBack(){
-    $("#home").addClass("hidden");
+    $("#home").attr("style", "display: none !important");;
 }
 
 function showTemplateForm(){
-    $("#template-form").removeClass("hidden");
+    $("#template-form").fadeIn('slow');
 }
 
 function hideTemplateForm(){
-    $("#template-form").addClass("hidden");
+    $("#template-form").attr("style", "display: none !important");;
 }
 
 function hideResults(){
     $("#answer").empty();
-    $("#results").addClass("hidden");
+    $("#results").attr("style", "display: none !important");;
 }
 
 function hideContQuestionResults(){
     $("#cont-question-data").empty();
-    $("#cont-question").addClass("hidden");
+    $("#cont-question").attr("style", "display: none !important");;
 }
 
 function loadScreen(){
     let loadingScreen = $("#loading");
     $("#query").prop('disabled', true);
-    loadingScreen.removeClass("hidden");
+    loadingScreen.fadeIn('slow');
 }
 
 function hideLoadScreen(){
     let loadingScreen = $("#loading");
     $("#query").prop('disabled', false);
-    loadingScreen.addClass("hidden");
+    loadingScreen.attr("style", "display: none !important");;
 }
 
 function cleanMainForm(){
@@ -165,12 +168,12 @@ function cleanTemplateForm(){
 
 async function loadResults(results, query){
     let parsedResults = await parser(results);
-    $("#results").removeClass("hidden");
+    $("#results").fadeIn('slow');
     loadQueryLink(query);
     $("#answer").append(parsedResults);
 }
 function showResults() {
-    $("#results").removeClass("hidden");
+    $("#results").fadeIn('slow');
 }
 
 function loadQueryLink(query) {
@@ -178,13 +181,13 @@ function loadQueryLink(query) {
 }
 async function loadContQuestionResults(results, query, question){
     let parsedResults = await parser(results);
-    $("#cont-question").removeClass("hidden");
+    $("#cont-question").fadeIn('slow');
     $("#cont-question-data").append("<h5>{}</h5>".replace("{}", question));
     $("#cont-question-data").append(parsedResults);
 }
 
 function loadError(lang){
-    $("#results").removeClass("hidden");
+    $("#results").fadeIn('slow');
     $("#answer").append(messagesData["wikidata-error"][lang]);
     }
 

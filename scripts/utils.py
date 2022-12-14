@@ -22,6 +22,8 @@ def setup_logger(name, log_filename, log_dir, level="info"):
     name : str
         Logger name.
     log_filename : str
+        Log filename.
+    log_dir : str
         Path to log file.
     level : str
         Base level of the logger.
@@ -92,6 +94,8 @@ def templates_update(qawiki_endpoint, qawiki_entity_prefix, logger, boolean_valu
         QAWiki endpoint url
     qawiki_entity_prefix : str
         QAWiki entity prefix url
+    logger : logging.Logger
+        Log object
     boolean_values_dict : str
         QAWiki endpoint url
     langs : list[] str
@@ -120,6 +124,8 @@ def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, logger, 
         QAWiki endpoint url
     qawiki_entity_prefix : str
         QAWiki entity prefix url
+    logger : logging.Logger
+        Log object
     boolean_values_dict : str
         QAWiki endpoint url
     langs : list[] str

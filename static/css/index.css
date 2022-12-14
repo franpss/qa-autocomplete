@@ -9,8 +9,21 @@
   padding: 10px;
 }
 
+.center-block {
+  display: block;
+  margin: auto;
+  margin-top: 10px;
+  width: fit-content;
+}
+
 .bottom-content {
   margin-top: 34px;
+}
+
+.question-links {
+  font-size: 10px; 
+  float: right;
+  margin-top: 15px;
 }
 
 @media (max-width: 1000px) {
@@ -28,10 +41,33 @@
     padding: 10px;
    }
 
-}
-.hidden {
-    display: none;
+  .center-block {
+    display: block;
+    margin: 20px !important;
   }
+
+  .question-links {
+    font-size: 10px; 
+    float: right;
+    margin-top: 0px;
+  }
+}
+
+.hidden {
+  display: none;
+  transition: display .5s ease;
+  -webkit-transition: display .5s ease;
+  -moz-transition: display .5s ease;
+  -o-transition: display .5s ease;
+}
+
+.active {
+  transition: display .5s ease;
+  -webkit-transition: display .5s ease;
+  -moz-transition: display .5s ease;
+  -o-transition: display .5s ease;
+}
+
 .clickable {cursor: pointer;}
 
 
@@ -48,6 +84,7 @@
 .template-text {
   font-size: 16px;
 }
+
 .header {
   position: absolute;
   right: 5%;
@@ -128,10 +165,10 @@ a {
 .desc {
   font-size: 12px !important;
 }
-.alert {
-   margin: 20px;
-   width: fit-content;
-}
+
+
+
+
 .entity-img {
   float: right;
 }
@@ -185,4 +222,25 @@ h3 {
 @keyframes animatebottom { 
   from{ bottom:-100px; opacity:0 } 
   to{ bottom:0; opacity:1 }
+}
+
+.main-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 45px;
+}
+.main-title a {
+  color: inherit !important; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
+
+.qid-input input {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="30"><text x="5" y="19" style="font: 16px Arial;">Q</text></svg>') no-repeat;
+  box-sizing: border-box;
+  font: 16px "Arial";
+  height: 30px;
+  padding-left: 20px;
+  width: 100px;
+  margin: auto;
+  margin-top: 10px;
+
 }

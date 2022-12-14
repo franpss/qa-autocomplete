@@ -30,5 +30,9 @@
     "template-help": {
         "en":"Italicized text can be replaced by any Wikidata entity",
         "es": "El texto en cursiva puede ser reemplazado por cualquier entidad de Wikidata"
+    },
+    "not-num-qid-input-error": {
+        "en": "The input must be an integer",
+        "es": "La entrada debe ser un número entero"
     }
 }
