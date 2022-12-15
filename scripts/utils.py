@@ -156,6 +156,6 @@ def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, logger, 
             return messages_dict["added-template"][lang].format(tf-t0), 1
     else:
         logger.error(f"{question_id}: Template was not updated. An empty list or null value was returned.")
-        return messages_dict["update-template-error"][lang].format(tf-t0), 0
+        return messages_dict["update-template-error"][lang], 0
 
 logger = setup_logger(str(time.time()), "logs.log", LOG_PATH)
