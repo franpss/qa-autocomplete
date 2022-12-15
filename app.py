@@ -69,7 +69,8 @@ def question_template(question_id):
 
 @app.route('/update_template/<question_id>', methods=["GET"])
 def update_template(question_id):
-    output, status = template_update(question_id, QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX, logger)
+    lang = request.cookies.get('lang') if request.cookies.get('lang') != None else "en"
+    output, status = template_update(question_id, QAWIKI_ENDPOINT, QAWIKI_ENTITY_PREFIX, logger, lang)
     if status:
         flash(output, category="info")
         return redirect(url_for('question_template', question_id=question_id))

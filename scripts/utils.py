@@ -9,6 +9,7 @@ import logging
 load_dotenv()
 
 BOOLEAN_VALUES_DICT_PATH = "static/QAWikiBooleanValues.json"
+MESSAGES_JSON_PATH = "static/messages.json"
 LANGS = ["en", "es"] 
 TEMPLATES_PATH = 'static/cached_questions'
 TEMPLATES_FILENAME = 'templates.json'
@@ -113,7 +114,7 @@ def templates_update(qawiki_endpoint, qawiki_entity_prefix, logger, boolean_valu
         logger.error(f"Templates were not updated. An empty list or null value was returned. Time elapsed: {tf - t0} seconds.")
     
 
-def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, logger, boolean_values_dict=read_json(BOOLEAN_VALUES_DICT_PATH), langs=LANGS):
+def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, logger, lang, messages_dict=read_json(MESSAGES_JSON_PATH), boolean_values_dict=read_json(BOOLEAN_VALUES_DICT_PATH), langs=LANGS):
     """Updates (or adds if it doesn't exist) a particular question template from QAWiki.
 
     Parameters
@@ -126,8 +127,12 @@ def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, logger, 
         QAWiki entity prefix url
     logger : logging.Logger
         Log object
-    boolean_values_dict : str
-        QAWiki endpoint url
+    lang : string
+        Current language to return message
+    messages_dict : dict{}
+        Dictionary with messages in available languages
+    boolean_values_dict : dict{}
+        Dictionary with QAWiki boolean values
     langs : list[] str
         list of languages
     """
@@ -142,15 +147,15 @@ def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, logger, 
             save_json(templates)
             tf = time.time()
             logger.info(f"{question_id}: Template updated. Time elapsed: {tf - t0} seconds.")
-            return f"Template {question_id} updated. Time elapsed: {tf - t0} seconds.", 1
+            return messages_dict["updated-template"][lang].format(tf-t0), 1
         else:
             templates.append(template[0])
             save_json(template)
             tf = time.time()
             logger.info(f"{question_id}: Template added. Time elapsed: {tf - t0} seconds.")
-            return f"Template {question_id} added. Time elapsed: {tf - t0} seconds.", 1
+            return messages_dict["added-template"][lang].format(tf-t0), 1
     else:
         logger.error(f"{question_id}: Template was not updated. An empty list or null value was returned.")
-        return f"Template was not updated. An empty list or null value was returned.", 0
+        return messages_dict["update-template-error"][lang].format(tf-t0), 0
 
 logger = setup_logger(str(time.time()), "logs.log", LOG_PATH)

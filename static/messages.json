@@ -34,5 +34,17 @@
     "not-num-qid-input-error": {
         "en": "The input must be an integer",
         "es": "La entrada debe ser un número entero"
+    },
+    "updated-template": {
+        "en": "Template updated. Time elapsed: {} seconds.",
+        "es": "Plantilla actualizada. Tiempo transcurrido: {} segundos."
+    },
+    "added-template": {
+        "en": "Template added. Time elapsed: {} seconds.",
+        "es": "Plantilla añadida. Tiempo transcurrido: {} segundos."
+    },
+    "update-template-error": {
+        "en": "Template was not updated. An empty list or null value was returned.",
+        "es": "La plantilla no se actualizó. Se devolvió una lista vacía o un valor nulo."
     }
 }
