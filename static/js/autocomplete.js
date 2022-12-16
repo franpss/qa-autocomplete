@@ -142,7 +142,7 @@ function autocompleteTemplateForm() {
             if (this.value.length > 0) {
                 let id = $(this).attr('id')
                 $(this).autocomplete({
-                    delay: 1000,
+                    delay: 500,
                     source: function(request, response) {
                         $.ajax({
                             type: "POST",
