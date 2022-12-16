@@ -154,7 +154,6 @@ function autocompleteTemplateForm() {
                             },
                             success: function(data) {
                                 response($.map(data.search, function(item, i) {
-                                    //alert(item.value);
                                     return {
                                         label: item.label,
                                         value: item.value,
@@ -163,7 +162,7 @@ function autocompleteTemplateForm() {
                                 }));
                             },
                             error: function(data) {
-                                return []; // todo
+                                return []; 
                             }
                         });
                     },
