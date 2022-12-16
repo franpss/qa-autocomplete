@@ -140,7 +140,9 @@ function autocompleteTemplateForm() {
         $(this).on("input", function() {
             var input = this.value;
             if (this.value.length > 0) {
+                let id = $(this).attr('id')
                 $(this).autocomplete({
+                    delay: 1000,
                     source: function(request, response) {
                         $.ajax({
                             type: "POST",
@@ -176,7 +178,8 @@ function autocompleteTemplateForm() {
 
                     }
                 }).on("focus", function () {
-                    $(this).autocomplete("search", this.value);
+                    
+                   // $("#"+id).autocomplete("search", $("#"+id).val());
                 }).autocomplete("instance")._renderItem = function(ul, item) {
                     return $("<li>")
                         .append("<div>" + item.label + "<br> <span class='desc'>" + item.desc + "</span></div>")
@@ -184,7 +187,7 @@ function autocompleteTemplateForm() {
                 };
             $(this).bind("paste", function () {
                 setTimeout(function () {
-                    $(this).autocomplete("search", $(this).val());
+                    $("#"+id).autocomplete("search", $("#"+id).val());
                 }, 0);
             });    
             }

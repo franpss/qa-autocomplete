@@ -10,7 +10,7 @@ load_dotenv()
 
 BOOLEAN_VALUES_DICT_PATH = "static/QAWikiBooleanValues.json"
 MESSAGES_JSON_PATH = "static/messages.json"
-LANGS = ["en", "es"] 
+LANGS = json.loads(os.environ.get("LANGS"))
 TEMPLATES_PATH = 'static/cached_questions'
 TEMPLATES_FILENAME = 'templates.json'
 LOG_PATH = 'logs'

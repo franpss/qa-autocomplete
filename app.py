@@ -30,13 +30,9 @@ app.secret_key = os.environ.get("SECRET_KEY")
 
 @app.route("/wikidata_search", methods=["POST"])
 def wikidata_search():
-    t0 = time.time()
     data = str(request.form.get("data"))
-    logger.warning(f"Test: '{data}' requested from input")
     lang = request.form.get("lang")
     output = get_wikidata_entities(lang, data, WIKIDATA_ENTITY_SEARCH, logger)
-    tf = time.time()
-    logger.warning(f"Test: successfully returned '{data}' search results from Wikidata. Time elapsed: {str(tf-t0)} seconds")
     return {"search": output}
 
 
