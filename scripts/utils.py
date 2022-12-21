@@ -135,6 +135,12 @@ def template_update(question_id, qawiki_endpoint, qawiki_entity_prefix, logger, 
         Dictionary with QAWiki boolean values
     langs : list[] str
         list of languages
+    Returns
+    -------
+    message: str
+        output message in selected language
+    status_code: int
+        1 if template generation was successful, 0 otherwise
     """
     logger.info(f"{question_id}: Requested template update")
     t0 = time.time()

@@ -3,9 +3,26 @@ import requests
 
 
 def get_results(url, query, logger, f="json"):
+    """Generates template for contingent question
+
+    Parameters
+    ----------
+    url : str
+        url of query service
+    query : str
+        SPARQL query
+    logger : logging.Logger
+        Log object
+    f : string
+        request output format
+    Returns
+    -------
+    output : list[]
+        query results
+    """
     output = []
     headers = {'User-Agent': 'Templet - Wikidata Autocomplete Search', 
-               'From': 'franpss@gmail.com'}
+               'From': 'Autocompletando preguntas sobre Wikidata - Memoria de Pregrado - franpss@gmail.com'}
     r = requests.get(url, params = {'format': f, 'query': query}, headers=headers)
     try:
         data = r.json()   
@@ -29,6 +46,23 @@ def get_results(url, query, logger, f="json"):
     
 
 def get_props_qualif(url, query, logger, f="json"):
+    """Gets properties/qualifiers that identify the mentions/entities of the QAWiki question/query.
+
+    Parameters
+    ----------
+    url : str
+        url of query service
+    query : str
+        SPARQL query
+    logger : logging.Logger
+        Log object
+    f : string
+        request output format
+    Returns
+    -------
+    output : list[]
+        query results
+    """
     logger.info(f"Getting mentions and entities from question in QAWiki")
     try:
         r = requests.get(url, params = {'format': f, 'query': query})
@@ -44,6 +78,23 @@ def get_props_qualif(url, query, logger, f="json"):
         return []
 
 def get_wikidata_entities(lang, data, wikidata_search, logger):
+    """Gets Wikidata entities from API.
+
+    Parameters
+    ----------
+    lang : str
+        selected language
+    data : str
+        search word
+    wikidata_search : str
+        url of wikidata API
+    logger : logging.Logger
+        Log object
+    Returns
+    -------
+    output : items[]
+        search results (Wikidata entities, including label and description)
+    """
     url = wikidata_search.format(data, lang)
     items = []
     logger.info(f"Getting Wikidata entities from API...")
@@ -66,6 +117,21 @@ def get_wikidata_entities(lang, data, wikidata_search, logger):
 
 
 def get_qawiki_question_query(question_id, qawiki_endpoint, logger):
+    """Gets SPARQL query for a question_id from QAWiki.
+
+    Parameters
+    ----------
+    question_id : str
+        QID of question in QAWiki
+    qawiki_endpoint : str
+        QAWiki endpoint url
+    logger : logging.Logger
+        Log object
+    Returns
+    -------
+    qawiki_query : str
+        question SPARQL query 
+    """
     try:
         question_query = """SELECT ?x WHERE {{VALUES ?q {{ wd:{} }} ?q wdt:P11 ?x}}"""
         query_f = question_query.format(question_id)

@@ -3,6 +3,25 @@ from scripts.query import get_props_qualif, get_qawiki_question_query, get_resul
 
 
 def generate_templates_cont_question(cont_question_dict, matches, lang):
+    """Generates template for contingent question
+
+    Parameters
+    ----------
+    cont_question_dict : dict{}
+        dictionary containing data from the contingent question
+    matches : list[] str
+        mentions/entities matched in main question
+    qawiki_entity_prefix : str
+        QAWiki entity prefix url
+    logger : logging.Logger
+        Log object
+    lang : string
+        selected language
+    Returns
+    -------
+    cont_question_dict : dict{}
+        dictionary containing data from the contingent question
+    """
     cont_question_dict[f"question_template_{lang}"] = cont_question_dict[f"question_raw_{lang}"]
     cont_question_dict[f"query_template_{lang}"] = cont_question_dict[f"query_raw"]
     for idx in range(len(matches)):
@@ -12,6 +31,34 @@ def generate_templates_cont_question(cont_question_dict, matches, lang):
 
 
 def generate_templates(lang, question_id, qawiki_query, qawiki_endpoint, logger):
+    """Generates templates for a question_id
+
+    Parameters
+    ----------
+    lang : string
+        selected language
+    question_id : str
+        QID of question in QAWiki
+    qawiki_query : str
+        original SPARQL query of question
+    qawiki_endpoint : str
+        QAWiki Query Service endpoint
+    logger : logging.Logger
+        Log object 
+    Returns
+    -------
+    original_question : str
+        original QAWiki question in natural language
+    matched_mentions : list[] str
+        mentions/entities matched in question/query
+    question_template: str 
+        natural language question template
+    query_template : str
+        SPARQL query template
+    visible_question : str
+        visible (in web app) natural language question
+    
+    """
     entities = set(re.findall(r"(?<=wd:)Q[0-9]+", qawiki_query))
     mentions_query = """
     SELECT ?mention ?entity
@@ -53,12 +100,54 @@ def generate_templates(lang, question_id, qawiki_query, qawiki_endpoint, logger)
 
 
 def get_all_templates(qawiki_endpoint_url, entity_prefix, boolean_values_dict, langs, logger):
+    """Generates templates for all questions in QAWiki
+
+    Parameters
+    ----------
+    qawiki_endpoint_url : str
+        QAWiki Query Service endpoint
+    entity_prefix : str
+        QAWiki entity prefix url
+    boolean_values_dict : dict{}
+        Dictionary with QAWiki boolean values
+    langs : list[] str
+        list of languages
+    logger : logging.Logger
+        Log object
+    Returns
+    -------
+    questions_output : dict{}
+        output containing questions and its templates
+    
+    """
     query = """SELECT * WHERE { ?q wdt:P1 wd:Q1 }"""
     questions =  get_results(qawiki_endpoint_url, query, logger)
     questions_ids = [question[0]["value"].removeprefix(entity_prefix) for question in questions]
     return get_templates(questions_ids, qawiki_endpoint_url, entity_prefix, boolean_values_dict, langs, logger)
 
 def get_templates(questions_ids, qawiki_endpoint_url, entity_prefix, boolean_values_dict, langs, logger):
+    """Generates templates for a list of QIDs from QAWiki
+
+    Parameters
+    ----------
+    questions_ids : list[] str
+        QAWiki questions QIDs
+    qawiki_endpoint_url : str
+        QAWiki Query Service endpoint
+    entity_prefix : str
+        QAWiki entity prefix url
+    boolean_values_dict : dict{}
+        Dictionary with QAWiki boolean values
+    langs : list[] str
+        list of languages
+    logger : logging.Logger
+        Log object
+    Returns
+    -------
+    questions_output : dict{}
+        output containing questions and its templates
+    
+    """
     get_question_query = """
         SELECT ?label {{ 
         VALUES (?item) {{(wd:{0})}} . 
