@@ -26,7 +26,7 @@ def generate_templates_cont_question(cont_question_dict, matches, lang):
     cont_question_dict[f"query_template_{lang}"] = cont_question_dict[f"query_raw"]
     for idx in range(len(matches)):
         cont_question_dict[f"question_template_{lang}"] = re.sub(r'\b' + re.escape(matches[idx]["mention"]) + r'((?= )|(?=\?))', f"$mention_{idx}", cont_question_dict[f"question_template_{lang}"])
-        cont_question_dict[f"query_template_{lang}"] = re.sub(r'\b' + re.escape("wd:" + matches[idx]["entity"]) + r'((?= )|(?=\?))',  f"$entity_{idx}", cont_question_dict[f"query_template_{lang}"])
+        cont_question_dict[f"query_template_{lang}"] = re.sub(r'\b' + re.escape("wd:" + matches[idx]["entity"]) + r'((?= )|(?=\?)|(?=\))|(?=\}))',  f"$entity_{idx}", cont_question_dict[f"query_template_{lang}"])
     return cont_question_dict
 
 
@@ -61,16 +61,25 @@ def generate_templates(lang, question_id, qawiki_query, qawiki_endpoint, logger)
     """
     entities = set(re.findall(r"(?<=wd:)Q[0-9]+", qawiki_query))
     mentions_query = """
-    SELECT ?mention ?entity
-        {{ 
-            VALUES (?item) {{(wd:{0})}}
-            ?item ?prop ?statement . 
-            ?statement ?ps ?mention . 
-            wd:P38 wikibase:statementProperty ?ps . 
-            ?statement ?pq ?entity . 
-            wd:P17 wikibase:qualifier ?pq .
-            FILTER (langMatches( lang(?mention), "{1}" ) )
-        }}
+    SELECT ?mention ?entity WHERE {{
+    {{
+        wd:{0} wdt:P47 ?item . 
+        ?item ?prop ?statement . 
+        ?statement ?ps ?mention . 
+        wd:P38 wikibase:statementProperty ?ps . 
+        ?statement ?pq ?entity . 
+        wd:P17 wikibase:qualifier ?pq .
+    }}
+    UNION {{
+        wd:{0} ?prop ?statement . 
+        ?statement ?ps ?mention . 
+        wd:P38 wikibase:statementProperty ?ps . 
+        ?statement ?pq ?entity . 
+        wd:P17 wikibase:qualifier ?pq .
+    }}
+    FILTER (langMatches( lang(?mention), "{1}" ) )
+    }}
+    GROUP BY ?mention ?entity
     """
     
     mentions = get_props_qualif(qawiki_endpoint, mentions_query.format(question_id, lang), logger)
@@ -95,7 +104,7 @@ def generate_templates(lang, question_id, qawiki_query, qawiki_endpoint, logger)
             
             visible_question = re.sub(r'\b' + re.escape(matched_mentions[idx]["mention"]) + r'((?= )|(?=\?))', "{" + matched_mentions[idx]["mention"] + "}", visible_question)
             question_template = re.sub(r'\b' + re.escape(matched_mentions[idx]["mention"]) + r'((?= )|(?=\?))', f"$mention_{idx}", question_template)
-            query_template = re.sub(r'\b' + re.escape("wd:" + matched_mentions[idx]["entity"]) + r'((?= )|(?=\?))', f"$entity_{idx}", query_template)
+            query_template = re.sub(r'\b' + re.escape("wd:" + matched_mentions[idx]["entity"]) + r'((?= )|(?=\?)|(?=\))|(?=\}))', f"$entity_{idx}", query_template)
         return original_question, matched_mentions, question_template, query_template, visible_question
 
 

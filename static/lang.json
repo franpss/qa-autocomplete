@@ -1,7 +1,7 @@
 {
     "title": {
-        "en": "Wikibase autocomplete search",
-        "es": "Búsqueda por autocompletación en Wikidata"
+        "en": "Wikidata autocomplete question answering",
+        "es": "Respuesta a preguntas por autocompletación en Wikidata"
     },
     "loading": {
         "en": "Loading results",
