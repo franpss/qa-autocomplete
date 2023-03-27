@@ -1,4 +1,6 @@
-
+.desc-title {
+  font-size: 12px;
+}
 .center {
   position: absolute;
   width: 50%;
@@ -177,7 +179,7 @@ a {
 }
 
 .title {
-  margin-top: 3px !important;
+  margin-top: 0px !important;
   margin-bottom: 7px;
 }
 .clear { 
